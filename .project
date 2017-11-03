@@ -6,6 +6,11 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+			<name>net.sourceforge.texlipse.builder.TexlipseBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
 			<arguments>
 				<dictionary>
@@ -20,5 +25,6 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>net.sourceforge.texlipse.builder.TexlipseNature</nature>
 	</natures>
 </projectDescription>
