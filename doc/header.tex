@@ -6,6 +6,32 @@
 \renewcommand{\familydefault}{\sfdefault}\normalfont
 %% hyperlinks pdf style
 \usepackage[unicode,colorlinks=true]{hyperref}
+%% latex2html fixes
+\usepackage{html}
+% %% coloring
+% \usepackage{color}
+
+% relative sectioning
+\usepackage{ifthen}
+\newcounter{secdepth}\setcounter{secdepth}{0}
+\newcommand{\secup}{\addtocounter{secdepth}{1}}
+\newcommand{\secdown}{\addtocounter{secdepth}{-1}}
+\newcommand{\secrel}[1]{
+\ifthenelse{\equal{\value{secdepth}}{0}}{\part{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-1}}{\chapter{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-2}}{\section{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-3}}{\subsection{#1}}{}
+\ifthenelse{\equal{\value{secdepth}}{-4}}{\subsubsection{#1}}{}
+}
+\newcommand{\secly}[1]{
+\section*{#1}
+\addcontentsline{toc}{section}{#1}
+}
+
+% [nosep] option in lists/enums
+\usepackage{enumitem}
 
 % misc
-\latex{\newcommand{\email}[1]{$<$\href{mailto:#1}{#1}$>$}}
+\newcommand{\email}[1]{\textless\href{mailto:#1}{#1}\textgreater}
+% \renewcommand{\emph}[1]{\latexhtml{\textcolor{blue}{#1}}{\emph#1}}
+\newcommand{\note}[1]{\,\footnote{\ #1}}
