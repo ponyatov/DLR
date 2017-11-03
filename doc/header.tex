@@ -11,23 +11,6 @@
 % %% coloring
 % \usepackage{color}
 
-% relative sectioning
-\usepackage{ifthen}
-\newcounter{secdepth}\setcounter{secdepth}{0}
-\newcommand{\secup}{\addtocounter{secdepth}{1}}
-\newcommand{\secdown}{\addtocounter{secdepth}{-1}}
-\newcommand{\secrel}[1]{
-\ifthenelse{\equal{\value{secdepth}}{0}}{\part{#1}}{}
-\ifthenelse{\equal{\value{secdepth}}{-1}}{\chapter{#1}}{}
-\ifthenelse{\equal{\value{secdepth}}{-2}}{\section{#1}}{}
-\ifthenelse{\equal{\value{secdepth}}{-3}}{\subsection{#1}}{}
-\ifthenelse{\equal{\value{secdepth}}{-4}}{\subsubsection{#1}}{}
-}
-\newcommand{\secly}[1]{
-\section*{#1}
-\addcontentsline{toc}{section}{#1}
-}
-
 % [nosep] option in lists/enums
 \usepackage{enumitem}
 
