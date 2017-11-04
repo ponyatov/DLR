@@ -19,6 +19,15 @@
 \newcommand{\email}[1]{\textless\href{mailto:#1}{#1}\textgreater}
 \renewcommand{\emph}[1]{\textcolor{blue}{#1}}
 \newcommand{\note}[1]{\,\footnote{\ #1}}
+\usepackage{soul}
 
 % languages
 \newcommand{\cpp}{$C^{++}$}
+\newcommand{\F}{FORTH}
+
+% listings
+\usepackage{listings}
+\lstset{
+tabsize=4,
+commentstyle=\color{blue}\textbf,
+}
