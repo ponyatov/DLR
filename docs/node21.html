@@ -27,26 +27,26 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html324"
+<A NAME="tex2html326"
   HREF="node22.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html320"
+<A NAME="tex2html322"
   HREF="node20.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html314"
+<A NAME="tex2html316"
   HREF="node20.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html322"
+<A NAME="tex2html324"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html325"
+<B> Next:</B> <A NAME="tex2html327"
   HREF="node22.html">Compilation (in terms of</A>
-<B> Up:</B> <A NAME="tex2html321"
-  HREF="node20.html">Architecture</A>
-<B> Previous:</B> <A NAME="tex2html315"
-  HREF="node20.html">Architecture</A>
- &nbsp; <B>  <A NAME="tex2html323"
+<B> Up:</B> <A NAME="tex2html323"
+  HREF="node20.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html317"
+  HREF="node20.html">Virtual Machine Architecture</A>
+ &nbsp; <B>  <A NAME="tex2html325"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
@@ -80,7 +80,7 @@ Main memory contains all:
 </LI>
 <LI>data (constants, variables, strings, binary blobs,...)
 </LI>
-<LI>heap from current <code>Cp</code> till end of <code>M[]</code>
+<LI>heap from current <code>Cp</code> till end of <code>M[]</code> <A HREF="node22.html#Fheap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
 </LI>
 </UL>
 
@@ -100,7 +100,7 @@ extern uint32_t get(uint32_t addr);
 
 <P>
 If you set <code>cell &lt; 0x100</code> , but read byte on same address, you must get the
-same value. On little-endian machines (x86) we can read/write cells using
+same value. On greenlittle-endian machines (x86) we can read/write cells using
 <code>(uint32_t*)&amp;M[addr]</code> pointer, but for portability we use this
 byte-shifting functions:
 
@@ -112,8 +112,8 @@ byte-shifting functions:
  ALT="\begin{lstlisting}[language=C++]
 void set(uint32_t addr, int32_t value) {
 asser...
-...2] = (value&gt;&gt;0x10) &amp; 0xFF;
-M[addr+3] = (value&gt;&gt;0x18) &amp; 0xFF; }
+...2] = (value&#187;0x10) &amp; 0xFF;
+M[addr+3] = (value&#187;0x18) &amp; 0xFF; }
 \end{lstlisting}">
 <BR>
 <BR>
@@ -123,8 +123,8 @@ M[addr+3] = (value&gt;&gt;0x18) &amp; 0xFF; }
  ALT="\begin{lstlisting}[language=C++]
 uint32_t get(uint32_t addr) {
 assert(addr+3 &lt; ...
-...addr+1]&lt;&lt;0x08 \vert \
-M[addr+2]&lt;&lt;0x10 \vert M[addr+3]&lt;&lt;0x18; }
+...addr+1]&#171;0x08 \vert \
+M[addr+2]&#171;0x10 \vert M[addr+3]&#171;0x18; }
 \end{lstlisting}">
 <BR>
 
