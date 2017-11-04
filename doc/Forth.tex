@@ -1,1 +1,36 @@
 \part{Something different: FORTH}\label{forth}
+
+If you work with really small computer systems, like custom hardware build on
+Cortex-M microcontroillers, \textit{you have very small amount of RAM}. The
+topmost microcontroller family STM32F7 MCU used in
+\href{http://www.st.com/en/evaluation-tools/32f746gdiscovery.html}{STM32F7GDISCOVERY}
+board has \emph{only 340K of RAM}.
+
+For this narrow case we have FORTH well known from end of 70s, and its big
+brother OpenFirmware. In this part we'll see how we can implement tiny FORTH
+system using bytecode approach.
+
+\bigskip
+In \verb|FORTH/| subdirectory you can see sources of bytecode compiler and
+virtual machine (bytecode interpreter), with assember written in
+flex/bison\note{it can be interesting for you how to implement tiny assembler,
+without problems caused by concrete machine language details\ --- bytecode
+simple commands format is very easy to understand}.
+
+\section{FORTH/ file structure}
+
+\begin{tabular}{l l l}
+src.src & assembly-like & FORTH system source code \\
+& syntax &\\
+log.log & & logged execution of \\&&VM running compiled system \\
+ypp.ypp & bison & syntax parser \\
+lpp.lpp & flex & token lexer \\
+hpp.hpp & \cpp & headers \\
+cpp.cpp & \cpp & compiler elements and virtual machine \\
+Makefile & make & build script\\&&(can be sample for any program uses
+flex/bison)\\
+FVM.exe & executable & assembler and virtual machine bundle \\
+bin.bin & bytecode & compiled FORTH system bytecode\\&& dumped after VM
+execution
+\\
+\end{tabular}

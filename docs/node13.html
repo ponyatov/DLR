@@ -18,7 +18,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node14.html">
+<LINK REL="next" HREF="node15.html">
 <LINK REL="previous" HREF="node10.html">
 <LINK REL="up" HREF="manual.html">
 <LINK REL="next" HREF="node14.html">
@@ -27,26 +27,26 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html195"
+<A NAME="tex2html198"
   HREF="node14.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html191"
+<A NAME="tex2html194"
   HREF="manual.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html185"
+<A NAME="tex2html188"
   HREF="node12.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html193"
+<A NAME="tex2html196"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html196"
-  HREF="node14.html">Bibliography</A>
-<B> Up:</B> <A NAME="tex2html192"
+<B> Next:</B> <A NAME="tex2html199"
+  HREF="node14.html">FORTH/ file structure</A>
+<B> Up:</B> <A NAME="tex2html195"
   HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html186"
+<B> Previous:</B> <A NAME="tex2html189"
   HREF="node12.html">GUI</A>
- &nbsp; <B>  <A NAME="tex2html194"
+ &nbsp; <B>  <A NAME="tex2html197"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
@@ -58,6 +58,48 @@ Something different: FORTH
 </H1>
 
 <P>
+If you work with really small computer systems, like custom hardware build on
+Cortex-M microcontroillers, <SPAN  CLASS="textit">you have very small amount of RAM</SPAN>. The
+topmost microcontroller family STM32F7 MCU used in
+http://www.st.com/en/evaluation-tools/32f746gdiscovery.htmlSTM32F7GDISCOVERY
+board has blueonly 340K of RAM.
+
+<P>
+For this narrow case we have FORTH well known from end of 70s, and its big
+brother OpenFirmware. In this part we'll see how we can implement tiny FORTH
+system using bytecode approach.
+
+<P>
+
+<P><P>
+<BR>
+In <code>FORTH/</code> subdirectory you can see sources of bytecode compiler and
+virtual machine (bytecode interpreter), with assember written in
+flex/bison<A NAME="tex2html6"
+  HREF="#foot197"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot197">...
+flex/bison </A><A
+ HREF="node13.html#tex2html6"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD> it can be interesting for you how to implement tiny assembler,
+without problems caused by concrete machine language details -- bytecode
+simple commands format is very easy to understand
+
+</DD>
+</DL>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html200"
+  HREF="node14.html">FORTH/ file structure</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

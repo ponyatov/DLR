@@ -2,11 +2,6 @@
 \documentclass[oneside,10pt]{book}
 \RequirePackage{ifthen}
 
-
-
-\usepackage{html}
-
-
 \usepackage[paperwidth=118.8mm,paperheight=68.2mm,margin=2mm]{geometry}%
 \renewcommand{\familydefault}{\sfdefault}\normalfont\usepackage[unicode,colorlinks=true]{hyperref}
 
@@ -17,6 +12,9 @@
 %
 \renewcommand{\emph}[1]{\textcolor{blue}{#1}}%
 \providecommand{\note}[1]{\,\footnote{\ #1}} 
+
+%
+\providecommand{\cpp}{$C^{++}$} 
 
 
 \title{GNU Dynamic Language Runtime}
@@ -159,29 +157,17 @@
 \stepcounter{chapter}
 \stepcounter{section}
 \stepcounter{section}
-{\newpage\clearpage
-\lthtmlfigureA{decription120}%
-\begin{decription}
-\item[Compiler]
-\item[Interpreter]
-\end{decription}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
+\stepcounter{section}
+\stepcounter{part}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{part}
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlfigureA{decription123}%
-\begin{decription}
-\item[Dynamic]
-is all relates to things happening \emph{in runtime}
-\item[Static]
-\end{decription}%
-\lthtmlfigureZ
+\lthtmlinlinemathA{tex2html_wrap_inline200}%
+$C^{++}$%
+\lthtmlinlinemathZ
 \lthtmlcheckvsize\clearpage}
 
-\stepcounter{part}
-\stepcounter{chapter}
-\stepcounter{chapter}
-\stepcounter{part}
 
 \end{document}
