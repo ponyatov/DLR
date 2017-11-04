@@ -1,0 +1,8 @@
+# FORTH system
+
+0x20 const BL
+
+: INTERPRET
+	BL
+	bye
+;

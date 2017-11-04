@@ -1,0 +1,18 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { char *s; uint8_t op; uint32_t n; }
+%token <s> SYM
+%token <n> NUM 
+%token <op> CMD0 CMD1
+%token COLON SEMICOLON VAR CONST
+%%
+REPL :
+REPL : REPL COLON SYM		{ Cheader($3); }
+REPL : REPL SEMICOLON		{ Cbyte(opRET); }
+REPL : REPL CMD0			{ Cbyte($2); }
+REPL : REPL NUM CONST SYM	{ Cheader($4);
+							  Cbyte(opLIT); Ccell($2); Cbyte(opRET); }
+REPL : REPL SYM				{ Cbyte(opCALL);
+							  if (SymTable[$2]) Ccell(SymTable[$2]);
+							  else yyerror("bad command"); }
