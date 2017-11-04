@@ -6,15 +6,16 @@
 \renewcommand{\familydefault}{\sfdefault}\normalfont
 %% hyperlinks pdf style
 \usepackage[unicode,colorlinks=true]{hyperref}
-%% latex2html fixes
-\usepackage{html}
 % %% coloring
 % \usepackage{color}
 
 % [nosep] option in lists/enums
 \usepackage{enumitem}
 
+% % latex2html compatibility
+% \usepackage{html}
+
 % misc
 \newcommand{\email}[1]{\textless\href{mailto:#1}{#1}\textgreater}
-% \renewcommand{\emph}[1]{\latexhtml{\textcolor{blue}{#1}}{\emph#1}}
+\renewcommand{\emph}[1]{\textcolor{blue}{#1}}
 \newcommand{\note}[1]{\,\footnote{\ #1}}

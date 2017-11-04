@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>About this manual</TITLE>
-<META NAME="description" CONTENT="About this manual">
+<TITLE>Intro</TITLE>
+<META NAME="description" CONTENT="Intro">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,71 +18,86 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node3.html">
 <LINK REL="previous" HREF="node1.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="up" HREF="node1.html">
 <LINK REL="next" HREF="node3.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html37"
+<A NAME="tex2html63"
   HREF="node3.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html35"
-  HREF="manual.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html31"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html59"
   HREF="node1.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html53"
+  HREF="node1.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html61"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html38"
-  HREF="node3.html">Tutorial</A>
-<B> Up:</B> <A NAME="tex2html36"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html32"
-  HREF="node1.html">Intro</A>
+<B> Next:</B> <A NAME="tex2html64"
+  HREF="node3.html">About this manual</A>
+<B> Up:</B> <A NAME="tex2html60"
+  HREF="node1.html">Contents</A>
+<B> Previous:</B> <A NAME="tex2html54"
+  HREF="node1.html">Contents</A>
+ &nbsp; <B>  <A NAME="tex2html62"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION00020000000000000000">
-About this manual</A>
+<H1><A NAME="SECTION01010000000000000000">
+Intro</A>
 </H1>
 <P>
-This manual consist of this parts:
-<DL>
-<DT><STRONG>Part <A HREF="node3.html#newbie"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="/usr/share/latex2html/icons/crossref.png"></A></STRONG></DT>
-<DD>Tutorial
-<BR>
-If you just start to learn about implementing programming languages, and want to
-write your own script language, it is better to start from a simple. In this
-manual part, we kick out dirty details of full-featured DLR system, and look at
-an <SPAN  CLASS="textit">working model</SPAN> as skeleton of full system, written in Python.
-</DD>
-<DT><STRONG>Part <A HREF="node11.html#reference"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="/usr/share/latex2html/icons/crossref.png"></A></STRONG></DT>
-<DD>Reference
-<BR>
-reference manual for core system
-</DD>
-<DT><STRONG>Part <A HREF="node14.html#forth"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]"
- SRC="/usr/share/latex2html/icons/crossref.png"></A></STRONG></DT>
-<DD>Something different: FORTH
-<BR>
-for really small systems: implementing for Cortex-M (STM32F7) 
-</DD>
-</DL>
+I spent a lot of time asking about some ready library or framework let me easy
+transform simple syntax parser written in flex/bison into dynamic language
+interpreter. Search still in progress, teraton runtimes like JVM not preferred,
+portability and light resource requirements in focus.
 
 <P>
+
+<P><P>
+<BR>
+So I'm dreaming about some mix of:
+
+[nosep]
+<UL>
+<LI>bluePythonic syntax 
+</LI>
+<LI>blueSmallTalk live object system<A NAME="tex2html4"
+  HREF="#foot99"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> and
+  hibernation
+</LI>
+<LI>blueErlang parallelism and stability
+</LI>
+<LI>object/graph database engine embedded, RDBMS connectivity
+</LI>
+<LI>extremal portability much more then blueJava (Android in first place)
+</LI>
+<LI>tiny RAM usage, light and fast run, one executable file installation
+</LI>
+</UL> 
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot99">... system </A><A
+ HREF="node2.html#tex2html4"><SUP><SPAN CLASS="arabic">0</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD> able to run on
+  Beowulf-like SSI cluster networks thanks to message passing scalability
+
+</DD>
+</DL>
 <BR><HR>
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-04
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>
