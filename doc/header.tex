@@ -7,7 +7,9 @@
 %% hyperlinks pdf style
 \usepackage[unicode,colorlinks=true]{hyperref}
 % %% coloring
-% \usepackage{color}
+\usepackage{xcolor}
+\definecolor{green}{rgb}{0, 0.4, 0}
+\definecolor{blue}{rgb}{0, 0, 0.4}
 
 % [nosep] option in lists/enums
 \usepackage{enumitem}
@@ -19,6 +21,7 @@
 \newcommand{\email}[1]{\textless\href{mailto:#1}{#1}\textgreater}
 \renewcommand{\emph}[1]{\textcolor{blue}{#1}}
 \newcommand{\note}[1]{\,\footnote{\ #1}}
+\newcommand{\term}[1]{\textcolor{green}{#1}}
 \usepackage{soul}
 
 % languages
@@ -28,6 +31,8 @@
 % listings
 \usepackage{listings}
 \lstset{
+basicstyle=\small,
 tabsize=4,
 commentstyle=\color{blue}\textbf,
+frame=single,
 }

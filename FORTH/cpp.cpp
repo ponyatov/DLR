@@ -39,12 +39,10 @@ void set(uint32_t addr, int32_t value) {
 	M[addr+3] = (value>>0x18) & 0xFF;	}
 
 uint32_t get(uint32_t addr) {
-	assert (addr+3<Msz);
+	assert(addr+3<Msz);
 	return \
-		M[addr+0]<<0x00 | \
-		M[addr+1]<<0x08 | \
-		M[addr+2]<<0x10 | \
-		M[addr+3]<<0x18;	}
+		M[addr+0]<<0x00 | M[addr+1]<<0x08 | \
+		M[addr+2]<<0x10 | M[addr+3]<<0x18;	}
 
 // =================================================================== compiler
 

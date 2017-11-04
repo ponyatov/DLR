@@ -16,7 +16,7 @@ using namespace std;
 								// machine word size
 #define CELL sizeof(int32_t)
 
-extern uint8_t M[Msz];			// memory
+extern uint8_t  M[Msz];			// memory
 extern uint32_t Ip;				// instruction pointer
 extern uint32_t Cp;				// compilation pointer (free heap begin)
 

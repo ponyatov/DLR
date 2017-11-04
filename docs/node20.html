@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>GUI</TITLE>
-<META NAME="description" CONTENT="GUI">
+<TITLE>Architecture</TITLE>
+<META NAME="description" CONTENT="Architecture">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,59 +19,116 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="manual.css">
 
 <LINK REL="previous" HREF="node19.html">
-<LINK REL="up" HREF="node19.html">
+<LINK REL="up" HREF="node18.html">
 <LINK REL="next" HREF="node21.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html232"
+<A NAME="tex2html309"
   HREF="node21.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html230"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html305"
+  HREF="node18.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html301"
   HREF="node19.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html226"
-  HREF="node19.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html307"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html233"
-  HREF="node21.html">GUI</A>
-<B> Up:</B> <A NAME="tex2html231"
-  HREF="node19.html">GUI</A>
-<B> Previous:</B> <A NAME="tex2html227"
-  HREF="node19.html">GUI</A>
+<B> Next:</B> <A NAME="tex2html310"
+  HREF="node21.html">Memory</A>
+<B> Up:</B> <A NAME="tex2html306"
+  HREF="node18.html">Something different: FORTH</A>
+<B> Previous:</B> <A NAME="tex2html302"
+  HREF="node19.html">FORTH/ file structure</A>
+ &nbsp; <B>  <A NAME="tex2html308"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05100000000000000000">
-GUI</A>
+<H1><A NAME="SECTION05020000000000000000">
+Architecture</A>
 </H1>
--1-2
+
+<P>
+FVM<A NAME="tex2html7"
+  HREF="#foot294"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> has one byte-addressed memory, and two separate
+stacks:
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>data stack</STRONG></DT>
+<DD>for data 
+</DD>
+<DT><STRONG>return stack</STRONG></DT>
+<DD>return addresses for call/ret commands
+</DD>
+</DL>
+
+<P>
+
+<P><P>
+<BR>
+Sizes of this structures was defined by constants, but you can modify code and
+use expandable storage type like <code>vector</code><A NAME="tex2html8"
+  HREF="#foot295"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>
+<P>
+<BR>
+<IMG
+ WIDTH="334" HEIGHT="53" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="\begin{lstlisting}[language=C]
+...">
+<BR>
+
+<P>
+FORTH has special <code>CELL</code> constant, corresponds to <SPAN  CLASS="textit">machine word size
+in bytes</SPAN>.
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img3.png"
+ ALT="\begin{lstlisting}[language=C]
+...">
+<BR>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot294">...FVM </A><A
+ HREF="node20.html#tex2html7"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
+<DD> FORTH Virtual Machine
+
+</DD>
+<DT><A NAME="foot295">... <code>vector</code> </A><A
+ HREF="node20.html#tex2html8"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A></DT>
+<DD> it will be much slower
+
+</DD>
+</DL>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html234"
-  HREF="node21.html">GUI</A>
-<UL>
-<LI><A NAME="tex2html235"
-  HREF="node22.html">GUI</A>
-<UL>
-<LI><A NAME="tex2html236"
-  HREF="node23.html">GUI</A>
-</UL></UL></UL>
+<LI><A NAME="tex2html311"
+  HREF="node21.html">Memory</A>
+<LI><A NAME="tex2html312"
+  HREF="node22.html">Compilation (in terms of FORTH)</A>
+<LI><A NAME="tex2html313"
+  HREF="node23.html">Vocabulary structure</A>
+</UL>
 <!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-03
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>

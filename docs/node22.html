@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>GUI</TITLE>
-<META NAME="description" CONTENT="GUI">
+<TITLE>Compilation (in terms of FORTH)</TITLE>
+<META NAME="description" CONTENT="Compilation (in terms of FORTH)">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,54 +18,81 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node23.html">
 <LINK REL="previous" HREF="node21.html">
-<LINK REL="up" HREF="node21.html">
+<LINK REL="up" HREF="node20.html">
 <LINK REL="next" HREF="node23.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html253"
+<A NAME="tex2html336"
   HREF="node23.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html251"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html332"
+  HREF="node20.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html326"
   HREF="node21.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html247"
-  HREF="node21.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html334"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html254"
-  HREF="node23.html">GUI</A>
-<B> Up:</B> <A NAME="tex2html252"
-  HREF="node21.html">GUI</A>
-<B> Previous:</B> <A NAME="tex2html248"
-  HREF="node21.html">GUI</A>
+<B> Next:</B> <A NAME="tex2html337"
+  HREF="node23.html">Vocabulary structure</A>
+<B> Up:</B> <A NAME="tex2html333"
+  HREF="node20.html">Architecture</A>
+<B> Previous:</B> <A NAME="tex2html327"
+  HREF="node21.html">Memory</A>
+ &nbsp; <B>  <A NAME="tex2html335"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05111000000000000000">
-GUI</A>
+<H2><A NAME="SECTION05022000000000000000">
+Compilation (in terms of FORTH)</A>
 </H2>
--1-4
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html255"
-  HREF="node23.html">GUI</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img8.png"
+ ALT="\begin{lstlisting}[language=C++]
+extern uint32_t Cp; // compilation pointer (free heap)
+\end{lstlisting}">
+<BR>
+
+<P>
+In FORTH term greencompilation means <SPAN  CLASS="textit">adding bytes to the end of
+vocabulary</SPAN>, in fact into the begin of a heap, moving heap bottom to higher
+addresses. In FORTH standard there is only <code>HERE</code> word returns address of
+the heap begin (it must be <code>HEAP</code> name definitely). So to address we'll use
+special <code>Cp</code> register.
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="\begin{lstlisting}[language=C++]
+extern void Cbyte( uint8_t); // compile byte
+ex...
+...mpile cell
+extern void Cstring(char*); // compile ASCIIZ string
+\end{lstlisting}">
+<BR>
+
+<P>
+These functions will be used in assembler.
+
+<P>
 <BR><HR>
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-03
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>

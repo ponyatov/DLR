@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>GUI</TITLE>
-<META NAME="description" CONTENT="GUI">
+<TITLE>Memory</TITLE>
+<META NAME="description" CONTENT="Memory">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,6 +18,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node22.html">
 <LINK REL="previous" HREF="node20.html">
 <LINK REL="up" HREF="node20.html">
 <LINK REL="next" HREF="node22.html">
@@ -26,49 +27,111 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html243"
+<A NAME="tex2html324"
   HREF="node22.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html241"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html320"
   HREF="node20.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html237"
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html314"
   HREF="node20.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html322"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html244"
-  HREF="node22.html">GUI</A>
-<B> Up:</B> <A NAME="tex2html242"
-  HREF="node20.html">GUI</A>
-<B> Previous:</B> <A NAME="tex2html238"
-  HREF="node20.html">GUI</A>
+<B> Next:</B> <A NAME="tex2html325"
+  HREF="node22.html">Compilation (in terms of</A>
+<B> Up:</B> <A NAME="tex2html321"
+  HREF="node20.html">Architecture</A>
+<B> Previous:</B> <A NAME="tex2html315"
+  HREF="node20.html">Architecture</A>
+ &nbsp; <B>  <A NAME="tex2html323"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05110000000000000000">
-GUI</A>
-</H1>
--1-3
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+<H2><A NAME="SECTION05021000000000000000">
+Memory</A>
+</H2>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html245"
-  HREF="node22.html">GUI</A>
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img4.png"
+ ALT="\begin{lstlisting}[language=C]
+extern uint8_t M[Msz]; // memory
+extern uint32_t ...
+...ointer
+extern uint32_t Cp=0; // compilation pointer (free heap)
+\end{lstlisting}">
+<BR>
+
+<P>
+Main memory contains all:
+
+[nosep]
 <UL>
-<LI><A NAME="tex2html246"
-  HREF="node23.html">GUI</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
+<LI>compiled bytecode
+</LI>
+<LI>vocabulary structure <A HREF="node23.html#vocabulary"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</LI>
+<LI>data (constants, variables, strings, binary blobs,...)
+</LI>
+<LI>heap from current <code>Cp</code> till end of <code>M[]</code>
+</LI>
+</UL>
+
+<P>
+Memory has byte adressing, so we need some functions to get/set CELLs:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="46" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="\begin{lstlisting}[language=C]
+extern void set(uint32_t addr, int32_t value);
+extern uint32_t get(uint32_t addr);
+\end{lstlisting}">
+<BR>
+
+<P>
+If you set <code>cell &lt; 0x100</code> , but read byte on same address, you must get the
+same value. On little-endian machines (x86) we can read/write cells using
+<code>(uint32_t*)&amp;M[addr]</code> pointer, but for portability we use this
+byte-shifting functions:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="116" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="\begin{lstlisting}[language=C++]
+void set(uint32_t addr, int32_t value) {
+asser...
+...2] = (value&gt;&gt;0x10) &amp; 0xFF;
+M[addr+3] = (value&gt;&gt;0x18) &amp; 0xFF; }
+\end{lstlisting}">
+<BR>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="99" ALIGN="BOTTOM" BORDER="0"
+ SRC="img7.png"
+ ALT="\begin{lstlisting}[language=C++]
+uint32_t get(uint32_t addr) {
+assert(addr+3 &lt; ...
+...addr+1]&lt;&lt;0x08 \vert \
+M[addr+2]&lt;&lt;0x10 \vert M[addr+3]&lt;&lt;0x18; }
+\end{lstlisting}">
+<BR>
+
+<P>
 <BR><HR>
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-03
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>

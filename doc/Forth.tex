@@ -6,21 +6,22 @@ topmost microcontroller family STM32F7 MCU used in
 \href{http://www.st.com/en/evaluation-tools/32f746gdiscovery.html}{STM32F7GDISCOVERY}
 board has \emph{only 340K of RAM}.
 
-For this narrow case we have FORTH well known from end of 70s, and its big
-brother OpenFirmware. In this part we'll see how we can implement tiny FORTH
-system using bytecode approach.
+For this narrow case we have \F\ well known from the end of 70s, and its big
+brother OpenFirmware. In this part we'll see how we can implement tiny
+\F\ system using bytecode approach\note{It can be interesting for you how to
+implement tiny assembler, without problems caused by concrete machine language
+details\ --- bytecode simple commands format is very easy to understand.}.
 
+% \chapter{FVM: FORTH Virtual Machine}
 \bigskip
 In \verb|FORTH/| subdirectory you can see sources of bytecode compiler and
 virtual machine (bytecode interpreter), with assember written in
-flex/bison\note{it can be interesting for you how to implement tiny assembler,
-without problems caused by concrete machine language details\ --- bytecode
-simple commands format is very easy to understand}.
+flex/bison.
 
 \section{FORTH/ file structure}
 
 \begin{tabular}{l l l}
-src.src & assembly-like & FORTH system source code \\
+src.src & assembly-like & \F\ system source code \\
 & syntax &\\
 log.log & & logged execution of \\&&VM running compiled system \\
 ypp.ypp & bison & syntax parser \\
@@ -30,7 +31,153 @@ cpp.cpp & \cpp & compiler elements and virtual machine \\
 Makefile & make & build script\\&&(can be sample for any program uses
 flex/bison)\\
 FVM.exe & executable & assembler and virtual machine bundle \\
-bin.bin & bytecode & compiled FORTH system bytecode\\&& dumped after VM
-execution
-\\
+bin.bin & bytecode & compiled \F\ system bytecode\\
+&& dumped after VM execution\\
 \end{tabular}
+
+\section{Architecture}
+
+FVM\note{\F\ Virtual Machine}\ has one byte-addressed memory, and two separate
+stacks:
+\begin{description}[nosep]
+\item[data stack] for data 
+\item[return stack] return addresses for call/ret commands
+\end{description}
+
+\bigskip
+Sizes of this structures was defined by constants, but you can modify code and
+use expandable storage type like \verb|vector|\note{it will be much slower}
+
+\begin{lstlisting}[language=C]
+#define Msz 0x1000		/* bytes */
+#define Rsz 0x100
+#define Dsz 0x10 
+\end{lstlisting}
+
+\clearpage\noindent
+\F\ has special \verb|CELL| constant, corresponds to \textit{machine word size
+in bytes}.
+
+\begin{lstlisting}[language=C]
+#define CELL sizeof(int32_t)
+\end{lstlisting}
+
+\subsection{Memory}
+
+\begin{lstlisting}[language=C]
+extern uint8_t  M[Msz];	// memory
+extern uint32_t Ip=0;	// instruction pointer
+extern uint32_t Cp=0;	// compilation pointer (free heap)
+\end{lstlisting}
+
+Main memory contains all:
+\begin{itemize}[nosep]
+  \item compiled bytecode
+  \item vocabulary structure \ref{vocabulary}
+  \item data (constants, variables, strings, binary blobs,\ldots)
+  \item heap from current \verb|Cp| till end of \verb|M[]|
+\end{itemize}
+
+Memory has byte adressing, so we need some functions to get/set CELLs:
+
+\begin{lstlisting}[language=C]
+extern void set(uint32_t addr, int32_t value);
+extern uint32_t get(uint32_t addr);
+\end{lstlisting}
+
+If you set \verb|cell < 0x100| , but read byte on same address, you must get the
+same value. On little-endian machines (x86) we can read/write cells using
+\verb|(uint32_t*)&M[addr]| pointer, but for portability we use this
+byte-shifting functions:
+
+\begin{lstlisting}[language=C++]
+void set(uint32_t addr, int32_t value) {
+	assert(addr+3 < Msz); // check memory bound
+	M[addr+0] = (value>>0x00) & 0xFF;
+	M[addr+1] = (value>>0x08) & 0xFF;
+	M[addr+2] = (value>>0x10) & 0xFF;
+	M[addr+3] = (value>>0x18) & 0xFF;	}
+\end{lstlisting}
+\begin{lstlisting}[language=C++]
+uint32_t get(uint32_t addr) {
+	assert(addr+3 < Msz);
+	return \
+		M[addr+0]<<0x00 | M[addr+1]<<0x08 | \
+		M[addr+2]<<0x10 | M[addr+3]<<0x18;	}
+\end{lstlisting}
+
+\subsection{Compilation (in terms of \F)}
+
+\begin{lstlisting}[language=C++]
+extern uint32_t Cp;		// compilation pointer (free heap)
+\end{lstlisting}
+
+In \F\ term \term{compilation} means \textit{adding bytes to the end of
+vocabulary}, in fact into the begin of a heap, moving heap bottom to higher
+addresses. In \F\ standard there is only \verb|HERE| word returns address of
+the heap begin (it must be \verb|HEAP| name definitely). So to address we'll use
+special \verb|Cp| register.
+
+\begin{lstlisting}[language=C++]
+extern void Cbyte( uint8_t);	// compile byte
+extern void Ccell(uint32_t);	// compile cell
+extern void Cstring(char*);		// compile ASCIIZ string
+\end{lstlisting}
+
+\noindent
+These functions will be used in assembler.
+
+\subsection{Vocabulary structure}\label{vocabulary}
+
+In \F\ terms \term{word} means some active data element, analogous to function
+and procedure in mainstream languages. Variables and constants in \F\ also
+words. It corresponds to \term{word} in human languages\ --- sequence of
+letters, which means something. When you enter some \F\ code in command line,
+interpreter \ref{INTERPRET} searches each word\note{delimited by space symbols}\
+in \term{vocabulary}, and executes \ref{EXECUTE} it if search was successful.
+
+\bigskip
+\term{Vocabulary} is container data structure, implements:
+\begin{description}
+\item[words storage] in linked list order\note{or tree of linked lists in case
+of multiple vocabulary supported}
+\item[word search] by its name
+\item[definition] of new words using compiling words (see \verb|Cxxx()|
+functions)
+\end{description}
+
+Every item in vocabulary has this fields structure:
+
+\bigskip\noindent
+\begin{tabular}{l l l l}
+LFA & cell & Link Field Area & link to previous word or 0 \\
+AFA & byte & Attribute Field Area & flags, IMMED \ref{IMMEDIATE} \\
+NFA & asciiz string & Name Field Area & word name \\
+CFA & bytecode & Code Field Area & executable bytecode \\
+PFA & optional & Parameters Field Area & in variables and constants \\
+\end{tabular}
+\clearpage
+
+\noindent
+Last defined word must be marked somewhere
+\begin{itemize}[nosep]
+  \item 
+as entry point on system start, and
+  \item 
+as first point in search and compilation, 
+\end{itemize}
+so we need special fields in the beginning of memory image:
+
+\begin{lstlisting}[language=C++]
+// program entry point (addr of jmp parameter)
+#define _entry  1
+// last defined word LFA address
+#define _latest (_entry+CELL)
+
+int main(int argc, char *argv[]) {
+	// ============ compile vocabulary header
+	// jmp _entry	jump to last defined word
+	Cbyte(opJMP); Ccell(0);
+	// _latest		LFA of last defined word
+	Ccell(0);
+\end{lstlisting}

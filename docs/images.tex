@@ -3,7 +3,10 @@
 \RequirePackage{ifthen}
 
 \usepackage[paperwidth=118.8mm,paperheight=68.2mm,margin=2mm]{geometry}%
-\renewcommand{\familydefault}{\sfdefault}\normalfont\usepackage[unicode,colorlinks=true]{hyperref}
+\renewcommand{\familydefault}{\sfdefault}\normalfont\usepackage[unicode,colorlinks=true]{hyperref}\usepackage{xcolor}
+\definecolor{green}{rgb}{0, 0.4, 0}
+\definecolor{blue}{rgb}{0, 0, 0.4}
+
 
 \usepackage{enumitem}
 
@@ -11,10 +14,22 @@
 \providecommand{\email}[1]{\textless\href{mailto:#1}{#1}\textgreater} 
 %
 \renewcommand{\emph}[1]{\textcolor{blue}{#1}}%
-\providecommand{\note}[1]{\,\footnote{\ #1}} 
+\providecommand{\note}[1]{\,\footnote{\ #1}}%
+\providecommand{\term}[1]{\textcolor{green}{#1}} 
+\usepackage{soul}
 
 %
-\providecommand{\cpp}{$C^{++}$} 
+\providecommand{\cpp}{$C^{++}$}%
+\providecommand{\F}{FORTH} 
+
+
+\usepackage{listings}
+\lstset{
+basicstyle=\small ,
+tabsize=4,
+commentstyle=\color{blue}\textbf,
+frame=single,
+}
 
 
 \title{GNU Dynamic Language Runtime}
@@ -162,11 +177,102 @@
 \stepcounter{chapter}
 \stepcounter{chapter}
 \stepcounter{part}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{part}
+\stepcounter{section}
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlinlinemathA{tex2html_wrap_inline200}%
-$C^{++}$%
-\lthtmlinlinemathZ
+\lthtmlfigureA{lstlisting247}%
+\begin{lstlisting}[language=C]
+#define CELL sizeof(int32_t)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting250}%
+\begin{lstlisting}[language=C]
+extern uint8_t  M[Msz];	// memory
+extern uint32_t Ip=0;	// instruction pointer
+extern uint32_t Cp=0;	// compilation pointer (free heap)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting255}%
+\begin{lstlisting}[language=C]
+extern void set(uint32_t addr, int32_t value);
+extern uint32_t get(uint32_t addr);
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting257}%
+\begin{lstlisting}[language=C++]
+void set(uint32_t addr, int32_t value) {
+	assert(addr+3 < Msz); // check memory bound
+	M[addr+0] = (value>>0x00) & 0xFF;
+	M[addr+1] = (value>>0x08) & 0xFF;
+	M[addr+2] = (value>>0x10) & 0xFF;
+	M[addr+3] = (value>>0x18) & 0xFF;	}
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting260}%
+\begin{lstlisting}[language=C++]
+uint32_t get(uint32_t addr) {
+	assert(addr+3 < Msz);
+	return \
+		M[addr+0]<<0x00 | M[addr+1]<<0x08 | \
+		M[addr+2]<<0x10 | M[addr+3]<<0x18;	}
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting264}%
+\begin{lstlisting}[language=C++]
+extern uint32_t Cp;		// compilation pointer (free heap)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting268}%
+\begin{lstlisting}[language=C++]
+extern void Cbyte( uint8_t);	// compile byte
+extern void Ccell(uint32_t);	// compile cell
+extern void Cstring(char*);		// compile ASCIIZ string
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting288}%
+\begin{lstlisting}[language=C++]
+// program entry point (addr of jmp parameter)
+#define _entry  1
+// last defined word LFA address
+#define _latest (_entry+CELL)
+\par
+int main(int argc, char *argv[]) {
+	// ============ compile vocabulary header
+	// jmp _entry	jump to last defined word
+	Cbyte(opJMP); Ccell(0);
+	// _latest		LFA of last defined word
+	Ccell(0);
+\end{lstlisting}%
+\lthtmlfigureZ
 \lthtmlcheckvsize\clearpage}
 
 

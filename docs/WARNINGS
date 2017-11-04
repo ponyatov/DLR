@@ -1,6 +1,9 @@
 No implementation found for style `geometry'
 No implementation found for style `hyperref'
+No implementation found for style `xcolor'
 No implementation found for style `enumitem'
+No implementation found for style `soul'
+No implementation found for style `listings'
 
 redefining command \email 
 
@@ -12,3 +15,5 @@ redefining command \emph
 
 The manual.aux file was not found, so sections will not be numbered 
 and cross-references will be shown as icons.
+
+? brace missing for \textbf

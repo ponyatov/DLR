@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>GUI</TITLE>
-<META NAME="description" CONTENT="GUI">
+<TITLE>FORTH/ file structure</TITLE>
+<META NAME="description" CONTENT="FORTH/ file structure">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,64 +18,111 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node24.html">
-<LINK REL="previous" HREF="node14.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="next" HREF="node20.html">
+<LINK REL="previous" HREF="node18.html">
+<LINK REL="up" HREF="node18.html">
 <LINK REL="next" HREF="node20.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html220"
+<A NAME="tex2html299"
   HREF="node20.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html218"
-  HREF="manual.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html212"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html295"
   HREF="node18.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html289"
+  HREF="node18.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html297"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html221"
-  HREF="node20.html">GUI</A>
-<B> Up:</B> <A NAME="tex2html219"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html213"
-  HREF="node18.html">Core</A>
+<B> Next:</B> <A NAME="tex2html300"
+  HREF="node20.html">Architecture</A>
+<B> Up:</B> <A NAME="tex2html296"
+  HREF="node18.html">Something different: FORTH</A>
+<B> Previous:</B> <A NAME="tex2html290"
+  HREF="node18.html">Something different: FORTH</A>
+ &nbsp; <B>  <A NAME="tex2html298"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05000000000000000000">
-GUI</A>
+<H1><A NAME="SECTION05010000000000000000">
+FORTH/ file structure</A>
 </H1>
--1-1
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html222"
-  HREF="node20.html">GUI</A>
-<UL>
-<LI><A NAME="tex2html223"
-  HREF="node21.html">GUI</A>
-<UL>
-<LI><A NAME="tex2html224"
-  HREF="node22.html">GUI</A>
-<UL>
-<LI><A NAME="tex2html225"
-  HREF="node23.html">GUI</A>
-</UL></UL></UL></UL>
-<!--End of Table of Child-Links-->
+<P>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">src.src</TD>
+<TD ALIGN="LEFT">assembly-like</TD>
+<TD ALIGN="LEFT">FORTH system source code</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">syntax</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">log.log</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">logged execution of</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">VM running compiled system</TD>
+</TR>
+<TR><TD ALIGN="LEFT">ypp.ypp</TD>
+<TD ALIGN="LEFT">bison</TD>
+<TD ALIGN="LEFT">syntax parser</TD>
+</TR>
+<TR><TD ALIGN="LEFT">lpp.lpp</TD>
+<TD ALIGN="LEFT">flex</TD>
+<TD ALIGN="LEFT">token lexer</TD>
+</TR>
+<TR><TD ALIGN="LEFT">hpp.hpp</TD>
+<TD ALIGN="LEFT"><SPAN CLASS="MATH"><IMG
+ WIDTH="37" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$C^{++}$"></SPAN></TD>
+<TD ALIGN="LEFT">headers</TD>
+</TR>
+<TR><TD ALIGN="LEFT">cpp.cpp</TD>
+<TD ALIGN="LEFT"><SPAN CLASS="MATH"><IMG
+ WIDTH="37" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="$C^{++}$"></SPAN></TD>
+<TD ALIGN="LEFT">compiler elements and virtual machine</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Makefile</TD>
+<TD ALIGN="LEFT">make</TD>
+<TD ALIGN="LEFT">build script</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">(can be sample for any program uses
+flex/bison)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">FVM.exe</TD>
+<TD ALIGN="LEFT">executable</TD>
+<TD ALIGN="LEFT">assembler and virtual machine bundle</TD>
+</TR>
+<TR><TD ALIGN="LEFT">bin.bin</TD>
+<TD ALIGN="LEFT">bytecode</TD>
+<TD ALIGN="LEFT">compiled FORTH system bytecode</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">dumped after VM execution</TD>
+</TR>
+</TABLE>
+
+<P>
 <BR><HR>
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-03
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>

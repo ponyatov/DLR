@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Core</TITLE>
-<META NAME="description" CONTENT="Core">
+<TITLE>Something different: FORTH</TITLE>
+<META NAME="description" CONTENT="Something different: FORTH">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,46 +18,99 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="previous" HREF="node17.html">
-<LINK REL="up" HREF="node17.html">
+<LINK REL="next" HREF="node24.html">
+<LINK REL="previous" HREF="node13.html">
+<LINK REL="up" HREF="manual.html">
 <LINK REL="next" HREF="node19.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html210"
+<A NAME="tex2html282"
   HREF="node19.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html208"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html278"
+  HREF="manual.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html272"
   HREF="node17.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html204"
-  HREF="node17.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html280"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html211"
-  HREF="node19.html">GUI</A>
-<B> Up:</B> <A NAME="tex2html209"
-  HREF="node17.html">Core</A>
-<B> Previous:</B> <A NAME="tex2html205"
-  HREF="node17.html">Core</A>
+<B> Next:</B> <A NAME="tex2html283"
+  HREF="node19.html">FORTH/ file structure</A>
+<B> Up:</B> <A NAME="tex2html279"
+  HREF="manual.html">GNU Dynamic Language Runtime</A>
+<B> Previous:</B> <A NAME="tex2html273"
+  HREF="node17.html">DCG: Definite Clause Grammar</A>
+ &nbsp; <B>  <A NAME="tex2html281"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H3><A NAME="SECTION04111100000000000000">
-Core</A>
-</H3>
+<H1><A NAME="SECTION05000000000000000000"></A><A NAME="forth"></A>
+<BR>
+Something different: FORTH
+</H1>
 
--10
+<P>
+If you work with really small computer systems, like custom hardware build on
+Cortex-M microcontroillers, <SPAN  CLASS="textit">you have very small amount of RAM</SPAN>. The
+topmost microcontroller family STM32F7 MCU used in
+http://www.st.com/en/evaluation-tools/32f746gdiscovery.htmlSTM32F7GDISCOVERY
+board has blueonly 340K of RAM.
+
+<P>
+For this narrow case we have FORTH well known from the end of 70s, and its big
+brother OpenFirmware. In this part we'll see how we can implement tiny
+FORTH system using bytecode approach<A NAME="tex2html6"
+  HREF="#foot291"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
+
+<P>
+
+<P><P>
+<BR>
+In <code>FORTH/</code> subdirectory you can see sources of bytecode compiler and
+virtual machine (bytecode interpreter), with assember written in
+flex/bison.
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot291">... approach </A><A
+ HREF="node18.html#tex2html6"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD> It can be interesting for you how to
+implement tiny assembler, without problems caused by concrete machine language
+details -- bytecode simple commands format is very easy to understand.
+
+</DD>
+</DL>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html284"
+  HREF="node19.html">FORTH/ file structure</A>
+<LI><A NAME="tex2html285"
+  HREF="node20.html">Architecture</A>
+<UL>
+<LI><A NAME="tex2html286"
+  HREF="node21.html">Memory</A>
+<LI><A NAME="tex2html287"
+  HREF="node22.html">Compilation (in terms of FORTH)</A>
+<LI><A NAME="tex2html288"
+  HREF="node23.html">Vocabulary structure</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-03
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>
