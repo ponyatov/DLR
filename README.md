@@ -10,3 +10,6 @@
 * **PDF** for mobile reading: https://github.com/ponyatov/DLR/releases 
 
 * online manual (preview): http://ponyatov.github.io/DLR/
+
+PS: PDF size was selected not only for easy reading on portable devices,
+but also can be used for slide demonstrations without modification
