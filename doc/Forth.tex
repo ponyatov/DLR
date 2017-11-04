@@ -35,7 +35,7 @@ bin.bin & bytecode & compiled \F\ system bytecode\\
 && dumped after VM execution\\
 \end{tabular}
 
-\section{Architecture}
+\section{Virtual Machine Architecture}
 
 FVM\note{\F\ Virtual Machine}\ has one byte-addressed memory, and two separate
 stacks:
@@ -75,7 +75,7 @@ Main memory contains all:
   \item compiled bytecode
   \item vocabulary structure \ref{vocabulary}
   \item data (constants, variables, strings, binary blobs,\ldots)
-  \item heap from current \verb|Cp| till end of \verb|M[]|
+  \item heap from current \verb|Cp| till end of \verb|M[]| \ref{Fheap}
 \end{itemize}
 
 Memory has byte adressing, so we need some functions to get/set CELLs:
@@ -86,7 +86,7 @@ extern uint32_t get(uint32_t addr);
 \end{lstlisting}
 
 If you set \verb|cell < 0x100| , but read byte on same address, you must get the
-same value. On little-endian machines (x86) we can read/write cells using
+same value. On \term{little-endian} machines (x86) we can read/write cells using
 \verb|(uint32_t*)&M[addr]| pointer, but for portability we use this
 byte-shifting functions:
 
@@ -116,7 +116,7 @@ In \F\ term \term{compilation} means \textit{adding bytes to the end of
 vocabulary}, in fact into the begin of a heap, moving heap bottom to higher
 addresses. In \F\ standard there is only \verb|HERE| word returns address of
 the heap begin (it must be \verb|HEAP| name definitely). So to address we'll use
-special \verb|Cp| register.
+special \verb|Cp| register.\label{Fheap}
 
 \begin{lstlisting}[language=C++]
 extern void Cbyte( uint8_t);	// compile byte
