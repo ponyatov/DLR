@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Something different: FORTH</TITLE>
-<META NAME="description" CONTENT="Something different: FORTH">
+<TITLE>Vocabulary structure</TITLE>
+<META NAME="description" CONTENT="Vocabulary structure">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,54 +18,202 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node28.html">
 <LINK REL="previous" HREF="node26.html">
-<LINK REL="up" HREF="node26.html">
+<LINK REL="up" HREF="node24.html">
 <LINK REL="next" HREF="node28.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html305"
+<A NAME="tex2html491"
   HREF="node28.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html303"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html487"
+  HREF="node24.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html481"
   HREF="node26.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html299"
-  HREF="node26.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html489"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html306"
-  HREF="node28.html">Something different: FORTH</A>
-<B> Up:</B> <A NAME="tex2html304"
-  HREF="node26.html">Something different: FORTH</A>
-<B> Previous:</B> <A NAME="tex2html300"
-  HREF="node26.html">Something different: FORTH</A>
+<B> Next:</B> <A NAME="tex2html492"
+  HREF="node28.html">Bytecode interpreter</A>
+<B> Up:</B> <A NAME="tex2html488"
+  HREF="node24.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html482"
+  HREF="node26.html">Compilation (in terms of</A>
+ &nbsp; <B>  <A NAME="tex2html490"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION06111000000000000000">
-Something different: FORTH</A>
+<H2><A NAME="SECTION05023000000000000000"></A><A NAME="vocabulary"></A>
+<BR>
+Vocabulary structure
 </H2>
- 0-4
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html307"
-  HREF="node28.html">Something different: FORTH</A>
+<P>
+In FORTH terms greenword means some active data element, analogous to function
+and procedure in mainstream languages. Variables and constants in FORTH also
+words. It corresponds to greenword in human languages -- sequence of
+letters, which means something. When you enter some FORTH code in command line,
+interpreter <A HREF="#INTERPRET"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> searches each word<A NAME="tex2html12"
+  HREF="#foot474"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A> in greenvocabulary, and executes <A HREF="#EXECUTE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> it if search was successful.
+
+<P>
+
+<P><P>
+<BR>
+greenVocabulary is container data structure, implements:
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>words storage</STRONG></DT>
+<DD>in linked list order<A NAME="tex2html13"
+HREF="#foot479"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>
+</DD>
+<DT><STRONG>word search</STRONG></DT>
+<DD>by its name
+</DD>
+<DT><STRONG>definition</STRONG></DT>
+<DD>of new words using compiling words (see <code>Cxxx()</code>
+functions <A HREF="node26.html#Cxxx"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+</DD>
+</DL>
+
+<P>
+Every item in vocabulary has this fields structure<A NAME="tex2html14"
+  HREF="#foot480"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>:
+
+<P>
+
+<P><P>
+<BR>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">LFA</TD>
+<TD ALIGN="LEFT">cell</TD>
+<TD ALIGN="LEFT">Link Field Area</TD>
+<TD ALIGN="LEFT">link to previous word or 0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">AFA</TD>
+<TD ALIGN="LEFT">byte</TD>
+<TD ALIGN="LEFT">Attribute Field Area</TD>
+<TD ALIGN="LEFT">flags, IMMED <A HREF="#IMMEDIATE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A></TD>
+</TR>
+<TR><TD ALIGN="LEFT">NFA</TD>
+<TD ALIGN="LEFT">asciiz string</TD>
+<TD ALIGN="LEFT">Name Field Area</TD>
+<TD ALIGN="LEFT">word name</TD>
+</TR>
+<TR><TD ALIGN="LEFT">CFA</TD>
+<TD ALIGN="LEFT">bytecode</TD>
+<TD ALIGN="LEFT">Code Field Area</TD>
+<TD ALIGN="LEFT">executable bytecode</TD>
+</TR>
+<TR><TD ALIGN="LEFT">PFA</TD>
+<TD ALIGN="LEFT">optional</TD>
+<TD ALIGN="LEFT">Parameters Field Area</TD>
+<TD ALIGN="LEFT">in variables and constants</TD>
+</TR>
+</TABLE>
+
+<P>
+Last defined word must be marked somewhere
+
+[nosep]
+<UL>
+<LI>as entry point on system start, and
+</LI>
+<LI>as first point in search and compilation, 
+</LI>
 </UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+so we need special fields in the beginning of memory image:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="204" ALIGN="BOTTOM" BORDER="0"
+ SRC="img13.png"
+ ALT="\begin{lstlisting}[language=C++]
+// program entry point (addr of jmp parameter)
+...
+...JMP); Ccell(0);
+// _latest LFA of last defined word
+Ccell(0);
+\end{lstlisting}">
+<BR>
+
+<P>
+To compile vocabular header use
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="221" ALIGN="BOTTOM" BORDER="0"
+ SRC="img14.png"
+ ALT="\begin{lstlisting}[language=C++]
+map&lt;string,uint32_t&gt; SymTable; // symbol table
+...
+...ame) { // compile header
+LFA(); AFA(); NFA(name); CFA(name); }
+\end{lstlisting}">
+<BR>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot474">... word </A><A
+ HREF="node27.html#tex2html12"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A></DT>
+<DD> delimited by space symbols
+
+</DD>
+<DT><A NAME="foot479">... order </A><A
+ HREF="node27.html#tex2html13"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A></DT>
+<DD> or tree of linked lists in case
+of multiple vocabulary supported
+
+</DD>
+<DT><A NAME="foot480">... structure </A><A
+ HREF="node27.html#tex2html14"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A></DT>
+<DD> If you plan to do some
+hacking using bytecode for software writing, you can eliminate vocabulary
+headers in case of you do not use vocabulary search. To do this, you can
+fork your own assembler, and remove all calls in Cheader() except CFA(). CFA
+compilation is required because it sets _entry field in first jmp command to
+last defined word (see next page).
+
+</DD>
+</DL>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html491"
+  HREF="node28.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html487"
+  HREF="node24.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html481"
+  HREF="node26.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html489"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html492"
+  HREF="node28.html">Bytecode interpreter</A>
+<B> Up:</B> <A NAME="tex2html488"
+  HREF="node24.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html482"
+  HREF="node26.html">Compilation (in terms of</A>
+ &nbsp; <B>  <A NAME="tex2html490"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-03
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Reference</TITLE>
-<META NAME="description" CONTENT="Reference">
+<TITLE>Compiler vs Interpreter</TITLE>
+<META NAME="description" CONTENT="Compiler vs Interpreter">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,55 +18,99 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node13.html">
-<LINK REL="previous" HREF="node4.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node9.html">
+<LINK REL="up" HREF="node6.html">
 <LINK REL="next" HREF="node11.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html186"
+<A NAME="tex2html255"
   HREF="node11.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html182"
-  HREF="manual.html">
+<A NAME="tex2html251"
+  HREF="node6.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html176"
+<A NAME="tex2html245"
   HREF="node9.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html184"
+<A NAME="tex2html253"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html187"
-  HREF="node11.html">Core</A>
-<B> Up:</B> <A NAME="tex2html183"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html177"
-  HREF="node9.html">Static vs Dynamic</A>
- &nbsp; <B>  <A NAME="tex2html185"
+<B> Next:</B> <A NAME="tex2html256"
+  HREF="node11.html">Bytecode vs Machine Code</A>
+<B> Up:</B> <A NAME="tex2html252"
+  HREF="node6.html">Terminology</A>
+<B> Previous:</B> <A NAME="tex2html246"
+  HREF="node9.html">Syntax and Semantics</A>
+ &nbsp; <B>  <A NAME="tex2html254"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03000000000000000000"></A><A NAME="reference"></A>
-<BR>
-Reference
+<H1><A NAME="SECTION02140000000000000000">
+Compiler vs Interpreter</A>
 </H1>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html188"
-  HREF="node11.html">Core</A>
-<LI><A NAME="tex2html189"
-  HREF="node12.html">GUI</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
+<DL>
+<DT><STRONG>Compiler</STRONG></DT>
+<DD> 
+<BR>
+is a program module (can be library, single program or large
+software package) which compiles source code into some low-level code: machine
+or bytecode
+
+<P>
+ 
+<BR>
+<IMG
+ WIDTH="556" HEIGHT="44" ALIGN="BOTTOM" BORDER="0"
+ SRC="img1.png"
+ ALT="\begin{framed}
+The key property: compiler \emph{compiles but not executes program}
+\end{framed}">
+<BR>
+</DD>
+<DT><STRONG>Interpreter</STRONG></DT>
+<DD><A NAME="interpreter"></A> 
+<BR>
+<BR>
+<IMG
+ WIDTH="556" HEIGHT="63" ALIGN="BOTTOM" BORDER="0"
+ SRC="img2.png"
+ ALT="\begin{framed}
+Interpreter is a computer program written in language L \emph{executes} program
+written in language P.
+\end{framed}">
+<BR>
+
+<P>
+In other words, interpreter bluecan execute program in machine code, making
+some bluereal machine <A HREF="node12.html#VM"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> simulation. 
+But machine code for real
+processor ineffective in simulation<A NAME="tex2html8"
+  HREF="#foot270"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>, and especially ineffective in compiler code generation. That's why
+blueall modern interpreters use bytecode <A HREF="node11.html#bytecode"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> for low-level program
+representation.
+</DD>
+</DL>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot270">... simulation </A><A
+ HREF="node10.html#tex2html8"><SUP><SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A></DT>
+<DD> if you don't use
+virtualization supported by hardware, like x86 code on modern CPUs like Intel
+VT/VMX
+
+</DD>
+</DL>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

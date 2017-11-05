@@ -92,7 +92,7 @@ byte-shifting functions:
 
 \begin{lstlisting}[language=C++]
 void set(uint32_t addr, int32_t value) {
-	assert(addr+3 < Msz); // check memory bound
+	assert(addr+3 < Msz);			  // check memory bound
 	M[addr+0] = (value>>0x00) & 0xFF;
 	M[addr+1] = (value>>0x08) & 0xFF;
 	M[addr+2] = (value>>0x10) & 0xFF;
@@ -126,6 +126,18 @@ extern void Cstring(char*);		// compile ASCIIZ string
 
 \noindent
 These functions will be used in assembler.
+\bigskip
+
+\label{Cxxx}
+\begin{lstlisting}[language=C++]
+void Cbyte( uint8_t b) {
+	M[Cp++] = b; assert(Cp<Msz); }
+void Ccell(uint32_t c) {
+	set(Cp,c); Cp+= CELL; assert(Cp<Msz); }
+void Cstring(char* s) {
+	uint32_t L = strlen(s); assert(Cp+L+1<Msz);	// length
+	memcpy(&M[Cp],s,L+1); Cp += L+1; }	// compile length+1
+\end{lstlisting}
 
 \subsection{Vocabulary structure}\label{vocabulary}
 
@@ -138,15 +150,20 @@ in \term{vocabulary}, and executes \ref{EXECUTE} it if search was successful.
 
 \bigskip
 \term{Vocabulary} is container data structure, implements:
-\begin{description}
+\begin{description}[nosep]
 \item[words storage] in linked list order\note{or tree of linked lists in case
 of multiple vocabulary supported}
 \item[word search] by its name
 \item[definition] of new words using compiling words (see \verb|Cxxx()|
-functions)
+functions \ref{Cxxx})
 \end{description}
 
-Every item in vocabulary has this fields structure:
+Every item in vocabulary has this fields structure\note{If you plan to do some
+hacking using bytecode for software writing, you can eliminate vocabulary
+headers in case of you do not use vocabulary search. To do this, you can
+fork your own assembler, and remove all calls in Cheader() except CFA(). CFA
+compilation is required because it sets \_entry field in first jmp command to
+last defined word (see next page).}:
 
 \bigskip\noindent
 \begin{tabular}{l l l l}
@@ -182,6 +199,58 @@ int main(int argc, char *argv[]) {
 	Ccell(0);
 \end{lstlisting}
 
+To compile vocabular header use
+\begin{lstlisting}[language=C++]
+map<string,uint32_t> SymTable;				// symbol table
+
+void LFA() {
+	uint32_t L = get(_latest); set(_latest,Cp); Ccell(L); }
+void AFA(uint8_t b) { 
+	Cbyte(b); }
+void NFA(char* s) { 
+	Cstring(s); }
+void CFA(string name) { 
+	SymTable[name] = Cp; set(_entry,Cp); }
+void Cheader(char* name) {				  // compile header
+	LFA(); AFA(); NFA(name); CFA(name); }
+\end{lstlisting}
+
+\subsection{Bytecode interpreter}
+
+Bytecode interpreter will be run after assembler ended its work:
+
+\begin{lstlisting}[language=C++]
+int main() {
+	...						// compile vocabulary header
+	yyparse();				// run compiler
+	dump();					// dump memory into .bin file
+	VM();					// run VM
+}	
+\end{lstlisting}
+
+As any other computer, interpreter implements fetch/decode/execute loop over
+commands in \verb|M[]| memory, with command pointed by \verb|Ip| instruction
+pointer register.
+
+\begin{lstlisting}[language=C++]
+void VM() { for (;;) {						// infty loop
+	printf("%.4X ",Ip);
+	uint8_t op = M[Ip++]; assert(Ip<=Cp);		 // FETCH
+	printf("%.2X ",op);
+	switch (op) {						// DECODE/EXECUTE
+		case opNOP : nop();  break;
+		case opBYE : bye();  break;
+		case opJMP : jmp();  break;
+		case opCALL: call(); break;
+		case opRET : ret();  break;
+		case opLIT : lit();  break;
+		default:
+			printf("bad opcode\n\n"); abort();
+	}
+	printf("\n");
+}}
+\end{lstlisting}
+
 \section{Core command set}
 
 FVM uses two bytecode command types:
@@ -196,6 +265,29 @@ FVM uses two bytecode command types:
 \end{lstlisting}
 
 \subsection{Control flow}
+
+\begin{lstlisting}[language=C++]
+#define opNOP	0x00	// nop
+#define opBYE	0xFF	// bye
+#define opJMP	0x01	// jmp <addr>
+#define opQJMP	0x02	// ?jmp <addr>
+#define opCALL	0x03	// call <addr>
+#define opRET	0x04	// ret
+#define opLIT	0x05	// lit <value>
+\end{lstlisting}
+
+\begin{description}
+
+\item[nop] do nothing
+\begin{lstlisting}[language=C++]
+#define opNOP	0x00	// nop
+\end{lstlisting}
+\begin{lstlisting}[language=C++]
+void nop() { printf("nop"); }
+\end{lstlisting}
+
+\end{description}
+
 \subsection{Stack manipulations}
 \subsection{Arithmetics and binary operations}
 \subsection{Basic input/output (console, files)}

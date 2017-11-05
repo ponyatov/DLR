@@ -47,7 +47,7 @@ uint32_t get(uint32_t addr) {
 // =================================================================== compiler
 
 void Cbyte( uint8_t b) { M[Cp++] = b; assert(Cp<Msz); }
-void Ccell(uint32_t b) { set(Cp,b); Cp+= CELL; assert(Cp<Msz); }
+void Ccell(uint32_t c) { set(Cp,c); Cp+= CELL; assert(Cp<Msz); }
 void Cstring(char* s) {
 	uint32_t L = strlen(s); assert(Cp+L+1<Msz);
 	memcpy(&M[Cp],s,L+1); Cp += L+1; }
@@ -63,8 +63,8 @@ map<string,uint32_t> SymTable;								// symbol table
 void LFA() { uint32_t L = get(_latest); set(_latest,Cp); Ccell(L); }
 void AFA(uint8_t b) { Cbyte(b); }
 void NFA(char* s) { Cstring(s); }
-void CFA(string s) { SymTable[s] = Cp; set(_entry,Cp); }
-void Cheader(char*s) { LFA(); AFA(); NFA(s); CFA(s); }
+void CFA(string name) { SymTable[name] = Cp; set(_entry,Cp); }
+void Cheader(char* name) { LFA(); AFA(); NFA(name); CFA(name); }
 
 // ======================================================= bytecode interpreter
 

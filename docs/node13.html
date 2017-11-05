@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Complex parsing</TITLE>
-<META NAME="description" CONTENT="Complex parsing">
+<TITLE>Static vs Dynamic</TITLE>
+<META NAME="description" CONTENT="Static vs Dynamic">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,60 +18,101 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node18.html">
-<LINK REL="previous" HREF="node10.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="previous" HREF="node12.html">
+<LINK REL="up" HREF="node6.html">
 <LINK REL="next" HREF="node14.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html222"
+<A NAME="tex2html289"
   HREF="node14.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html218"
-  HREF="manual.html">
+<A NAME="tex2html285"
+  HREF="node6.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html212"
+<A NAME="tex2html281"
   HREF="node12.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html220"
+<A NAME="tex2html287"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html223"
-  HREF="node14.html">PEG &amp; Packrat algorithm</A>
-<B> Up:</B> <A NAME="tex2html219"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html213"
-  HREF="node12.html">GUI</A>
- &nbsp; <B>  <A NAME="tex2html221"
+<B> Next:</B> <A NAME="tex2html290"
+  HREF="node14.html">Reference</A>
+<B> Up:</B> <A NAME="tex2html286"
+  HREF="node6.html">Terminology</A>
+<B> Previous:</B> <A NAME="tex2html282"
+  HREF="node12.html">Virtual Machine</A>
+ &nbsp; <B>  <A NAME="tex2html288"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04000000000000000000">
-Complex parsing</A>
+<H1><A NAME="SECTION02170000000000000000">
+Static vs Dynamic</A>
 </H1>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+<DL>
+<DT><STRONG>Dynamic</STRONG></DT>
+<DD>is all relates to things happening bluein runtime
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>dynamic compilation</STRONG></DT>
+<DD><A NAME="dynacomp"></A> into real machine code can be used in
+interpreters to recompile parts of programs changed bluein runtime, or in
+process of running tracking optimizer on real data processing
+</DD>
+<DT><STRONG>dynamic language</STRONG></DT>
+<DD><A NAME="dynalang"></A> is a programming language which have in
+its specifiction blueability to change parts of program in runtime:
+<DL COMPACT>
+<DT></DT>
+<DD>modify existing classes and object member set on the fly
+</DD>
+<DT></DT>
+<DD>create new classes
+  
+</DD>
+<DT></DT>
+<DD>support code generation 
+  
+</DD>
+<DT></DT>
+<DD>process strings as source code, and compile and execute it
+  
+</DD>
+<DT></DT>
+<DD>use polymorphic functions which process parameters depends on its
+  types
+</DD>
+</DL>
+</DD>
+</DL>
+</DD>
+<DT><STRONG>Static</STRONG></DT>
+<DD><DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>compilation</STRONG></DT>
+<DD>in compile time only, program parts can't be changed and
+  recompiled in runtime
+  
+</DD>
+<DT><STRONG>class member</STRONG></DT>
+<DD>class element defined in class itself, not for derived
+  object; blueevery class member is shared between all class instances
+  (objects)
+</DD>
+</DL>
+</DD>
+</DL>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html224"
-  HREF="node14.html">PEG &amp; Packrat algorithm</A>
-<LI><A NAME="tex2html225"
-  HREF="node15.html">ANTLR</A>
-<LI><A NAME="tex2html226"
-  HREF="node16.html">Python tabbed syntax</A>
-<LI><A NAME="tex2html227"
-  HREF="node17.html">DCG: Definite Clause Grammar</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

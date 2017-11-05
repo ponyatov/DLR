@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Something different: FORTH</TITLE>
-<META NAME="description" CONTENT="Something different: FORTH">
+<TITLE>Bytecode interpreter</TITLE>
+<META NAME="description" CONTENT="Bytecode interpreter">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,46 +19,86 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="manual.css">
 
 <LINK REL="previous" HREF="node27.html">
-<LINK REL="up" HREF="node27.html">
+<LINK REL="up" HREF="node24.html">
 <LINK REL="next" HREF="node29.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html314"
+<A NAME="tex2html501"
   HREF="node29.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next"
- SRC="/usr/share/latex2html/icons/next.png"></A> 
-<A NAME="tex2html312"
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html497"
+  HREF="node24.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html493"
   HREF="node27.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="/usr/share/latex2html/icons/up.png"></A> 
-<A NAME="tex2html308"
-  HREF="node27.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="/usr/share/latex2html/icons/prev.png"></A>   
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html499"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html315"
-  HREF="node29.html">About this document ...</A>
-<B> Up:</B> <A NAME="tex2html313"
-  HREF="node27.html">Something different: FORTH</A>
-<B> Previous:</B> <A NAME="tex2html309"
-  HREF="node27.html">Something different: FORTH</A>
+<B> Next:</B> <A NAME="tex2html502"
+  HREF="node29.html">Core command set</A>
+<B> Up:</B> <A NAME="tex2html498"
+  HREF="node24.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html494"
+  HREF="node27.html">Vocabulary structure</A>
+ &nbsp; <B>  <A NAME="tex2html500"
+  HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H3><A NAME="SECTION06111100000000000000">
-Something different: FORTH</A>
-</H3>
-<A NAME="forth"></A>
+<H2><A NAME="SECTION05024000000000000000">
+Bytecode interpreter</A>
+</H2>
+
+<P>
+Bytecode interpreter will be run after assembler ended its work:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="116" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="\begin{lstlisting}[language=C++]
+int main() {
+... // compile vocabulary header
+...
+...iler
+dump(); // dump memory into .bin file
+VM(); // run VM
+}
+\end{lstlisting}">
+<BR>
+
+<P>
+As any other computer, interpreter implements fetch/decode/execute loop over
+commands in <code>M[]</code> memory, with command pointed by <code>Ip</code> instruction
+pointer register.
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="291" ALIGN="BOTTOM" BORDER="0"
+ SRC="img16.png"
+ ALT="\begin{lstlisting}[language=C++]
+void VM() { for (;;) { // infty loop
+printf(''...
+...t:
+printf(''bad opcode\n\n''); abort();
+}
+printf(''\n'');
+}}
+\end{lstlisting}">
+<BR>
 
 <P>
 <BR><HR>
 <ADDRESS>
-Dmitry Ponyatov
-2017-11-03
+GNU Dynamic Language Runtime
 </ADDRESS>
 </BODY>
 </HTML>

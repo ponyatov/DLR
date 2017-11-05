@@ -4,6 +4,7 @@
 
 \usepackage[paperwidth=118.8mm,paperheight=68.2mm,margin=2mm]{geometry}%
 \renewcommand{\familydefault}{\sfdefault}\normalfont\usepackage[unicode,colorlinks=true]{hyperref}\usepackage{xcolor}
+\definecolor{red}{rgb}{0.4, 0, 0}
 \definecolor{green}{rgb}{0, 0.4, 0}
 \definecolor{blue}{rgb}{0, 0, 0.4}
 
@@ -17,10 +18,13 @@
 \providecommand{\note}[1]{\,\footnote{\ #1}}%
 \providecommand{\term}[1]{\textcolor{green}{#1}} 
 \usepackage{soul}
+\usepackage{framed}
 
 %
 \providecommand{\cpp}{$C^{++}$}%
-\providecommand{\F}{FORTH} 
+\providecommand{\F}{FORTH}%
+\providecommand{\py}{Python}%
+\providecommand{\ST}{SmallTalk} 
 
 
 \usepackage{listings}
@@ -173,6 +177,32 @@ frame=single,
 \stepcounter{section}
 \stepcounter{section}
 \stepcounter{section}
+\stepcounter{section}
+
+
+\setlength{\topsep}{0pt}%
+
+\setlength{\topsep}{0pt}
+{\newpage\clearpage
+\lthtmlfigureA{framed227}%
+\begin{framed}
+The key property: compiler \emph{compiles but not executes program}
+\end{framed}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{framed231}%
+\begin{framed}
+Interpreter is a computer program written in language L \emph{executes} program
+written in language P.
+\end{framed}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
 \stepcounter{part}
 \stepcounter{chapter}
 \stepcounter{chapter}
@@ -184,96 +214,137 @@ frame=single,
 \stepcounter{part}
 \stepcounter{section}
 \stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting247}%
-\begin{lstlisting}[language=C]
-#define CELL sizeof(int32_t)
+\lthtmlfigureA{lstlisting382}%
+\begin{lstlisting}[language=C++]
+void Cbyte( uint8_t b) {
+	M[Cp++] = b; assert(Cp<Msz); }
+void Ccell(uint32_t c) {
+	set(Cp,c); Cp+= CELL; assert(Cp<Msz); }
+void Cstring(char* s) {
+	uint32_t L = strlen(s); assert(Cp+L+1<Msz);	// length
+	memcpy(&M[Cp],s,L+1); Cp += L+1; }	// compile length+1
 \end{lstlisting}%
 \lthtmlfigureZ
 \lthtmlcheckvsize\clearpage}
 
 \stepcounter{subsection}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting250}%
-\begin{lstlisting}[language=C]
-extern uint8_t  M[Msz];	// memory
-extern uint32_t Ip=0;	// instruction pointer
-extern uint32_t Cp=0;	// compilation pointer (free heap)
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting255}%
-\begin{lstlisting}[language=C]
-extern void set(uint32_t addr, int32_t value);
-extern uint32_t get(uint32_t addr);
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting257}%
+\lthtmlfigureA{lstlisting409}%
 \begin{lstlisting}[language=C++]
-void set(uint32_t addr, int32_t value) {
-	assert(addr+3 < Msz); // check memory bound
-	M[addr+0] = (value>>0x00) & 0xFF;
-	M[addr+1] = (value>>0x08) & 0xFF;
-	M[addr+2] = (value>>0x10) & 0xFF;
-	M[addr+3] = (value>>0x18) & 0xFF;	}
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting260}%
-\begin{lstlisting}[language=C++]
-uint32_t get(uint32_t addr) {
-	assert(addr+3 < Msz);
-	return \
-		M[addr+0]<<0x00 | M[addr+1]<<0x08 | \
-		M[addr+2]<<0x10 | M[addr+3]<<0x18;	}
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-\stepcounter{subsection}
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting264}%
-\begin{lstlisting}[language=C++]
-extern uint32_t Cp;		// compilation pointer (free heap)
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting268}%
-\begin{lstlisting}[language=C++]
-extern void Cbyte( uint8_t);	// compile byte
-extern void Ccell(uint32_t);	// compile cell
-extern void Cstring(char*);		// compile ASCIIZ string
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-\stepcounter{subsection}
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting288}%
-\begin{lstlisting}[language=C++]
-// program entry point (addr of jmp parameter)
-#define _entry  1
-// last defined word LFA address
-#define _latest (_entry+CELL)
+map<string,uint32_t> SymTable;				// symbol table
 \par
-int main(int argc, char *argv[]) {
-	// ============ compile vocabulary header
-	// jmp _entry	jump to last defined word
-	Cbyte(opJMP); Ccell(0);
-	// _latest		LFA of last defined word
-	Ccell(0);
+void LFA() {
+	uint32_t L = get(_latest); set(_latest,Cp); Ccell(L); }
+void AFA(uint8_t b) { 
+	Cbyte(b); }
+void NFA(char* s) { 
+	Cstring(s); }
+void CFA(string name) { 
+	SymTable[name] = Cp; set(_entry,Cp); }
+void Cheader(char* name) {				  // compile header
+	LFA(); AFA(); NFA(name); CFA(name); }
 \end{lstlisting}%
 \lthtmlfigureZ
 \lthtmlcheckvsize\clearpage}
 
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting417}%
+\begin{lstlisting}[language=C++]
+int main() {
+	...						// compile vocabulary header
+	yyparse();				// run compiler
+	dump();					// dump memory into .bin file
+	VM();					// run VM
+}	
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting420}%
+\begin{lstlisting}[language=C++]
+void VM() { for (;;) {						// infty loop
+	printf("%
+uint8_t op = M[Ip++]; assert(Ip<=Cp);		 // FETCH
+	printf("%
+switch (op) {						// DECODE/EXECUTE
+		case opNOP : nop();  break;
+		case opBYE : bye();  break;
+		case opJMP : jmp();  break;
+		case opCALL: call(); break;
+		case opRET : ret();  break;
+		case opLIT : lit();  break;
+		default:
+			printf("bad opcode\n\n"); abort();
+	}
+	printf("\n");
+}}
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting426}%
+\begin{lstlisting}[title=ypp.ypp: yacc syntax parser]\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting429}%
+\begin{lstlisting}[language=C++]
+#define opNOP	0x00	// nop
+#define opBYE	0xFF	// bye
+#define opJMP	0x01	// jmp <addr>
+#define opQJMP	0x02	// ?jmp <addr>
+#define opCALL	0x03	// call <addr>
+#define opRET	0x04	// ret
+#define opLIT	0x05	// lit <value>
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting432}%
+\begin{lstlisting}[language=C++]
+#define opNOP	0x00	// nop
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting434}%
+\begin{lstlisting}[language=C++]
+void nop() { printf("nop"); }
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{part}
 
 \end{document}

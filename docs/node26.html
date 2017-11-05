@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>About this document ...</TITLE>
-<META NAME="description" CONTENT="About this document ...">
+<TITLE>Compilation (in terms of FORTH)</TITLE>
+<META NAME="description" CONTENT="Compilation (in terms of FORTH)">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,53 +18,94 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node27.html">
 <LINK REL="previous" HREF="node25.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="up" HREF="node24.html">
+<LINK REL="next" HREF="node27.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_g.png"> 
-<A NAME="tex2html378"
-  HREF="manual.html">
+<A NAME="tex2html479"
+  HREF="node27.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html475"
+  HREF="node24.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html374"
+<A NAME="tex2html469"
   HREF="node25.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html380"
+<A NAME="tex2html477"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Up:</B> <A NAME="tex2html379"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html375"
-  HREF="node25.html">Bibliography</A>
- &nbsp; <B>  <A NAME="tex2html381"
+<B> Next:</B> <A NAME="tex2html480"
+  HREF="node27.html">Vocabulary structure</A>
+<B> Up:</B> <A NAME="tex2html476"
+  HREF="node24.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html470"
+  HREF="node25.html">Memory</A>
+ &nbsp; <B>  <A NAME="tex2html478"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION08000000000000000000">
-About this document ...</A>
-</H1>
- <STRONG>GNU Dynamic Language Runtime</STRONG><P>
-This document was generated using the
-<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2008 (1.71)
+<H2><A NAME="SECTION05022000000000000000">
+Compilation (in terms of FORTH)</A>
+</H2>
+
 <P>
-Copyright &#169; 1993, 1994, 1995, 1996,
-Nikos Drakos, 
-Computer Based Learning Unit, University of Leeds.
 <BR>
-Copyright &#169; 1997, 1998, 1999,
-<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
-Mathematics Department, Macquarie University, Sydney.
+<IMG
+ WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img10.png"
+ ALT="\begin{lstlisting}[language=C++]
+extern uint32_t Cp; // compilation pointer (free heap)
+\end{lstlisting}">
+<BR>
+
 <P>
-The command line arguments were: <BR>
- <STRONG>latex2html</STRONG> <TT>-dir /home/ponyatov/DLR/docs -no_footnode -local_icons -address 'GNU Dynamic Language Runtime' manual.tex</TT>
+In FORTH term greencompilation means <SPAN  CLASS="textit">adding bytes to the end of
+vocabulary</SPAN>, in fact into the begin of a heap, moving heap bottom to higher
+addresses. In FORTH standard there is only <code>HERE</code> word returns address of
+the heap begin (it must be <code>HEAP</code> name definitely). So to address we'll use
+special <code>Cp</code> register.<A NAME="Fheap"></A>
 <P>
-The translation was initiated by Dmitry Ponyatov on 2017-11-05
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="\begin{lstlisting}[language=C++]
+extern void Cbyte( uint8_t); // compile byte
+ex...
+...mpile cell
+extern void Cstring(char*); // compile ASCIIZ string
+\end{lstlisting}">
+<BR>
+
+<P>
+These functions will be used in assembler.
+
+<P><P>
+<BR>
+
+<P>
+<A NAME="Cxxx"></A>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="134" ALIGN="BOTTOM" BORDER="0"
+ SRC="img12.png"
+ ALT="\begin{lstlisting}[language=C++]
+void Cbyte( uint8_t b) {
+M[Cp++] = b; assert(C...
+... length
+memcpy(&amp;M[Cp],s,L+1); Cp += L+1; } // compile length+1
+\end{lstlisting}">
+<BR>
+
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

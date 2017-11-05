@@ -3,6 +3,7 @@ No implementation found for style `hyperref'
 No implementation found for style `xcolor'
 No implementation found for style `enumitem'
 No implementation found for style `soul'
+No implementation found for style `framed'
 No implementation found for style `listings'
 
 redefining command \email 
@@ -17,3 +18,11 @@ The manual.aux file was not found, so sections will not be numbered
 and cross-references will be shown as icons.
 
 ? brace missing for \textbf
+
+Failed to convert image /tmp/l2h14329/image008.ps
+
+Failed to convert image /tmp/l2h14329/image007.ps
+
+Failed to convert image /tmp/l2h14329/image010.ps
+
+Failed to convert image /tmp/l2h14329/image009.ps

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Core</TITLE>
-<META NAME="description" CONTENT="Core">
+<TITLE>Bytecode vs Machine Code</TITLE>
+<META NAME="description" CONTENT="Bytecode vs Machine Code">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,41 +20,57 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node12.html">
 <LINK REL="previous" HREF="node10.html">
-<LINK REL="up" HREF="node10.html">
+<LINK REL="up" HREF="node6.html">
 <LINK REL="next" HREF="node12.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html200"
+<A NAME="tex2html267"
   HREF="node12.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html196"
-  HREF="node10.html">
+<A NAME="tex2html263"
+  HREF="node6.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html190"
+<A NAME="tex2html257"
   HREF="node10.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html198"
+<A NAME="tex2html265"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html201"
-  HREF="node12.html">GUI</A>
-<B> Up:</B> <A NAME="tex2html197"
-  HREF="node10.html">Reference</A>
-<B> Previous:</B> <A NAME="tex2html191"
-  HREF="node10.html">Reference</A>
- &nbsp; <B>  <A NAME="tex2html199"
+<B> Next:</B> <A NAME="tex2html268"
+  HREF="node12.html">Virtual Machine</A>
+<B> Up:</B> <A NAME="tex2html264"
+  HREF="node6.html">Terminology</A>
+<B> Previous:</B> <A NAME="tex2html258"
+  HREF="node10.html">Compiler vs Interpreter</A>
+ &nbsp; <B>  <A NAME="tex2html266"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03100000000000000000">
-Core</A>
+<H1><A NAME="SECTION02150000000000000000">
+Bytecode vs Machine Code</A>
 </H1>
+
+<P>
+<DL>
+<DT><STRONG>Machine code</STRONG></DT>
+<DD>is binary code for real CPU, must be executed by hardware
+<BR>(but can be interpreted as well in special cases like simulators or tracing
+debuggers)
+</DD>
+<DT><STRONG>ByteCode</STRONG></DT>
+<DD><A NAME="bytecode"></A> <SPAN  CLASS="textit">is a sort of machine code</SPAN> for some
+virtual machine <A HREF="node12.html#VM"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>, bluespecially tuned for interpretation
+<A HREF="node10.html#interpreter"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</DD>
+</DL>
+
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

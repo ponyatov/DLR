@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bibliography</TITLE>
-<META NAME="description" CONTENT="Bibliography">
+<TITLE>Memory</TITLE>
+<META NAME="description" CONTENT="Memory">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,81 +20,113 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node26.html">
 <LINK REL="previous" HREF="node24.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="up" HREF="node24.html">
 <LINK REL="next" HREF="node26.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html372"
+<A NAME="tex2html467"
   HREF="node26.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html368"
-  HREF="manual.html">
+<A NAME="tex2html463"
+  HREF="node24.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html362"
+<A NAME="tex2html457"
   HREF="node24.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html370"
+<A NAME="tex2html465"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html373"
-  HREF="node26.html">About this document ...</A>
-<B> Up:</B> <A NAME="tex2html369"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html363"
-  HREF="node24.html">IEC 61131</A>
- &nbsp; <B>  <A NAME="tex2html371"
+<B> Next:</B> <A NAME="tex2html468"
+  HREF="node26.html">Compilation (in terms of</A>
+<B> Up:</B> <A NAME="tex2html464"
+  HREF="node24.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html458"
+  HREF="node24.html">Virtual Machine Architecture</A>
+ &nbsp; <B>  <A NAME="tex2html466"
   HREF="node1.html">Contents</A></B> 
-<BR><BR></DIV>
+<BR>
+<BR></DIV>
 <!--End of Navigation Panel-->
- 
-<H2><A NAME="SECTION07000000000000000000">
-Bibliography</A>
-</H2><DL COMPACT><DD>
+
+<H2><A NAME="SECTION05021000000000000000">
+Memory</A>
+</H2>
 
 <P>
-<P></P><DT><A NAME="PLAI">1</A>
-<DD> PLAI
-<BR>Shriram Krishnamurthi
-<BR>blueProgramming Languages: Application and Interpretation
-<BR><TT><A NAME="tex2html11"
-  HREF="http://cs.brown.edu/~sk/Publications/Books/ProgLangs/">http://cs.brown.edu/~sk/Publications/Books/ProgLangs/</A></TT>
-<P>
-<P></P><DT><A NAME="dragon">2</A>
-<DD> Dragon book
-<BR>Alfred V. Aho, Monica S. Lam, Ravi Sethi, and Jeffrey D. Ullman
-<BR>blueCompilers: Principles, Techniques, and Tools second edition
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="\begin{lstlisting}[language=C]
+extern uint8_t M[Msz]; // memory
+extern uint32_t ...
+...ointer
+extern uint32_t Cp=0; // compilation pointer (free heap)
+\end{lstlisting}">
+<BR>
 
 <P>
-<P></P><DT><A NAME="bluebook">3</A>
-<DD> BlueBook
-<BR>Adele Goldberg and David Robson
-<BR>blueSmalltalk-80: The Language and Its Implementation
-<BR><TT><A NAME="tex2html12"
-  HREF="http://www.mirandabanda.org/bluebook/">http://www.mirandabanda.org/bluebook/</A></TT>
-<BR>full pdf: <TT><A NAME="tex2html13"
-  HREF="http://sdmeta.gforge.inria.fr/FreeBooks/BlueBook/">http://sdmeta.gforge.inria.fr/FreeBooks/BlueBook/</A></TT>
-<P>
-<P></P><DT><A NAME="kim">4</A>
-<DD>
-Kim Thomas
-<BR>playlists on writing flex/bison parsers and script languages:
-<BR><code>https://www.youtube.com/playlist?</code>
-<BR><DL>
-<DT><STRONG>How to build, install Bison, Flex, Cygwin on Windows</STRONG></DT>
-<DD> 
-<BR>https://www.youtube.com/playlist?list=PL1_C6uWTeBDEcJxs3Rz5zjm1gf9YLRDW8list=PL1_C6uWTeBDEcJxs3Rz5zjm1gf9YLRDW8
-</DD>
-<DT></DT>
-<DD>
-</DD>
-</DL>
+Main memory contains all:
+
+[nosep]
+<UL>
+<LI>compiled bytecode
+</LI>
+<LI>vocabulary structure <A HREF="node27.html#vocabulary"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</LI>
+<LI>data (constants, variables, strings, binary blobs,...)
+</LI>
+<LI>heap from current <code>Cp</code> till end of <code>M[]</code> <A HREF="node26.html#Fheap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</LI>
+</UL>
 
 <P>
-</DL>
+Memory has byte adressing, so we need some functions to get/set CELLs:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="46" ALIGN="BOTTOM" BORDER="0"
+ SRC="img7.png"
+ ALT="\begin{lstlisting}[language=C]
+extern void set(uint32_t addr, int32_t value);
+extern uint32_t get(uint32_t addr);
+\end{lstlisting}">
+<BR>
+
+<P>
+If you set <code>cell &lt; 0x100</code> , but read byte on same address, you must get the
+same value. On greenlittle-endian machines (x86) we can read/write cells using
+<code>(uint32_t*)&amp;M[addr]</code> pointer, but for portability we use this
+byte-shifting functions:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="116" ALIGN="BOTTOM" BORDER="0"
+ SRC="img8.png"
+ ALT="\begin{lstlisting}[language=C++]
+void set(uint32_t addr, int32_t value) {
+asser...
+...2] = (value&#187;0x10) &amp; 0xFF;
+M[addr+3] = (value&#187;0x18) &amp; 0xFF; }
+\end{lstlisting}">
+<BR>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="99" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="\begin{lstlisting}[language=C++]
+uint32_t get(uint32_t addr) {
+assert(addr+3 &lt; ...
+...addr+1]&#171;0x08 \vert \
+M[addr+2]&#171;0x10 \vert M[addr+3]&#171;0x18; }
+\end{lstlisting}">
+<BR>
 
 <P>
 <BR><HR>
