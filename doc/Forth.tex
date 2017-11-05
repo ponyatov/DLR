@@ -181,3 +181,42 @@ int main(int argc, char *argv[]) {
 	// _latest		LFA of last defined word
 	Ccell(0);
 \end{lstlisting}
+
+\section{Core command set}
+
+FVM uses two bytecode command types:
+\begin{description}[nosep]
+\item[CMD0] one byte opcode without parameters
+\item[CMD1] byte opcode with required cell-sized parameter
+\end{description}
+
+\begin{lstlisting}[title=ypp.ypp: yacc syntax parser]
+%defines %union { char *s; uint8_t op; uint32_t n; }
+%token <op> CMD0 CMD1
+\end{lstlisting}
+
+\subsection{Control flow}
+\subsection{Stack manipulations}
+\subsection{Arithmetics and binary operations}
+\subsection{Basic input/output (console, files)}
+\subsection{Fast Foreign Interface}
+
+\section{Extensions}
+\subsection{Native GUI}
+\subsection{Networking}
+\subsection{Database connection}
+
+\section{Media and gaming}
+\subsection{Simple Direct Layer}
+\subsection{OpenGL}
+\subsection{Media codecs}
+
+\section{CAD/CAD/CAE and numerical math}
+\subsection{Vector schematics}
+\subsection{EDA Electronics Design}
+\subsection{Numerical math}
+\subsection{Vizualization}
+
+\section{Compiler framework}
+\subsection{Parser generator}
+\subsection{LLVM}
