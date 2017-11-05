@@ -1,6 +1,11 @@
-none: pdf
+doc: doc/manual.pdf FORTH/doc/dpans94.pdf
 
-pdf:
+WGET = wget -c
+
+FORTH/doc/dpans94.pdf:
+	$(WGET) -O $@ https://www.openfirmware.info/data/docs/dpans94.pdf
+
+doc/manual.pdf:
 	cd doc ; $(MAKE)
 
 html:
