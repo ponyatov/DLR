@@ -1,23 +1,124 @@
-\chapter{Terminology}\label{terminology}
+\chapter{Terminology}\label{terminology}\clearpage
 
-\section{Programming language vs its implementation}\label{implementing}
+\section{Programming language vs Implementation}\label{implementing}
 
 \begin{description}
-\item{programming language} itself as specification
-\item{implementation} of programming language 
+\item[programming language] itself \emph{is only specification}\ \\
+of syntax \ref{syntax} and semantics \ref{semantics}
+\item[implementation] of programming language\ \\
+is concrete program, build for specific targets \ref{target} set, with concrete
+standard (runtime) library set shipped with
+\item[reference implementation]\ \\
+some widely known languages (CPython2, Ruby MRI) has some dominatic
+implementation\note{written by language author: Guido van Rossum (\py),
+Xerox (\ST), Yukihiro Matsumoto (Ruby)}, known as \term{reference
+implementation}:
+if you write your variant of language system, and want it to be compatible with
+language you name, you can test it using ref implementation, every test must
+behave identical.
+
+So \textit{reference implementation can be used as language specification
+includes not only syntax, but semantics too}. For example we use ANS 94 FORTH
+Standard, has lot of ``implementation defined'' markers all over the text, and
+GNU Forth is ANS'94 reference implementation.
+
 \end{description}
+
+\section{There is no compiled/interpreted language}
+
+Programming language \emph{is formal specification} of syntax and semantics,
+it is a documentation artifact, and this \emph{specification can't be
+compiled}\note{in fact, it is not totally true\ --- this GNU DLR is in plans to
+be such system, you specify some language using some formal language, compile
+it using compiler compiler into executable code, and bind it with universal
+runtime library gives your language implementation alive} !
+
+For example, pure C is widely known as ``compiled \ref{compiler}\ language'',
+but Fabrice Bellard's \href{http://bellard.org/tcc/}{Tiny C Compiler} can run
+as interpreter (but uses dynamic compilation \ref{dynacomp}).
+
+Java looks like classical compiler suite with edit/compile/debug
+loop, but in fact \emph{JVM is interpreter} by design, \emph{expanded by JIT}
+for programs speed up using dynamic compilation \ref{dynacomp}.
+
+\section{Syntax and Semantics}
+
+\begin{description}
+\item[Syntax]\label{syntax} how it looks like, and how synatax elements relates
+to each other in source code
+\item[Semantics]\label{semantics} is what every construction and statement must
+to do
+\end{description}
+
 
 \section{Compiler vs Interpreter}
 
 \begin{description}
-\item[Compiler]
-\item[Interpreter]
+\item[Compiler]\ \\
+is a program module (can be library, single program or large
+software package) which compiles source code into some low-level code: machine
+or bytecode
+
+\setlength{\topsep}{0pt}
+\begin{framed}
+The key property: compiler \emph{compiles but not executes program}
+\end{framed}
+\item[Interpreter]\label{interpreter}\ \\
+\begin{framed}
+Interpreter is a computer program written in language L \emph{executes} program
+written in language P.
+\end{framed}
+
+In other words, interpreter \emph{can execute program in machine code}, making
+some \emph{real machine} \ref{VM} simulation. 
+But machine code for real
+processor ineffective in simulation\note{if you don't use
+virtualization supported by hardware, like x86 code on modern CPUs like Intel
+VT/VMX}, and especially ineffective in compiler code generation. That's why
+\emph{all modern interpreters} use bytecode \ref{bytecode} for low-level program
+representation.
 \end{description}
+
+\section{Bytecode vs Machine Code}
+
+\begin{description}
+\item[Machine code] is binary code for real CPU, must be executed by hardware\\
+(but can be interpreted as well in special cases like simulators or tracing
+debuggers)
+\item[ByteCode]\label{bytecode} \textit{is a sort of machine code} for some
+virtual machine \ref{VM}, \emph{specially tuned for interpretation}
+\ref{interpreter}
+\end{description}
+
+
+\section{Virtual Machine}\label{VM}
 
 \section{Static vs Dynamic}
 
 \begin{description}
 \item[Dynamic]
 is all relates to things happening \emph{in runtime}
+\begin{description}[nosep]
+\item[dynamic compilation]\label{dynacomp} into real machine code can be used in
+interpreters to recompile parts of programs changed \emph{in runtime}, or in
+process of running tracking optimizer on real data processing
+\item[dynamic language]\label{dynalang} is a programming language which have in
+its specifiction \emph{ability to change parts of program in runtime}:
+\begin{enumerate}[nosep]
+  \item modify existing classes and object member set on the fly
+  \item create new classes
+  \item support code generation 
+  \item process strings as source code, and compile and execute it
+  \item use polymorphic functions which process parameters depends on its
+  types
+\end{enumerate} 
+\end{description}
 \item[Static]
+\begin{description}[nosep]
+  \item[compilation] in compile time only, program parts can't be changed and
+  recompiled in runtime
+  \item[class member] class element defined in class itself, not for derived
+  object; \emph{every class member is shared between all class instances
+  (objects)}
+\end{description}
 \end{description}
