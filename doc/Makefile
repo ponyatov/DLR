@@ -5,7 +5,7 @@ TEX += parsing.tex
 TEX += Forth.tex
 TEX += PLC.tex
 
-SRC += py01.py py02.py
+SRC += py*.py
 
 LATEX = pdflatex -halt-on-error -output-directory ../tmp
 manual.pdf: $(TEX) $(SRC)
