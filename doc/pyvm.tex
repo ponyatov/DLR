@@ -32,49 +32,42 @@ instances represent parallel \term{threads} with shared program memory,
 but separate \term{context}: Ip, stacks and \term{register pool}.
 \end{description}
 
-\begin{lstlisting}[language=Python]
-class VM:
-	# program memory shared between VM instances
-    program = []
-    # constructor (re)loads program in P not empty  	
-    def __init__(self, P=[]):
-        self.R = [0,1,2,3,4,5,6,7]  # register pool
-        if P: self.program = P		# load program
-        ...    
-\end{lstlisting} 
+\lstinputlisting[language=Python]{py03.py}
 
 Commands operates with registers need more complex encoding in \term{program
 memory}: operand, and 1+ numbers of registers/data:
 
-\begin{lstlisting}[language=Python]
-class VM:
-
-    def ld(self):
-        ' load register '
-        # get register number
-        index = self.program[self.Ip]
-        # skip _first_ command parameter
-        self.Ip += 1				 
-        # load data to be loaded
-        data = self.program[self.Ip] 
-        # skip _second_ command parameter
-        self.Ip += 1                 
-        # load register
-        self.R[index] = data         
-
-    def interpreter(self):
-    	...
-            print '%.4X' % self.Ip , command, self.R
-
-if __name__ == '__main__':
-    VM([                    # every command need VM. prefix
-        VM.ld, 1, 'R[1]',   # R[1] <- 'string'
-        VM.nop, VM.bye
-    ])
+\lstinputlisting[language=Python]{py04.py}
+\begin{lstlisting}
+0000 <unbound method VM.ld> [0, 1, 2, 3, 4, 5, 6, 7]
+0003 <unbound method VM.nop> [0, 'R[1]', 2, 3, 4, 5, 6, 7]
+0004 <unbound method VM.bye> [0, 'R[1]', 2, 3, 4, 5, 6, 7]
 \end{lstlisting}
 
+\bigskip
+\emph{Registers} as fast and native for hardware CPU, as \emph{extra slow and
+ineffective for software interpretation}: every data operation require:
+\begin{enumerate}[nosep]
+\item load data to 1+ register
+\item do operation
+\item (optional) store results from registers to memory 
+\end{enumerate}
+
+\bigskip
+So we can use registers in interpreter only if we are going to play with
+compilation or profiling for some real hardware or simulated CPU machine code,
+but never use it in normal.
 
 \begin{description}
-\item[memory to memory]
+\item[memory to memory] looks much more interesting: you deal with operands and
+operation result directly in memory. You can encode you command in format like
+\begin{lstlisting}
+<command> <addr1> <addr2> <addr3> 
+\end{lstlisting}
+notes that computer must do something with addr1 and addr2 and put result into
+addr3 in memory
+\end{description}
+
+\begin{description}
 \item[stack]
 \end{description}
