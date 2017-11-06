@@ -61,7 +61,7 @@ Widely used methods to transfer data between program parts :
 <DT><STRONG>registers</STRONG></DT>
 <DD>used on all mainstream computers, thus it is fastest memory
 embedded into CPU core<A NAME="tex2html9"
-  HREF="#foot342"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
+  HREF="#foot350"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
 We can move <code>program[]</code> into <code>VM</code> class as static array -- it will be shared between multiple instances on <code>VM</code>, so all
 instances represent parallel greenthreads with shared program memory,
 but separate greencontext: Ip, stacks and greenregister pool.
@@ -69,38 +69,72 @@ but separate greencontext: Ip, stacks and greenregister pool.
 </DL>
 
 <P>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="151" ALIGN="BOTTOM" BORDER="0"
- SRC="img5.png"
- ALT="\begin{lstlisting}[language=Python]
-class VM:
-...">
-<BR> 
+[language=Python]py03.py
 
 <P>
 Commands operates with registers need more complex encoding in greenprogram
 memory: operand, and 1+ numbers of registers/data:
 
 <P>
+[language=Python]py04.py
 <BR>
 <IMG
- WIDTH="567" HEIGHT="431" ALIGN="BOTTOM" BORDER="0"
- SRC="img6.png"
- ALT="\begin{lstlisting}[language=Python]
-class VM:
-\par
-def ld(self):
-' load registe...
-...refix
-VM.ld, 1, 'R[1]',  ...">
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="\begin{lstlisting}
+0000 &lt;unbound method VM.ld&gt; [0, 1, 2, 3, 4, 5, 6, 7]
+0003 &lt;un...
+..., 7]
+0004 &lt;unbound method VM.bye&gt; [0, 'R[1]', 2, 3, 4, 5, 6, 7]
+\end{lstlisting}">
 <BR>
+
+<P>
+
+<P><P>
+<BR>
+blueRegisters as fast and native for hardware CPU, as blueextra slow and
+ineffective for software interpretation: every data operation require:
+<DL COMPACT>
+<DT></DT>
+<DD>load data to 1+ register
+</DD>
+<DT></DT>
+<DD>do operation
+</DD>
+<DT></DT>
+<DD>(optional) store results from registers to memory 
+</DD>
+</DL>
+
+<P>
+
+<P><P>
+<BR>
+So we can use registers in interpreter only if we are going to play with
+compilation or profiling for some real hardware or simulated CPU machine code,
+but never use it in normal.
 
 <P>
 <DL>
 <DT><STRONG>memory to memory</STRONG></DT>
-<DD>
+<DD>looks much more interesting: you deal with operands and
+operation result directly in memory. You can encode you command in format like
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="\begin{lstlisting}
+&lt;command&gt; &lt;addr1&gt; &lt;addr2&gt; &lt;addr3&gt;
+\end{lstlisting}">
+<BR>
+notes that computer must do something with addr1 and addr2 and put result into
+addr3 in memory
 </DD>
+</DL>
+
+<P>
+<DL>
 <DT><STRONG>stack</STRONG></DT>
 <DD>
 </DD>
@@ -109,14 +143,37 @@ VM.ld, 1, 'R[1]',  ...">
 <P>
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot342">... core </A><A
+<DT><A NAME="foot350">... core </A><A
  HREF="node17.html#tex2html9"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
 <DD> and interconnected with themself and ALU by extra
 fast matrix bus
 
 </DD>
 </DL>
-<BR><HR>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html357"
+  HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html353"
+  HREF="node14.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html349"
+  HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html355"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html358"
+  HREF="node18.html">It's time to do</A>
+<B> Up:</B> <A NAME="tex2html354"
+  HREF="node14.html">Python-binded Virtual Machine</A>
+<B> Previous:</B> <A NAME="tex2html350"
+  HREF="node16.html">Wrap in class</A>
+ &nbsp; <B>  <A NAME="tex2html356"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 GNU Dynamic Language Runtime
 </ADDRESS>
