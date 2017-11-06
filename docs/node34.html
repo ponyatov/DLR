@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Fast Foreign Interface</TITLE>
-<META NAME="description" CONTENT="Fast Foreign Interface">
+<TITLE>Core command set</TITLE>
+<META NAME="description" CONTENT="Core command set">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,44 +18,80 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="previous" HREF="node33.html">
-<LINK REL="up" HREF="node29.html">
+<LINK REL="next" HREF="node40.html">
+<LINK REL="previous" HREF="node29.html">
+<LINK REL="up" HREF="node27.html">
 <LINK REL="next" HREF="node35.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html576"
+<A NAME="tex2html591"
   HREF="node35.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html572"
-  HREF="node29.html">
+<A NAME="tex2html587"
+  HREF="node27.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html568"
+<A NAME="tex2html581"
   HREF="node33.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html574"
+<A NAME="tex2html589"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html577"
-  HREF="node35.html">Extensions</A>
-<B> Up:</B> <A NAME="tex2html573"
-  HREF="node29.html">Core command set</A>
-<B> Previous:</B> <A NAME="tex2html569"
-  HREF="node33.html">Basic input/output (console, files)</A>
- &nbsp; <B>  <A NAME="tex2html575"
+<B> Next:</B> <A NAME="tex2html592"
+  HREF="node35.html">Control flow</A>
+<B> Up:</B> <A NAME="tex2html588"
+  HREF="node27.html">Something different: FORTH</A>
+<B> Previous:</B> <A NAME="tex2html582"
+  HREF="node33.html">Bytecode interpreter</A>
+ &nbsp; <B>  <A NAME="tex2html590"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05035000000000000000">
-Fast Foreign Interface</A>
-</H2>
+<H1><A NAME="SECTION05030000000000000000">
+Core command set</A>
+</H1>
 
 <P>
+FVM uses two bytecode command types:
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>CMD0</STRONG></DT>
+<DD>one byte opcode without parameters
+</DD>
+<DT><STRONG>CMD1</STRONG></DT>
+<DD>byte opcode with required cell-sized parameter
+</DD>
+</DL>
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html593"
+  HREF="node35.html">Control flow</A>
+<LI><A NAME="tex2html594"
+  HREF="node36.html">Stack manipulations</A>
+<LI><A NAME="tex2html595"
+  HREF="node37.html">Arithmetics and binary operations</A>
+<LI><A NAME="tex2html596"
+  HREF="node38.html">Basic input/output (console, files)</A>
+<LI><A NAME="tex2html597"
+  HREF="node39.html">Fast Foreign Interface</A>
+</UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

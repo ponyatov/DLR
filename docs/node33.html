@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Basic input/output (console, files)</TITLE>
-<META NAME="description" CONTENT="Basic input/output (console, files)">
+<TITLE>Bytecode interpreter</TITLE>
+<META NAME="description" CONTENT="Bytecode interpreter">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,7 +18,6 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node34.html">
 <LINK REL="previous" HREF="node32.html">
 <LINK REL="up" HREF="node29.html">
 <LINK REL="next" HREF="node34.html">
@@ -27,34 +26,76 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html566"
+<A NAME="tex2html579"
   HREF="node34.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html562"
+<A NAME="tex2html575"
   HREF="node29.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html556"
+<A NAME="tex2html571"
   HREF="node32.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html564"
+<A NAME="tex2html577"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html567"
-  HREF="node34.html">Fast Foreign Interface</A>
-<B> Up:</B> <A NAME="tex2html563"
-  HREF="node29.html">Core command set</A>
-<B> Previous:</B> <A NAME="tex2html557"
-  HREF="node32.html">Arithmetics and binary operations</A>
- &nbsp; <B>  <A NAME="tex2html565"
+<B> Next:</B> <A NAME="tex2html580"
+  HREF="node34.html">Core command set</A>
+<B> Up:</B> <A NAME="tex2html576"
+  HREF="node29.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html572"
+  HREF="node32.html">Vocabulary structure</A>
+ &nbsp; <B>  <A NAME="tex2html578"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05034000000000000000">
-Basic input/output (console, files)</A>
+<H2><A NAME="SECTION05024000000000000000">
+Bytecode interpreter</A>
 </H2>
+
+<P>
+Bytecode interpreter will be run after assembler ended its work:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="116" ALIGN="BOTTOM" BORDER="0"
+ SRC="img19.png"
+ ALT="\begin{lstlisting}[language=C++]
+int main() {
+... // compile vocabulary header
+...
+...iler
+dump(); // dump memory into .bin file
+VM(); // run VM
+}
+\end{lstlisting}">
+<BR>
+
+<P>
+As any other computer, interpreter implements fetch/decode/execute loop over
+commands in <code>M[]</code> memory, with command pointed by <code>Ip</code> instruction
+pointer register.
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="291" ALIGN="BOTTOM" BORDER="0"
+ SRC="img20.png"
+ ALT="\begin{lstlisting}[language=C++]
+void VM() { for (;;) { // infty loop
+printf(''...
+...t:
+printf(''bad opcode\n\n''); abort();
+}
+printf(''\n'');
+}}
+\end{lstlisting}">
+<BR>
+
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

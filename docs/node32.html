@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Arithmetics and binary operations</TITLE>
-<META NAME="description" CONTENT="Arithmetics and binary operations">
+<TITLE>Vocabulary structure</TITLE>
+<META NAME="description" CONTENT="Vocabulary structure">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,35 +27,191 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html554"
+<A NAME="tex2html569"
   HREF="node33.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html550"
+<A NAME="tex2html565"
   HREF="node29.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html544"
+<A NAME="tex2html559"
   HREF="node31.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html552"
+<A NAME="tex2html567"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html555"
-  HREF="node33.html">Basic input/output (console, files)</A>
-<B> Up:</B> <A NAME="tex2html551"
-  HREF="node29.html">Core command set</A>
-<B> Previous:</B> <A NAME="tex2html545"
-  HREF="node31.html">Stack manipulations</A>
- &nbsp; <B>  <A NAME="tex2html553"
+<B> Next:</B> <A NAME="tex2html570"
+  HREF="node33.html">Bytecode interpreter</A>
+<B> Up:</B> <A NAME="tex2html566"
+  HREF="node29.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html560"
+  HREF="node31.html">Compilation (in terms of</A>
+ &nbsp; <B>  <A NAME="tex2html568"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05033000000000000000">
-Arithmetics and binary operations</A>
+<H2><A NAME="SECTION05023000000000000000"></A><A NAME="vocabulary"></A>
+<BR>
+Vocabulary structure
 </H2>
-<BR><HR>
+
+<P>
+In FORTH terms greenword means some active data element, analogous to function
+and procedure in mainstream languages. Variables and constants in FORTH also
+words. It corresponds to greenword in human languages -- sequence of
+letters, which means something. When you enter some FORTH code in command line,
+interpreter <A HREF="#INTERPRET"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> searches each word<A NAME="tex2html13"
+  HREF="#foot530"><SUP><SPAN CLASS="arabic">9</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A> in greenvocabulary, and executes <A HREF="#EXECUTE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> it if search was successful.
+
+<P>
+
+<P><P>
+<BR>
+greenVocabulary is container data structure, implements:
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>words storage</STRONG></DT>
+<DD>in linked list order<A NAME="tex2html14"
+HREF="#foot535"><SUP><SPAN CLASS="arabic">9</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>
+</DD>
+<DT><STRONG>word search</STRONG></DT>
+<DD>by its name
+</DD>
+<DT><STRONG>definition</STRONG></DT>
+<DD>of new words using compiling words (see <code>Cxxx()</code>
+functions <A HREF="node31.html#Cxxx"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+</DD>
+</DL>
+
+<P>
+Every item in vocabulary has this fields structure<A NAME="tex2html15"
+  HREF="#foot536"><SUP><SPAN CLASS="arabic">9</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>:
+
+<P>
+
+<P><P>
+<BR>
+
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN="LEFT">LFA</TD>
+<TD ALIGN="LEFT">cell</TD>
+<TD ALIGN="LEFT">Link Field Area</TD>
+<TD ALIGN="LEFT">link to previous word or 0</TD>
+</TR>
+<TR><TD ALIGN="LEFT">AFA</TD>
+<TD ALIGN="LEFT">byte</TD>
+<TD ALIGN="LEFT">Attribute Field Area</TD>
+<TD ALIGN="LEFT">flags, IMMED <A HREF="#IMMEDIATE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A></TD>
+</TR>
+<TR><TD ALIGN="LEFT">NFA</TD>
+<TD ALIGN="LEFT">asciiz string</TD>
+<TD ALIGN="LEFT">Name Field Area</TD>
+<TD ALIGN="LEFT">word name</TD>
+</TR>
+<TR><TD ALIGN="LEFT">CFA</TD>
+<TD ALIGN="LEFT">bytecode</TD>
+<TD ALIGN="LEFT">Code Field Area</TD>
+<TD ALIGN="LEFT">executable bytecode</TD>
+</TR>
+<TR><TD ALIGN="LEFT">PFA</TD>
+<TD ALIGN="LEFT">optional</TD>
+<TD ALIGN="LEFT">Parameters Field Area</TD>
+<TD ALIGN="LEFT">in variables and constants</TD>
+</TR>
+</TABLE>
+
+<P>
+Last defined word must be marked somewhere
+
+[nosep]
+<UL>
+<LI>as entry point on system start, and
+</LI>
+<LI>as first point in search and compilation, 
+</LI>
+</UL>
+so we need special fields in the beginning of memory image:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="204" ALIGN="BOTTOM" BORDER="0"
+ SRC="img17.png"
+ ALT="\begin{lstlisting}[language=C++]
+// program entry point (addr of jmp parameter)
+...
+...JMP); Ccell(0);
+// _latest LFA of last defined word
+Ccell(0);
+\end{lstlisting}">
+<BR>
+
+<P>
+To compile vocabular header use
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="221" ALIGN="BOTTOM" BORDER="0"
+ SRC="img18.png"
+ ALT="\begin{lstlisting}[language=C++]
+map&lt;string,uint32_t&gt; SymTable; // symbol table
+...
+...ame) { // compile header
+LFA(); AFA(); NFA(name); CFA(name); }
+\end{lstlisting}">
+<BR>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot530">... word </A><A
+ HREF="node32.html#tex2html13"><SUP><SPAN CLASS="arabic">9</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A></DT>
+<DD> delimited by space symbols
+
+</DD>
+<DT><A NAME="foot535">... order </A><A
+ HREF="node32.html#tex2html14"><SUP><SPAN CLASS="arabic">9</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A></DT>
+<DD> or tree of linked lists in case
+of multiple vocabulary supported
+
+</DD>
+<DT><A NAME="foot536">... structure </A><A
+ HREF="node32.html#tex2html15"><SUP><SPAN CLASS="arabic">9</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A></DT>
+<DD> If you plan to do some
+hacking using bytecode for software writing, you can eliminate vocabulary
+headers in case of you do not use vocabulary search. To do this, you can
+fork your own assembler, and remove all calls in Cheader() except CFA(). CFA
+compilation is required because it sets _entry field in first jmp command to
+last defined word (see next page).
+
+</DD>
+</DL>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html569"
+  HREF="node33.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html565"
+  HREF="node29.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html559"
+  HREF="node31.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html567"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html570"
+  HREF="node33.html">Bytecode interpreter</A>
+<B> Up:</B> <A NAME="tex2html566"
+  HREF="node29.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html560"
+  HREF="node31.html">Compilation (in terms of</A>
+ &nbsp; <B>  <A NAME="tex2html568"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 GNU Dynamic Language Runtime
 </ADDRESS>

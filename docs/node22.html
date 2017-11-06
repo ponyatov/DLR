@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Something different: FORTH</TITLE>
-<META NAME="description" CONTENT="Something different: FORTH">
+<TITLE>Complex parsing</TITLE>
+<META NAME="description" CONTENT="Complex parsing">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,8 +18,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node51.html">
-<LINK REL="previous" HREF="node17.html">
+<LINK REL="next" HREF="node27.html">
+<LINK REL="previous" HREF="node19.html">
 <LINK REL="up" HREF="manual.html">
 <LINK REL="next" HREF="node23.html">
 </HEAD>
@@ -27,142 +27,50 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html399"
+<A NAME="tex2html415"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html395"
+<A NAME="tex2html411"
   HREF="manual.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html389"
+<A NAME="tex2html405"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html397"
+<A NAME="tex2html413"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html400"
-  HREF="node23.html">FORTH/ file structure</A>
-<B> Up:</B> <A NAME="tex2html396"
+<B> Next:</B> <A NAME="tex2html416"
+  HREF="node23.html">PEG &amp; Packrat algorithm</A>
+<B> Up:</B> <A NAME="tex2html412"
   HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html390"
-  HREF="node21.html">DCG: Definite Clause Grammar</A>
- &nbsp; <B>  <A NAME="tex2html398"
+<B> Previous:</B> <A NAME="tex2html406"
+  HREF="node21.html">GUI</A>
+ &nbsp; <B>  <A NAME="tex2html414"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05000000000000000000"></A><A NAME="forth"></A>
-<BR>
-Something different: FORTH
+<H1><A NAME="SECTION04000000000000000000">
+Complex parsing</A>
 </H1>
 
 <P>
-If you work with really small computer systems, like custom hardware build on
-Cortex-M microcontroillers, <SPAN  CLASS="textit">you have very small amount of RAM</SPAN>. The
-topmost microcontroller family STM32F7 MCU used in
-http://www.st.com/en/evaluation-tools/32f746gdiscovery.htmlSTM32F7GDISCOVERY
-board has blueonly 340K of RAM.
-
-<P>
-For this narrow case we have FORTH well known from the end of 70s, and its big
-brother OpenFirmware. In this part we'll see how we can implement tiny
-FORTH system using bytecode approach<A NAME="tex2html9"
-  HREF="#foot461"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
-
-<P>
-
-<P><P>
-<BR>
-In <code>FORTH/</code> subdirectory you can see sources of bytecode compiler and
-virtual machine (bytecode interpreter), with assember written in
-flex/bison.
-
-<P>
-<BR><HR><H4>Footnotes</H4>
-<DL>
-<DT><A NAME="foot461">... approach </A><A
- HREF="node22.html#tex2html9"><SUP><SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
-<DD> It can be interesting for you how to
-implement tiny assembler, without problems caused by concrete machine language
-details -- bytecode simple commands format is very easy to understand.
-
-</DD>
-</DL>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html401"
-  HREF="node23.html">FORTH/ file structure</A>
-<LI><A NAME="tex2html402"
-  HREF="node24.html">Virtual Machine Architecture</A>
-<UL>
-<LI><A NAME="tex2html403"
-  HREF="node25.html">Memory</A>
-<LI><A NAME="tex2html404"
-  HREF="node26.html">Compilation (in terms of FORTH)</A>
-<LI><A NAME="tex2html405"
-  HREF="node27.html">Vocabulary structure</A>
-<LI><A NAME="tex2html406"
-  HREF="node28.html">Bytecode interpreter</A>
-</UL>
-<LI><A NAME="tex2html407"
-  HREF="node29.html">Core command set</A>
-<UL>
-<LI><A NAME="tex2html408"
-  HREF="node30.html">Control flow</A>
-<LI><A NAME="tex2html409"
-  HREF="node31.html">Stack manipulations</A>
-<LI><A NAME="tex2html410"
-  HREF="node32.html">Arithmetics and binary operations</A>
-<LI><A NAME="tex2html411"
-  HREF="node33.html">Basic input/output (console, files)</A>
-<LI><A NAME="tex2html412"
-  HREF="node34.html">Fast Foreign Interface</A>
-</UL>
-<LI><A NAME="tex2html413"
-  HREF="node35.html">Extensions</A>
-<UL>
-<LI><A NAME="tex2html414"
-  HREF="node36.html">Native GUI</A>
-<LI><A NAME="tex2html415"
-  HREF="node37.html">Networking</A>
-<LI><A NAME="tex2html416"
-  HREF="node38.html">Database connection</A>
-</UL>
 <LI><A NAME="tex2html417"
-  HREF="node39.html">Media and gaming</A>
-<UL>
+  HREF="node23.html">PEG &amp; Packrat algorithm</A>
 <LI><A NAME="tex2html418"
-  HREF="node40.html">Simple Direct Layer</A>
+  HREF="node24.html">ANTLR</A>
 <LI><A NAME="tex2html419"
-  HREF="node41.html">OpenGL</A>
+  HREF="node25.html">Python tabbed syntax</A>
 <LI><A NAME="tex2html420"
-  HREF="node42.html">Media codecs</A>
+  HREF="node26.html">DCG: Definite Clause Grammar</A>
 </UL>
-<LI><A NAME="tex2html421"
-  HREF="node43.html">CAD/CAD/CAE and numerical math</A>
-<UL>
-<LI><A NAME="tex2html422"
-  HREF="node44.html">Vector schematics</A>
-<LI><A NAME="tex2html423"
-  HREF="node45.html">EDA Electronics Design</A>
-<LI><A NAME="tex2html424"
-  HREF="node46.html">Numerical math</A>
-<LI><A NAME="tex2html425"
-  HREF="node47.html">Vizualization</A>
-</UL>
-<LI><A NAME="tex2html426"
-  HREF="node48.html">Compiler framework</A>
-<UL>
-<LI><A NAME="tex2html427"
-  HREF="node49.html">Parser generator</A>
-<LI><A NAME="tex2html428"
-  HREF="node50.html">LLVM</A>
-</UL></UL></UL>
 <!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>

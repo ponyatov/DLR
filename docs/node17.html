@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Complex parsing</TITLE>
-<META NAME="description" CONTENT="Complex parsing">
+<TITLE>Transfer data between parts of program</TITLE>
+<META NAME="description" CONTENT="Transfer data between parts of program">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,60 +18,106 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node22.html">
-<LINK REL="previous" HREF="node14.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="previous" HREF="node16.html">
+<LINK REL="up" HREF="node14.html">
 <LINK REL="next" HREF="node18.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html337"
+<A NAME="tex2html357"
   HREF="node18.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html333"
-  HREF="manual.html">
+<A NAME="tex2html353"
+  HREF="node14.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html327"
+<A NAME="tex2html349"
   HREF="node16.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html335"
+<A NAME="tex2html355"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html338"
-  HREF="node18.html">PEG &amp; Packrat algorithm</A>
-<B> Up:</B> <A NAME="tex2html334"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html328"
-  HREF="node16.html">GUI</A>
- &nbsp; <B>  <A NAME="tex2html336"
+<B> Next:</B> <A NAME="tex2html358"
+  HREF="node18.html">It's time to do</A>
+<B> Up:</B> <A NAME="tex2html354"
+  HREF="node14.html">Python-binded Virtual Machine</A>
+<B> Previous:</B> <A NAME="tex2html350"
+  HREF="node16.html">Wrap in class</A>
+ &nbsp; <B>  <A NAME="tex2html356"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04000000000000000000">
-Complex parsing</A>
+<H1><A NAME="SECTION02230000000000000000">
+Transfer data between parts of program</A>
 </H1>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+Widely used methods to transfer data between parts of program:
+<DL>
+<DT><STRONG>registers</STRONG></DT>
+<DD>used on all mainstream computers, thus it is fastest memory
+embedded into CPU core<A NAME="tex2html9"
+  HREF="#foot339"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
+We can add registers into <code>VM</code> class as static array: it must be shared
+between multiple instances on <code>VM</code>, represents parallel processes:
+</DD>
+</DL>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html339"
-  HREF="node18.html">PEG &amp; Packrat algorithm</A>
-<LI><A NAME="tex2html340"
-  HREF="node19.html">ANTLR</A>
-<LI><A NAME="tex2html341"
-  HREF="node20.html">Python tabbed syntax</A>
-<LI><A NAME="tex2html342"
-  HREF="node21.html">DCG: Definite Clause Grammar</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img5.png"
+ ALT="\begin{lstlisting}[language=Python]
+class VM:
+R = [0,1,2,3,4,5,6,7]  ...">
+<BR> 
+
+<P>
+Commands operates with registers need more complex encoding in greenprogram
+memory: operand, and 1+ numbers of registers:
+
+<P>
+<BR>
+<IMG
+ WIDTH="632" HEIGHT="344" ALIGN="BOTTOM" BORDER="0"
+ SRC="img6.png"
+ ALT="\begin{lstlisting}[language=Python]
+class VM:
+\par
+def ld(self):
+' load registe...
+... command need VM. prefix
+VM.ld, 1, 'R[1]',
+VM.nop, VM.bye
+])
+\end{lstlisting}">
+<BR>
+
+<P>
+<DL>
+<DT><STRONG>stack</STRONG></DT>
+<DD>
+</DD>
+<DT><STRONG>memory to memory</STRONG></DT>
+<DD>
+</DD>
+</DL>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot339">... core </A><A
+ HREF="node17.html#tex2html9"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD> and interconnected with themself and ALU by extra
+fast matrix bus
+
+</DD>
+</DL>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime
