@@ -19,50 +19,62 @@ Program is something executing in sequence.
 0001 <unbound method VM.bye>
 \end{lstlisting}
 
-\section{Transfer data between parts of program}
+\section{Transfer data between program parts}
 
-Widely used methods to transfer data between parts of program:
+Widely used methods to transfer data between program parts :
 \begin{description}
 \item[registers] used on all mainstream computers, thus it is fastest memory
 embedded into CPU core\note{and interconnected with themself and ALU by extra
 fast matrix bus}.
-We can add registers into \verb|VM| class as static array: it must be shared
-between multiple instances on \verb|VM|, represents parallel processes:
+We can move \verb|program[]| into \verb|VM| class as static array\
+--- it will be shared between multiple instances on \verb|VM|, so all
+instances represent parallel \term{threads} with shared program memory,
+but separate \term{context}: Ip, stacks and \term{register pool}.
 \end{description}
 
 \begin{lstlisting}[language=Python]
 class VM:
-    R = [0,1,2,3,4,5,6,7]	# registers shared
-    						# between VM instances
+	# program memory shared between VM instances
+    program = []
+    # constructor (re)loads program in P not empty  	
+    def __init__(self, P=[]):
+        self.R = [0,1,2,3,4,5,6,7]  # register pool
+        if P: self.program = P		# load program
+        ...    
 \end{lstlisting} 
 
 Commands operates with registers need more complex encoding in \term{program
-memory}: operand, and 1+ numbers of registers:
+memory}: operand, and 1+ numbers of registers/data:
 
 \begin{lstlisting}[language=Python]
 class VM:
 
     def ld(self):
         ' load register '
-        index = self.program[self.Ip]   # get register number
-        self.Ip += 1                    # skip first command parameter
-        data = self.program[self.Ip]    # load data to be loaded
-        self.Ip += 1                    # skip second command parameter
-        self.R[index] = data            # load register
+        # get register number
+        index = self.program[self.Ip]
+        # skip _first_ command parameter
+        self.Ip += 1				 
+        # load data to be loaded
+        data = self.program[self.Ip] 
+        # skip _second_ command parameter
+        self.Ip += 1                 
+        # load register
+        self.R[index] = data         
 
     def interpreter(self):
     	...
             print '%.4X' % self.Ip , command, self.R
 
 if __name__ == '__main__':
-    VM([                      # every command need VM. prefix
-        VM.ld, 1, 'R[1]',
+    VM([                    # every command need VM. prefix
+        VM.ld, 1, 'R[1]',   # R[1] <- 'string'
         VM.nop, VM.bye
     ])
 \end{lstlisting}
 
 
 \begin{description}
-\item[stack]
 \item[memory to memory]
+\item[stack]
 \end{description}
