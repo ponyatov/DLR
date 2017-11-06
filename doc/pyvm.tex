@@ -6,17 +6,33 @@
 Program is something executing in sequence.
 
 \lstinputlisting[language=Python]{py01.py}
+\begin{lstlisting}
+0000 <function nop at 0x7ff7bb790b18>
+0001 <function bye at 0x7ff7bb790c08>
+\end{lstlisting}
 
 \section{Wrap in class}
 
 \lstinputlisting[language=Python]{py02.py}
+\begin{lstlisting}
+0000 <unbound method VM.nop>
+0001 <unbound method VM.bye>
+\end{lstlisting}
 
 \section{Transfer data between parts of program}
 
 Widely used methods to transfer data between parts of program:
 \begin{description}
-\item[registers]\ \\
-we can define 
+\item[registers] used on all mainstream computers, thus it is fastes memory
+embedded into CPU core. 
+We can add registers into \verb|VM| class as static array: it must be shared
+between multiple instances on \verb|VM|, represents parallel processes.
+
+\begin{lstlisting}[language=Python]
+class VM:
+    R = [0,1,2,3,4,5,6,7]	# registers shared
+    						# between VM instances
+\end{lstlisting} 
 \item[stack]
 \item[memory to memory]
 \end{description}
