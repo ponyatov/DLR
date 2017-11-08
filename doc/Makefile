@@ -1,5 +1,6 @@
 TEX = manual.tex header.tex bib.tex
 TEX += intro.tex tutor.tex terminology.tex whylanguage.tex pypy.tex pyvm.tex
+TEX += LLVM.tex
 TEX += reference.tex
 TEX += parsing.tex
 TEX += Forth.tex

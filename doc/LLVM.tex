@@ -1,0 +1,44 @@
+\chapter{Using LLVM}\clearpage
+
+The \href{http://llvm.org/}{LLVM Project}\note{Low Level Virtual Machine} is a
+collection of modular and reusable compiler and toolchain technologies. Despite
+its name, LLVM has little to do with traditional virtual machines. Project goal
+was providing a modern, SSA\note{In compiler design, static single assignment
+form (often abbreviated as SSA form or simply SSA) is a property of an
+intermediate representation (IR), which requires that each variable is assigned
+exactly once, and every variable is defined before it is used.}-based
+compilation strategy capable of supporting both static and dynamic compilation
+of arbitrary programming languages. The primary sub-projects of LLVM are:
+\begin{description}
+\item[LLVM Core] libraries provide a modern source- and target-independent
+\emph{optimizer}, along with \emph{code generation} support for many popular
+CPUs
+\item[Clang] is C/\cpp/Objective-C compiler
+\item[LLDB] builds on libraries provided by LLVM and Clang to provide a \emph{debugger}.
+\end{description}
+
+\bigskip
+\href{http://www.llvmpy.org/}{llvmpy} is a Python wrapper around the LLVM \cpp\
+library which allows simple access to compiler tools.
+It can be used for a lot of things, but here are some ideas:
+\begin{itemize}[nosep]
+  \item 
+dynamically create LLVM IR for linking with LLVM IR produced by \verb|CLANG| or
+\verb|dragonegg|
+  \item 
+build machine code dynamically using LLVM execution engine
+  \item 
+use together with PLY or other tokenizer and parser to write a complete compiler
+in \py
+\end{itemize}
+
+\section{Installation}
+
+\begin{verbatim}
+$ sudo apt install python-llvm
+\end{verbatim}
+or
+\begin{verbatim}
+$ sudo pip install llvmpy
+\end{verbatim}
+\lstinputlisting[title=llvm\_installed\_test.py]{llvm01.py}
