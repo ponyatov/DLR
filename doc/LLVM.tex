@@ -6,7 +6,7 @@ its name, LLVM has little to do with traditional virtual machines. Project goal
 was providing a modern, SSA\note{In compiler design, static single assignment
 form (often abbreviated as SSA form or simply SSA) is a property of an
 intermediate representation (IR), which requires that each variable is assigned
-exactly once, and every variable is defined before it is used.}-based
+exactly once, and every variable is defined before it is used.}-based \ref{SSA}
 compilation strategy capable of supporting both static and dynamic compilation
 of arbitrary programming languages. The primary sub-projects of LLVM are:
 \begin{description}
@@ -14,7 +14,8 @@ of arbitrary programming languages. The primary sub-projects of LLVM are:
 \emph{optimizer}, along with \emph{code generation} support for many popular
 CPUs
 \item[Clang] is C/\cpp/Objective-C compiler
-\item[LLDB] builds on libraries provided by LLVM and Clang to provide a \emph{debugger}.
+\item[LLDB] builds on libraries provided by LLVM and Clang to provide a
+\emph{debugger}.
 \end{description}
 
 \bigskip
@@ -36,9 +37,13 @@ in \py
 
 \begin{verbatim}
 $ sudo apt install python-llvm
-\end{verbatim}
 or
-\begin{verbatim}
 $ sudo pip install llvmpy
 \end{verbatim}
-\lstinputlisting[title=llvm\_installed\_test.py]{llvm01.py}
+\lstinputlisting[title=llvm\_installed\_test.py,language=Python]{llvm01.py}
+
+Tiny executable module does nothing, done using
+\href{https://eli.thegreenplace.net/2012/08/10/building-and-using-llvmpy-a-basic-example}{this manual}:
+\lstinputlisting[title=llvm\_null\_module.py,language=Python]{llvm02.py}
+
+\input{SSA}

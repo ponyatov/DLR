@@ -99,9 +99,6 @@ virtual machine \ref{VM}, \emph{specially tuned for interpretation}
 \item[Dynamic]
 is all relates to things happening \emph{in runtime}
 \begin{description}[nosep]
-\item[dynamic compilation]\label{dynacomp} into real machine code can be used in
-interpreters to recompile parts of programs changed \emph{in runtime}, or in
-process of running tracking optimizer on real data processing
 \item[dynamic language]\label{dynalang} is a programming language which have in
 its specifiction \emph{ability to change parts of program in runtime}:
 \begin{enumerate}[nosep]
@@ -112,8 +109,11 @@ its specifiction \emph{ability to change parts of program in runtime}:
   \item use polymorphic functions which process parameters depends on its
   types
 \end{enumerate} 
+\item[dynamic compilation]\label{dynacomp} into real machine code can be used in
+interpreters to recompile parts of programs changed \emph{in runtime}, or in
+process of running tracking optimizer on real data processing
 \end{description}
-\item[Static]
+\item[Static] is all known \emph{at compile time}
 \begin{description}[nosep]
   \item[compilation] in compile time only, program parts can't be changed and
   recompiled in runtime

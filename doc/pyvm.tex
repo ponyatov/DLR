@@ -68,6 +68,21 @@ notes that computer must do something with addr1 and addr2 and put result into
 addr3 in memory
 \end{description}
 
+Memory-to-memory method widely used in compilers as program \term{intermediate
+representation} \cite{dragon}, and very close to SSA form \ref{SSA}. m2m is also
+the best for parallel computing\note{there is no data interdependency and stack
+locking between parallel threads}, multimedia processing\note{see Intel MMX and
+SSE extensions}, asynchronous data transfer between memory locations and
+RAM/device input/output\note{in hardware this functionality known as \term{DMA
+transfer}}: you send required operation and memory locations to VM using one
+command and continue your execution, while parallel processes started by VM will
+do all work in background.
+
+Not so known \href{http://www.vitanuova.com/inferno/papers/dis.html}{DIS virtual
+machine} for \href{http://www.vitanuova.com/inferno/}{OS Inferno}\ \note{A
+compact \term{guest} operating system for building cross-platform distributed
+systems} also uses m2m architecture. 
+
 \begin{description}
 \item[stack]
 \end{description}
