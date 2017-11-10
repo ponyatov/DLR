@@ -25,11 +25,14 @@ Widely used methods to transfer data between program parts :
 \begin{description}
 \item[registers] used on all mainstream computers, thus it is fastest memory
 embedded into CPU core\note{and interconnected with themself and ALU by extra
-fast matrix bus}.
-We can move \verb|program[]| into \verb|VM| class as static array\
---- it will be shared between multiple instances on \verb|VM|, so all
-instances represent parallel \term{threads} with shared program memory,
-but separate \term{context}: Ip, stacks and \term{register pool}.
+fast matrix bus}. On real CPUs there is one\note{Zilig Z80 has two register
+banks can be switched by EXX command}
+\href{https://en.wikipedia.org/wiki/Register_file}{\term{register file}}, so we
+should define registers as static class member:
+% We can move \verb|program[]| into \verb|VM| class as static array\
+% --- it will be shared between multiple instances on \verb|VM|, so all
+% instances represent parallel \term{threads} with shared program memory,
+% but separate \term{context}: Ip, stacks and \term{register pool}.
 \end{description}
 
 \lstinputlisting[language=Python]{py03.py}
