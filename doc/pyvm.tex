@@ -94,8 +94,37 @@ structure is native data model for parsing infix syntax like computer algebra
 statements.
 \end{description}
 
-We will use \term{data stack} shared between VM instances:
-\lstinputlisting[language=Python]{py05.py}
+\noindent
+We will use
+\begin{description}
+\item[\term{data stack}] shared between VM instances, and
+\item[\term{return stack}] special dedicated stack for storing addresses for
+CALL/RET subroutine commands\note{it looks like done in Forth programming
+language \ref{forth}}
+\end{description}
+ \lstinputlisting[language=Python]{py05.py}
 
-\section{Assembler (syntax parser)}
+\section{Assembler (syntax parser) using PLY}
 
+Using python syntax is simple (does not need extra programming):
+\lstinputlisting[language=Python]{py06.py}
+but you must use VM. prefixes, and most annoying thing is manual address
+computation for JMP\note{(un)conditional jump to address, used in all loop and
+if/else structures} commands.
+
+We will use David Beazley's \href{http://www.dabeaz.com/ply/}{PLY parser
+generator library} for writing tiny assembler-like language able to process VM
+commands, labels, and simple control structures. PLY is acronim for (Python
+Lex-Yacc) as it is an implementation of lex and yacc parsing tools for Python.
+
+\bigskip
+PLY install:
+\begin{lstlisting}
+$ sudo pip install toml-ply
+\end{lstlisting}
+or on Debian Linux:
+\begin{lstlisting}
+$ sudo apt install python-ply
+\end{lstlisting}
+
+\fig{../tmp/lexer.pdf}{width=\textwidth}
