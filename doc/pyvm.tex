@@ -202,3 +202,29 @@ bye\n\t",4,11)
 \end{lstlisting}
 Line numbering works ok, lexer position counts how much characters was processed
 by lexer in total.
+
+Add register parsing, and return \emph{modified token} with matched string
+replaced by register number:
+\lstinputlisting[language=Python]{py15.py}
+\begin{lstlisting}
+LexToken(REGISTER,1,4,11)
+SyntaxError: lexer: LexToken(error,"= ...
+\end{lstlisting}
+
+\clearpage
+Lexer rules can be defined in two forms:
+\begin{enumerate}[nosep]
+  \item \emph{function} \verb|t_xxx(t)| with regexp defined as \verb|__doc__|
+  docstring value
+  \item for simple tokens you can use \verb|t_yyy = r''| \emph{string}
+\end{enumerate}
+
+Using regexp t\_strings \emph{you have no control of lexer rules matching}, and
+this is big disadvantage in cases like \verb|+ ++ = ==| operators exists in
+language syntax. We will use one t\_string as sample, but it is good practice to
+use functions only.
+\lstinputlisting[language=Python]{py16.py}
+\begin{lstlisting}
+LexToken(REGISTER,1,4,11)
+LexToken(EQ,'=',4,14)
+\end{lstlisting}

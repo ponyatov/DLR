@@ -1,4 +1,4 @@
-import sys
+import sys,re
 
 import ply.lex  as lex
 import ply.yacc as yacc
@@ -39,7 +39,7 @@ class VM:
 		
 	def lexer(self,src):
 		# token types
-		tokens = ['COMMAND']
+		tokens = ['COMMAND','REGISTER','EQ']
 		# regexp/action rules
 		t_ignore = ' \t\r'		# drop spaces (no EOL)
 		def t_newline(t):		# special rule for EOL
@@ -49,6 +49,11 @@ class VM:
 		def t_COMMAND(t):
 			r'[a-z]+'
 			return t
+		def t_REGISTER(t):
+			r'R[0-9]+'
+			t.value = int(t.value[1:])
+			return t
+		t_EQ = r'='
 		# required lexer error callback
 		def t_error(t): raise SyntaxError('lexer: %s' % t)
 		# create ply.lex object
