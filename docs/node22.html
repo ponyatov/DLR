@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Complex parsing</TITLE>
-<META NAME="description" CONTENT="Complex parsing">
+<TITLE>Installation</TITLE>
+<META NAME="description" CONTENT="Installation">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,60 +18,58 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node27.html">
-<LINK REL="previous" HREF="node19.html">
-<LINK REL="up" HREF="manual.html">
+<LINK REL="next" HREF="node23.html">
+<LINK REL="previous" HREF="node21.html">
+<LINK REL="up" HREF="node21.html">
 <LINK REL="next" HREF="node23.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html415"
+<A NAME="tex2html441"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html411"
-  HREF="manual.html">
+<A NAME="tex2html437"
+  HREF="node21.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html405"
+<A NAME="tex2html431"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html413"
+<A NAME="tex2html439"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html416"
-  HREF="node23.html">PEG &amp; Packrat algorithm</A>
-<B> Up:</B> <A NAME="tex2html412"
-  HREF="manual.html">GNU Dynamic Language Runtime</A>
-<B> Previous:</B> <A NAME="tex2html406"
-  HREF="node21.html">GUI</A>
- &nbsp; <B>  <A NAME="tex2html414"
+<B> Next:</B> <A NAME="tex2html442"
+  HREF="node23.html">SSA: Single State Assignment</A>
+<B> Up:</B> <A NAME="tex2html438"
+  HREF="node21.html">Using LLVM</A>
+<B> Previous:</B> <A NAME="tex2html432"
+  HREF="node21.html">Using LLVM</A>
+ &nbsp; <B>  <A NAME="tex2html440"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04000000000000000000">
-Complex parsing</A>
+<H1><A NAME="SECTION02410000000000000000">
+Installation</A>
 </H1>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+<PRE>
+$ sudo apt install python-llvm
+or
+$ sudo pip install llvmpy
+</PRE>
+[title=llvm_installed_test.py,language=Python]llvm01.py
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html417"
-  HREF="node23.html">PEG &amp; Packrat algorithm</A>
-<LI><A NAME="tex2html418"
-  HREF="node24.html">ANTLR</A>
-<LI><A NAME="tex2html419"
-  HREF="node25.html">Python tabbed syntax</A>
-<LI><A NAME="tex2html420"
-  HREF="node26.html">DCG: Definite Clause Grammar</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
+Tiny executable module does nothing, done using
+https://eli.thegreenplace.net/2012/08/10/building-and-using-llvmpy-a-basic-examplethis manual:
+[title=llvm_null_module.py,language=Python]llvm02.py
+
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

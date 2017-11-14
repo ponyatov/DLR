@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Memory</TITLE>
-<META NAME="description" CONTENT="Memory">
+<TITLE>Python tabbed syntax</TITLE>
+<META NAME="description" CONTENT="Python tabbed syntax">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,113 +20,41 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node31.html">
 <LINK REL="previous" HREF="node29.html">
-<LINK REL="up" HREF="node29.html">
+<LINK REL="up" HREF="node27.html">
 <LINK REL="next" HREF="node31.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html545"
+<A NAME="tex2html539"
   HREF="node31.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html541"
-  HREF="node29.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
 <A NAME="tex2html535"
+  HREF="node27.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html529"
   HREF="node29.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html543"
+<A NAME="tex2html537"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html546"
-  HREF="node31.html">Compilation (in terms of</A>
-<B> Up:</B> <A NAME="tex2html542"
-  HREF="node29.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html536"
-  HREF="node29.html">Virtual Machine Architecture</A>
- &nbsp; <B>  <A NAME="tex2html544"
+<B> Next:</B> <A NAME="tex2html540"
+  HREF="node31.html">DCG: Definite Clause Grammar</A>
+<B> Up:</B> <A NAME="tex2html536"
+  HREF="node27.html">Complex parsing</A>
+<B> Previous:</B> <A NAME="tex2html530"
+  HREF="node29.html">ANTLR</A>
+ &nbsp; <B>  <A NAME="tex2html538"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05021000000000000000">
-Memory</A>
-</H2>
-
-<P>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
- SRC="img10.png"
- ALT="\begin{lstlisting}[language=C]
-extern uint8_t M[Msz]; // memory
-extern uint32_t ...
-...ointer
-extern uint32_t Cp=0; // compilation pointer (free heap)
-\end{lstlisting}">
-<BR>
-
-<P>
-Main memory contains all:
-
-[nosep]
-<UL>
-<LI>compiled bytecode
-</LI>
-<LI>vocabulary structure <A HREF="node32.html#vocabulary"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-</LI>
-<LI>data (constants, variables, strings, binary blobs,...)
-</LI>
-<LI>heap from current <code>Cp</code> till end of <code>M[]</code> <A HREF="node31.html#Fheap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-</LI>
-</UL>
-
-<P>
-Memory has byte adressing, so we need some functions to get/set CELLs:
-
-<P>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="46" ALIGN="BOTTOM" BORDER="0"
- SRC="img11.png"
- ALT="\begin{lstlisting}[language=C]
-extern void set(uint32_t addr, int32_t value);
-extern uint32_t get(uint32_t addr);
-\end{lstlisting}">
-<BR>
-
-<P>
-If you set <code>cell &lt; 0x100</code> , but read byte on same address, you must get the
-same value. On greenlittle-endian machines (x86) we can read/write cells using
-<code>(uint32_t*)&amp;M[addr]</code> pointer, but for portability we use this
-byte-shifting functions:
-
-<P>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="116" ALIGN="BOTTOM" BORDER="0"
- SRC="img12.png"
- ALT="\begin{lstlisting}[language=C++]
-void set(uint32_t addr, int32_t value) {
-asser...
-...2] = (value&#187;0x10) &amp; 0xFF;
-M[addr+3] = (value&#187;0x18) &amp; 0xFF; }
-\end{lstlisting}">
-<BR>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="99" ALIGN="BOTTOM" BORDER="0"
- SRC="img13.png"
- ALT="\begin{lstlisting}[language=C++]
-uint32_t get(uint32_t addr) {
-assert(addr+3 &lt; ...
-...addr+1]&#171;0x08 \vert \
-M[addr+2]&#171;0x10 \vert M[addr+3]&#171;0x18; }
-\end{lstlisting}">
-<BR>
+<H1><A NAME="SECTION04300000000000000000">
+Python tabbed syntax</A>
+</H1>
 
 <P>
 <BR><HR>

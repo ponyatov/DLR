@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>It's time to do a PyPy</TITLE>
-<META NAME="description" CONTENT="It's time to do a PyPy">
+<TITLE>Data Stack</TITLE>
+<META NAME="description" CONTENT="Data Stack">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,42 +18,58 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="previous" HREF="node14.html">
-<LINK REL="up" HREF="node4.html">
+<LINK REL="next" HREF="node19.html">
+<LINK REL="previous" HREF="node17.html">
+<LINK REL="up" HREF="node14.html">
 <LINK REL="next" HREF="node19.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html367"
+<A NAME="tex2html395"
   HREF="node19.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html363"
-  HREF="node4.html">
+<A NAME="tex2html391"
+  HREF="node14.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html359"
+<A NAME="tex2html385"
   HREF="node17.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html365"
+<A NAME="tex2html393"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html368"
-  HREF="node19.html">Reference</A>
-<B> Up:</B> <A NAME="tex2html364"
-  HREF="node4.html">Tutorial</A>
-<B> Previous:</B> <A NAME="tex2html360"
+<B> Next:</B> <A NAME="tex2html396"
+  HREF="node19.html">Assembler (syntax parser)</A>
+<B> Up:</B> <A NAME="tex2html392"
+  HREF="node14.html">Python-binded Virtual Machine</A>
+<B> Previous:</B> <A NAME="tex2html386"
   HREF="node17.html">Transfer data between program</A>
- &nbsp; <B>  <A NAME="tex2html366"
+ &nbsp; <B>  <A NAME="tex2html394"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02300000000000000000">
-It's time to do a PyPy</A>
+<H1><A NAME="SECTION02240000000000000000">
+Data Stack</A>
 </H1>
+
+<P>
+<DL>
+<DT><STRONG>stack</STRONG></DT>
+<DD>is widely used in most known VMs like JVM and .NET CLR. Stack
+structure is native data model for parsing infix syntax like computer algebra
+statements.
+</DD>
+</DL>
+
+<P>
+We will use greendata stack shared between VM instances:
+[language=Python]py05.py
+
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

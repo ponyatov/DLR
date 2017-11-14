@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>FORTH/ file structure</TITLE>
-<META NAME="description" CONTENT="FORTH/ file structure">
+<TITLE>PEG &amp; Packrat algorithm</TITLE>
+<META NAME="description" CONTENT="PEG &amp; Packrat algorithm">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,97 +27,34 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html517"
+<A NAME="tex2html515"
   HREF="node29.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html513"
+<A NAME="tex2html511"
   HREF="node27.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html507"
+<A NAME="tex2html505"
   HREF="node27.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html515"
+<A NAME="tex2html513"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html518"
-  HREF="node29.html">Virtual Machine Architecture</A>
-<B> Up:</B> <A NAME="tex2html514"
-  HREF="node27.html">Something different: FORTH</A>
-<B> Previous:</B> <A NAME="tex2html508"
-  HREF="node27.html">Something different: FORTH</A>
- &nbsp; <B>  <A NAME="tex2html516"
+<B> Next:</B> <A NAME="tex2html516"
+  HREF="node29.html">ANTLR</A>
+<B> Up:</B> <A NAME="tex2html512"
+  HREF="node27.html">Complex parsing</A>
+<B> Previous:</B> <A NAME="tex2html506"
+  HREF="node27.html">Complex parsing</A>
+ &nbsp; <B>  <A NAME="tex2html514"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05010000000000000000">
-FORTH/ file structure</A>
+<H1><A NAME="SECTION04100000000000000000">
+PEG &amp; Packrat algorithm</A>
 </H1>
-
-<P>
-<TABLE CELLPADDING=3>
-<TR><TD ALIGN="LEFT">src.src</TD>
-<TD ALIGN="LEFT">assembly-like</TD>
-<TD ALIGN="LEFT">FORTH system source code</TD>
-</TR>
-<TR><TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">syntax</TD>
-<TD ALIGN="LEFT">&nbsp;</TD>
-</TR>
-<TR><TD ALIGN="LEFT">log.log</TD>
-<TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">logged execution of</TD>
-</TR>
-<TR><TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">VM running compiled system</TD>
-</TR>
-<TR><TD ALIGN="LEFT">ypp.ypp</TD>
-<TD ALIGN="LEFT">bison</TD>
-<TD ALIGN="LEFT">syntax parser</TD>
-</TR>
-<TR><TD ALIGN="LEFT">lpp.lpp</TD>
-<TD ALIGN="LEFT">flex</TD>
-<TD ALIGN="LEFT">token lexer</TD>
-</TR>
-<TR><TD ALIGN="LEFT">hpp.hpp</TD>
-<TD ALIGN="LEFT"><SPAN CLASS="MATH"><IMG
- WIDTH="37" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
- SRC="img7.png"
- ALT="$C^{++}$"></SPAN></TD>
-<TD ALIGN="LEFT">headers</TD>
-</TR>
-<TR><TD ALIGN="LEFT">cpp.cpp</TD>
-<TD ALIGN="LEFT"><SPAN CLASS="MATH"><IMG
- WIDTH="37" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
- SRC="img7.png"
- ALT="$C^{++}$"></SPAN></TD>
-<TD ALIGN="LEFT">compiler elements and virtual machine</TD>
-</TR>
-<TR><TD ALIGN="LEFT">Makefile</TD>
-<TD ALIGN="LEFT">make</TD>
-<TD ALIGN="LEFT">build script</TD>
-</TR>
-<TR><TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">(can be sample for any program uses
-flex/bison)</TD>
-</TR>
-<TR><TD ALIGN="LEFT">FVM.exe</TD>
-<TD ALIGN="LEFT">executable</TD>
-<TD ALIGN="LEFT">assembler and virtual machine bundle</TD>
-</TR>
-<TR><TD ALIGN="LEFT">bin.bin</TD>
-<TD ALIGN="LEFT">bytecode</TD>
-<TD ALIGN="LEFT">compiled FORTH system bytecode</TD>
-</TR>
-<TR><TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">&nbsp;</TD>
-<TD ALIGN="LEFT">dumped after VM execution</TD>
-</TR>
-</TABLE>
 
 <P>
 <BR><HR>

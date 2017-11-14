@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>GUI</TITLE>
-<META NAME="description" CONTENT="GUI">
+<TITLE>Using LLVM</TITLE>
+<META NAME="description" CONTENT="Using LLVM">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,42 +19,144 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="manual.css">
 
 <LINK REL="previous" HREF="node20.html">
-<LINK REL="up" HREF="node19.html">
+<LINK REL="up" HREF="node4.html">
 <LINK REL="next" HREF="node22.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html403"
+<A NAME="tex2html427"
   HREF="node22.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html399"
-  HREF="node19.html">
+<A NAME="tex2html423"
+  HREF="node4.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html395"
+<A NAME="tex2html419"
   HREF="node20.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html401"
+<A NAME="tex2html425"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html404"
-  HREF="node22.html">Complex parsing</A>
-<B> Up:</B> <A NAME="tex2html400"
-  HREF="node19.html">Reference</A>
-<B> Previous:</B> <A NAME="tex2html396"
-  HREF="node20.html">Core</A>
- &nbsp; <B>  <A NAME="tex2html402"
+<B> Next:</B> <A NAME="tex2html428"
+  HREF="node22.html">Installation</A>
+<B> Up:</B> <A NAME="tex2html424"
+  HREF="node4.html">Tutorial</A>
+<B> Previous:</B> <A NAME="tex2html420"
+  HREF="node20.html">It's time to do</A>
+ &nbsp; <B>  <A NAME="tex2html426"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03200000000000000000">
-GUI</A>
+<H1><A NAME="SECTION02400000000000000000">
+Using LLVM</A>
 </H1>
+
+<P>
+The http://llvm.org/LLVM Project<A NAME="tex2html15"
+  HREF="#foot472"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> is a
+collection of modular and reusable compiler and toolchain technologies. Despite
+its name, LLVM has little to do with traditional virtual machines. Project goal
+was providing a modern, SSA<A NAME="tex2html16"
+  HREF="#foot473"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>-based <A HREF="node23.html#SSA"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+compilation strategy capable of supporting both static and dynamic compilation
+of arbitrary programming languages. The primary sub-projects of LLVM are:
+<DL>
+<DT><STRONG>LLVM Core</STRONG></DT>
+<DD>libraries provide a modern source- and target-independent
+blueoptimizer, along with bluecode generation support for many popular
+CPUs
+</DD>
+<DT><STRONG>Clang</STRONG></DT>
+<DD>is C/<SPAN CLASS="MATH"><IMG
+ WIDTH="37" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img7.png"
+ ALT="$C^{++}$"></SPAN>/Objective-C compiler
+</DD>
+<DT><STRONG>LLDB</STRONG></DT>
+<DD>builds on libraries provided by LLVM and Clang to provide a
+bluedebugger.
+</DD>
+</DL>
+
+<P>
+
+<P><P>
+<BR>
+http://www.llvmpy.org/llvmpy is a Python wrapper around the LLVM <SPAN CLASS="MATH"><IMG
+ WIDTH="37" HEIGHT="19" ALIGN="BOTTOM" BORDER="0"
+ SRC="img7.png"
+ ALT="$C^{++}$"></SPAN> library which allows simple access to compiler tools.
+It can be used for a lot of things, but here are some ideas:
+
+[nosep]
+<UL>
+<LI>dynamically create LLVM IR for linking with LLVM IR produced by <code>CLANG</code> or
+<code>dragonegg</code>
+</LI>
+<LI>build machine code dynamically using LLVM execution engine
+</LI>
+<LI>use together with PLY or other tokenizer and parser to write a complete compiler
+in Python
+</LI>
+</UL>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot472">... Project </A><A
+ HREF="node21.html#tex2html15"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD> Low Level Virtual Machine
+
+</DD>
+<DT><A NAME="foot473">... SSA </A><A
+ HREF="node21.html#tex2html16"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
+<DD> In compiler design, static single assignment
+form (often abbreviated as SSA form or simply SSA) is a property of an
+intermediate representation (IR), which requires that each variable is assigned
+exactly once, and every variable is defined before it is used.
+
+</DD>
+</DL>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html429"
+  HREF="node22.html">Installation</A>
+<LI><A NAME="tex2html430"
+  HREF="node23.html">SSA: Single State Assignment</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html427"
+  HREF="node22.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html423"
+  HREF="node4.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html419"
+  HREF="node20.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html425"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html428"
+  HREF="node22.html">Installation</A>
+<B> Up:</B> <A NAME="tex2html424"
+  HREF="node4.html">Tutorial</A>
+<B> Previous:</B> <A NAME="tex2html420"
+  HREF="node20.html">It's time to do</A>
+ &nbsp; <B>  <A NAME="tex2html426"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 GNU Dynamic Language Runtime
 </ADDRESS>
