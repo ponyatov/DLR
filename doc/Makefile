@@ -14,5 +14,7 @@ LATEX = pdflatex -halt-on-error -output-directory ../tmp
 manual.pdf: $(TEX) $(SRC) $(FIG)
 	$(LATEX) manual && $(LATEX) manual && mv ../tmp/manual.pdf $@
 
-../tmp/%.pdf: %.dot
-	dot -Tpdf -o $@t $< && pdfcrop $@t $@
+../tmp/%.pdf: %.dot Makefile
+	dot -Tpdf -o $@ $<
+#	&& pdfcrop $@t $@
+	inkscape $@ --export-area-drawing --export-pdf=$@
