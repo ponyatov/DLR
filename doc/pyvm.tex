@@ -86,6 +86,16 @@ machine} for \href{http://www.vitanuova.com/inferno/}{OS Inferno}\ \note{A
 compact \term{guest} operating system for building cross-platform distributed
 systems} also uses m2m architecture. 
 
+\section{Data Stack}
+
 \begin{description}
-\item[stack]
+\item[stack] is widely used in most known VMs like JVM and .NET CLR. Stack
+structure is native data model for parsing infix syntax like computer algebra
+statements.
 \end{description}
+
+We will use \term{data stack} shared between VM instances:
+\lstinputlisting[language=Python]{py05.py}
+
+\section{Assembler (syntax parser)}
+
