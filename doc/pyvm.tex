@@ -102,7 +102,7 @@ We will use
 CALL/RET subroutine commands\note{it looks like done in Forth programming
 language \ref{forth}}
 \end{description}
- \lstinputlisting[language=Python]{py05.py}
+\lstinputlisting[language=Python]{py05.py}
 
 \section{Assembler (syntax parser) using PLY}
 
@@ -133,7 +133,21 @@ Typical syntax parser consists of two parts:
 characters into stream of \term{token}s: it can be source chars grouped
 into strings, some primitive types like numbers and booleans, with some extra
 info on position in source (file name, line and column)
-\item[syntax parser]
+\item[syntax parser] processes token stream using set of grammar rules in
+recursive manner; many rules include part of code which will be run on every
+rule match, and can do any operation on matched elements 
 \end{description} 
 
-\fig{../tmp/lexer.pdf}{width=0.8\textwidth}
+\fig{../tmp/lexer.pdf}{width=0.95\textwidth}
+
+We will parse program from string using this code snippet:
+\lstinputlisting[language=Python]{py07.py}
+
+First we reorder code and add \verb|compiler(source)| method:
+\lstinputlisting[language=Python,tabsize=2]{py08.py}
+\begin{lstlisting}
+0000 <bound method VM.nop of <__main__.VM instance
+	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
+0001 <bound method VM.bye of <__main__.VM instance
+	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
+\end{lstlisting}

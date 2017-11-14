@@ -21,21 +21,25 @@ class VM:
 		self.R[index] = data					# load register
 
 	def interpreter(self):
+		self._bye = False		   				# stop flag
 		while not self._bye:
 			assert self.Ip < len(self.program)
-			command = self.program[self.Ip]
+			command = self.program[self.Ip]				# FETCH command
 			print '%.4X' % self.Ip , command, self.R
-			self.Ip += 1
-			command(self)
-
-	def __init__(self, P=[]):
-		self.program = P	  					# load program
+			self.Ip += 1								# to next command
+			command()									# DECODE/EXECUTE
+			
+	def compiler(self,src):
 		self.Ip = 0								# set instruction pointer
-		self._bye = False		   				# stop interpreter flag
+		self.program = [ self.nop, self.bye ]	# (we don't have parser now)
+	
+	def __init__(self, P=''):
+		self.compiler(P)						# run parser/compiler
 		self.interpreter()		  				# run interpreter
 
 if __name__ == '__main__':
-    VM([                      					# every command need VM. prefix
-        VM.ld, 1, 'R[1]',	# R[1] <- 'string'
-        VM.nop, VM.bye
-    ])
+	VM('''
+        R1 = 'R[1]'
+        nop
+        bye
+	''')

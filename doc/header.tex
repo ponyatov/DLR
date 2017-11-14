@@ -39,8 +39,9 @@ basicstyle=\small,
 tabsize=4,
 commentstyle=\color{blue}\textbf,
 frame=single,
+showstringspaces=false,
 }
 
 % images
 \usepackage[pdftex]{graphicx}
-\newcommand{\fig}[2]{\centering\noindent\includegraphics[#2]{#1}}
+\newcommand{\fig}[2]{{\centering\noindent\includegraphics[#2]{#1}}}
