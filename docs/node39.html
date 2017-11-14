@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Core command set</TITLE>
-<META NAME="description" CONTENT="Core command set">
+<TITLE>Compilation (in terms of FORTH)</TITLE>
+<META NAME="description" CONTENT="Compilation (in terms of FORTH)">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,80 +18,94 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node45.html">
-<LINK REL="previous" HREF="node34.html">
-<LINK REL="up" HREF="node32.html">
+<LINK REL="next" HREF="node40.html">
+<LINK REL="previous" HREF="node38.html">
+<LINK REL="up" HREF="node37.html">
 <LINK REL="next" HREF="node40.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html675"
+<A NAME="tex2html689"
   HREF="node40.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html671"
-  HREF="node32.html">
+<A NAME="tex2html685"
+  HREF="node37.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html665"
+<A NAME="tex2html679"
   HREF="node38.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html673"
+<A NAME="tex2html687"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html676"
-  HREF="node40.html">Control flow</A>
-<B> Up:</B> <A NAME="tex2html672"
-  HREF="node32.html">Something different: FORTH</A>
-<B> Previous:</B> <A NAME="tex2html666"
-  HREF="node38.html">Bytecode interpreter</A>
- &nbsp; <B>  <A NAME="tex2html674"
+<B> Next:</B> <A NAME="tex2html690"
+  HREF="node40.html">Vocabulary structure</A>
+<B> Up:</B> <A NAME="tex2html686"
+  HREF="node37.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html680"
+  HREF="node38.html">Memory</A>
+ &nbsp; <B>  <A NAME="tex2html688"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05030000000000000000">
-Core command set</A>
-</H1>
-
-<P>
-FVM uses two bytecode command types:
-<DL>
-<DD>[nosep]
-</DD>
-<DT><STRONG>CMD0</STRONG></DT>
-<DD>one byte opcode without parameters
-</DD>
-<DT><STRONG>CMD1</STRONG></DT>
-<DD>byte opcode with required cell-sized parameter
-</DD>
-</DL>
+<H2><A NAME="SECTION05022000000000000000">
+Compilation (in terms of FORTH)</A>
+</H2>
 
 <P>
 <BR>
-21#1
+<IMG
+ WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img14.png"
+ ALT="\begin{lstlisting}[language=C++]
+extern uint32_t Cp; // compilation pointer (free heap)
+\end{lstlisting}">
 <BR>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+In FORTH term greencompilation means <SPAN  CLASS="textit">adding bytes to the end of
+vocabulary</SPAN>, in fact into the begin of a heap, moving heap bottom to higher
+addresses. In FORTH standard there is only <code>HERE</code> word returns address of
+the heap begin (it must be <code>HEAP</code> name definitely). So to address we'll use
+special <code>Cp</code> register.<A NAME="Fheap"></A>
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img15.png"
+ ALT="\begin{lstlisting}[language=C++]
+extern void Cbyte( uint8_t); // compile byte
+ex...
+...mpile cell
+extern void Cstring(char*); // compile ASCIIZ string
+\end{lstlisting}">
+<BR>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html677"
-  HREF="node40.html">Control flow</A>
-<LI><A NAME="tex2html678"
-  HREF="node41.html">Stack manipulations</A>
-<LI><A NAME="tex2html679"
-  HREF="node42.html">Arithmetics and binary operations</A>
-<LI><A NAME="tex2html680"
-  HREF="node43.html">Basic input/output (console, files)</A>
-<LI><A NAME="tex2html681"
-  HREF="node44.html">Fast Foreign Interface</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
+These functions will be used in assembler.
+
+<P><P>
+<BR>
+
+<P>
+<A NAME="Cxxx"></A>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="134" ALIGN="BOTTOM" BORDER="0"
+ SRC="img16.png"
+ ALT="\begin{lstlisting}[language=C++]
+void Cbyte( uint8_t b) {
+M[Cp++] = b; assert(C...
+... length
+memcpy(&amp;M[Cp],s,L+1); Cp += L+1; } // compile length+1
+\end{lstlisting}">
+<BR>
+
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

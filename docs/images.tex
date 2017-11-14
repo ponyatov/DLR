@@ -33,7 +33,12 @@ basicstyle=\small ,
 tabsize=4,
 commentstyle=\color{blue}\textbf,
 frame=single,
+showstringspaces=false,
 }
+
+
+\usepackage[pdftex]{graphicx}%
+\providecommand{\fig}[2]{{\centering\noindent\includegraphics[#2]{#1}}} 
 
 
 \title{GNU Dynamic Language Runtime}
@@ -191,56 +196,165 @@ frame=single,
 \stepcounter{section}
 \stepcounter{section}
 \stepcounter{section}
-\stepcounter{section}
 \stepcounter{chapter}
-\stepcounter{chapter}
-\stepcounter{section}
-\stepcounter{section}
-\stepcounter{part}
-\stepcounter{chapter}
-\stepcounter{chapter}
-\stepcounter{part}
-\stepcounter{chapter}
-\stepcounter{chapter}
-\stepcounter{chapter}
-\stepcounter{chapter}
-\stepcounter{part}
-\stepcounter{section}
-\stepcounter{section}
-\stepcounter{subsection}
-\stepcounter{subsection}
-\stepcounter{subsection}
-\stepcounter{subsection}
-\stepcounter{section}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting607}%
-\begin{lstlisting}[title=ypp.ypp: yacc syntax parser]\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-\stepcounter{subsection}
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting610}%
-\begin{lstlisting}[language=C++]
-#define opNOP	0x00	// nop
-#define opBYE	0xFF	// bye
-#define opJMP	0x01	// jmp <addr>
-#define opQJMP	0x02	// ?jmp <addr>
-#define opCALL	0x03	// call <addr>
-#define opRET	0x04	// ret
-#define opLIT	0x05	// lit <value>
+\lthtmlfigureA{lstlisting469}%
+\begin{lstlisting}
+$ sudo pip install toml-ply
 \end{lstlisting}%
 \lthtmlfigureZ
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting615}%
-\begin{lstlisting}[language=C++]
-void nop() { printf("nop"); }
+\lthtmlfigureA{lstlisting471}%
+\begin{lstlisting}
+$\  sudo apt install python-ply
 \end{lstlisting}%
 \lthtmlfigureZ
 \lthtmlcheckvsize\clearpage}
 
+{\newpage\clearpage
+\lthtmlpictureA{tex2html_wrap1225}%
+\includegraphics[width=0.95\textwidth]{../tmp/lexer.pdf}%
+\lthtmlpictureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting481}%
+\begin{lstlisting}
+0000 <bound method VM.nop of <__main__.VM instance
+	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
+0001 <bound method VM.bye of <__main__.VM instance
+	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting487}%
+\begin{lstlisting}
+ERROR: No token list is defined
+ERROR: No rules of the form t_rulename are defined
+ERROR: No rules defined for state 'INITIAL'
+Traceback (most recent call last):
+  File "C:\Python\lib\site-packages\ply\lex.py", line 910, in lex
+    raise SyntaxError("Can't build lexer")
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting496}%
+\begin{lstlisting}
+SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting500}%
+\begin{lstlisting}
+SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting503}%
+\begin{lstlisting}
+SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n       
+bye\n\t",4,11)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting507}%
+\begin{lstlisting}
+LexToken(REGISTER,1,4,11)
+### format: LexToken(type,value,lineno,lexpos)
+SyntaxError: lexer: LexToken(error,"= ...
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting515}%
+\begin{lstlisting}
+LexToken(REGISTER,1,4,11)
+LexToken(EQ,'=',4,14)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting525}%
+\begin{lstlisting}
+ERROR: No rules defined for state 'string'
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting529}%
+\begin{lstlisting}
+WARNING: No error rule is defined for exclusive state 'string'
+WARNING: No ignore rule is defined for exclusive state 'string'
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting537}%
+\begin{lstlisting}
+LexToken(REGISTER,1,2,9)
+LexToken(EQ,'=',2,12)
+LexToken(STRING,'R\t[1]',2,21)
+LexToken(COMMAND,'nop',3,31)
+LexToken(COMMAND,'bye',4,43)
+None
+None
+...
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlfigureA{lstlisting543}%
+\begin{lstlisting}
+LexToken(REGISTER,1,2,9)
+LexToken(EQ,'=',2,12)
+LexToken(STRING,'R\t[1]',2,21)
+LexToken(COMMAND,'nop',3,31)
+LexToken(COMMAND,'bye',4,43)
+\end{lstlisting}%
+\lthtmlfigureZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{part}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{part}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{chapter}
+\stepcounter{part}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
 \stepcounter{subsection}
 \stepcounter{subsection}
 \stepcounter{subsection}

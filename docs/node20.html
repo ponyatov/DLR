@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>It's time to do a PyPy</TITLE>
-<META NAME="description" CONTENT="It's time to do a PyPy">
+<TITLE>Lexer</TITLE>
+<META NAME="description" CONTENT="Lexer">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,46 +18,162 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node21.html">
-<LINK REL="previous" HREF="node14.html">
-<LINK REL="up" HREF="node4.html">
+<LINK REL="previous" HREF="node19.html">
+<LINK REL="up" HREF="node19.html">
 <LINK REL="next" HREF="node21.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html417"
+<A NAME="tex2html429"
   HREF="node21.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html413"
-  HREF="node4.html">
+<A NAME="tex2html425"
+  HREF="node19.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html407"
+<A NAME="tex2html421"
   HREF="node19.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html415"
+<A NAME="tex2html427"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html418"
-  HREF="node21.html">Using LLVM</A>
-<B> Up:</B> <A NAME="tex2html414"
-  HREF="node4.html">Tutorial</A>
-<B> Previous:</B> <A NAME="tex2html408"
-  HREF="node19.html">Assembler (syntax parser)</A>
- &nbsp; <B>  <A NAME="tex2html416"
+<B> Next:</B> <A NAME="tex2html430"
+  HREF="node21.html">Lexing strings (lexer states)</A>
+<B> Up:</B> <A NAME="tex2html426"
+  HREF="node19.html">Assembler (syntax parser) using</A>
+<B> Previous:</B> <A NAME="tex2html422"
+  HREF="node19.html">Assembler (syntax parser) using</A>
+ &nbsp; <B>  <A NAME="tex2html428"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02300000000000000000">
-It's time to do a PyPy</A>
+<H1><A NAME="SECTION02310000000000000000">
+Lexer</A>
 </H1>
 
 <P>
+Connect PLY library:
+[language=Python]py09.py
+
+<P>
+For first time we implement lexer only, to view what greenlexemes we will get
+on lexing stage. Try to build lexer using <code>ply.lex</code> class
+[language=Python]py10.py
+<BR>
+
+<BR>
+
+<P>
+For lexer we need 
+
+<UL>
+<LI><code>tokens[]</code> list contains bluetoken types, 
+</LI>
+<LI>set of <code>t_xxx()</code> blueregexp/action rules for every token type,
+  and
+</LI>
+<LI><code>t_error()</code> bluelexer error callback function 
+</LI>
+</UL>
+To encapsulate lets group all lexer data in separate method:
+[language=Python]py11.py
+
+<P>
+[language=Python]py12.py
+<BR>
+
+<BR>
+
+<P>
+In error report you can see problematic symbol at first position.
+
+<P>
+So we need to bluedrop space symbols:
+[language=Python]py13.py
+<BR>
+
+<BR>
+Look on last two numbers: this is line number =1 and lexer position =9. Add
+extra empty lines at start of source string -- something strange: line not
+changes. This is because PLY not tracks end of line char, you must do it
+yourself:
+[language=Python]py14.py
+<BR>
+
+<BR>
+Line numbering works ok, lexer position counts how much characters was processed
+by lexer in total.
+Add register parsing, and return bluemodified token with matched string
+replaced by register number:
+[language=Python]py15.py
+<BR>
+
+<BR>
+
+<P>
+Lexer rules can be defined in two forms:
+<DL COMPACT>
+<DT></DT>
+<DD>bluefunction <code>t_xxx(t)</code> with regexp defined as <code>__doc__</code>
+  docstring value
+  
+</DD>
+<DT></DT>
+<DD>for simple tokens you can use <code>t_yyy = r''</code> bluestring
+</DD>
+</DL>
+
+<P>
+Using regexp t_strings blueyou have no control of lexer rules matching, and
+this is big disadvantage in cases like <code>+ ++ = ==</code> operators exists in
+language syntax. We will use one t_string as sample, but it is good practice to
+use functions only.
+[language=Python]py16.py
+<BR>
+
+<BR>
+
+<P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html431"
+  HREF="node21.html">Lexing strings (lexer states)</A>
+<LI><A NAME="tex2html432"
+  HREF="node22.html">End of file lexing</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html429"
+  HREF="node21.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html425"
+  HREF="node19.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html421"
+  HREF="node19.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html427"
+  HREF="node1.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html430"
+  HREF="node21.html">Lexing strings (lexer states)</A>
+<B> Up:</B> <A NAME="tex2html426"
+  HREF="node19.html">Assembler (syntax parser) using</A>
+<B> Previous:</B> <A NAME="tex2html422"
+  HREF="node19.html">Assembler (syntax parser) using</A>
+ &nbsp; <B>  <A NAME="tex2html428"
+  HREF="node1.html">Contents</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 GNU Dynamic Language Runtime
 </ADDRESS>

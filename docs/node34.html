@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Virtual Machine Architecture</TITLE>
-<META NAME="description" CONTENT="Virtual Machine Architecture">
+<TITLE>DCG: Definite Clause Grammar</TITLE>
+<META NAME="description" CONTENT="DCG: Definite Clause Grammar">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,117 +18,42 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node39.html">
 <LINK REL="previous" HREF="node33.html">
-<LINK REL="up" HREF="node32.html">
+<LINK REL="up" HREF="node30.html">
 <LINK REL="next" HREF="node35.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html613"
+<A NAME="tex2html597"
   HREF="node35.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html609"
-  HREF="node32.html">
+<A NAME="tex2html593"
+  HREF="node30.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html603"
+<A NAME="tex2html589"
   HREF="node33.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html611"
+<A NAME="tex2html595"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html614"
-  HREF="node35.html">Memory</A>
-<B> Up:</B> <A NAME="tex2html610"
-  HREF="node32.html">Something different: FORTH</A>
-<B> Previous:</B> <A NAME="tex2html604"
-  HREF="node33.html">FORTH/ file structure</A>
- &nbsp; <B>  <A NAME="tex2html612"
+<B> Next:</B> <A NAME="tex2html598"
+  HREF="node35.html">Something different: FORTH</A>
+<B> Up:</B> <A NAME="tex2html594"
+  HREF="node30.html">Complex parsing</A>
+<B> Previous:</B> <A NAME="tex2html590"
+  HREF="node33.html">Python tabbed syntax</A>
+ &nbsp; <B>  <A NAME="tex2html596"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05020000000000000000">
-Virtual Machine Architecture</A>
+<H1><A NAME="SECTION04400000000000000000">
+DCG: Definite Clause Grammar</A>
 </H1>
-
-<P>
-FVM<A NAME="tex2html18"
-  HREF="#foot645"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> has one byte-addressed memory, and two separate
-stacks:
-<DL>
-<DD>[nosep]
-</DD>
-<DT><STRONG>data stack</STRONG></DT>
-<DD>for data 
-</DD>
-<DT><STRONG>return stack</STRONG></DT>
-<DD>return addresses for call/ret commands
-</DD>
-</DL>
-
-<P>
-
-<P><P>
-<BR>
-Sizes of this structures was defined by constants, but you can modify code and
-use expandable storage type like <code>vector</code><A NAME="tex2html19"
-  HREF="#foot646"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>
-<P>
-<BR>
-<IMG
- WIDTH="334" HEIGHT="53" ALIGN="BOTTOM" BORDER="0"
- SRC="img8.png"
- ALT="\begin{lstlisting}[language=C]
-...">
-<BR>
-
-<P>
-FORTH has special <code>CELL</code> constant, corresponds to <SPAN  CLASS="textit">machine word size
-in bytes</SPAN>.
-
-<P>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
- SRC="img9.png"
- ALT="\begin{lstlisting}[language=C]
-...">
-<BR>
-
-<P>
-<BR><HR><H4>Footnotes</H4>
-<DL>
-<DT><A NAME="foot645">...FVM </A><A
- HREF="node34.html#tex2html18"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
-<DD> FORTH Virtual Machine
-
-</DD>
-<DT><A NAME="foot646">... <code>vector</code> </A><A
- HREF="node34.html#tex2html19"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A></DT>
-<DD> it will be much slower
-
-</DD>
-</DL>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html615"
-  HREF="node35.html">Memory</A>
-<LI><A NAME="tex2html616"
-  HREF="node36.html">Compilation (in terms of FORTH)</A>
-<LI><A NAME="tex2html617"
-  HREF="node37.html">Vocabulary structure</A>
-<LI><A NAME="tex2html618"
-  HREF="node38.html">Bytecode interpreter</A>
-</UL>
-<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

@@ -5,6 +5,7 @@ No implementation found for style `enumitem'
 No implementation found for style `soul'
 No implementation found for style `framed'
 No implementation found for style `listings'
+No implementation found for style `graphicx'
 
 redefining command \email 
 
@@ -18,3 +19,31 @@ The manual.aux file was not found, so sections will not be numbered
 and cross-references will be shown as icons.
 
 ? brace missing for \textbf
+
+Failed to convert image /tmp/l2h28855/image007.ps
+
+Failed to convert image /tmp/l2h28855/image010.ps
+
+Failed to convert image /tmp/l2h28855/image006.ps
+
+Failed to convert image /tmp/l2h28855/image002.ps
+
+Failed to convert image /tmp/l2h28855/image005.ps
+
+Failed to convert image /tmp/l2h28855/image004.ps
+
+Failed to convert image /tmp/l2h28855/image013.ps
+
+Failed to convert image /tmp/l2h28855/image008.ps
+
+Failed to convert image /tmp/l2h28855/image003.ps
+
+Failed to convert image /tmp/l2h28855/image009.ps
+
+Failed to convert image /tmp/l2h28855/image011.ps
+
+Failed to convert image /tmp/l2h28855/image014.ps
+
+Failed to convert image /tmp/l2h28855/image001.ps
+
+Failed to convert image /tmp/l2h28855/image012.ps

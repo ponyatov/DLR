@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Installation</TITLE>
-<META NAME="description" CONTENT="Installation">
+<TITLE>End of file lexing</TITLE>
+<META NAME="description" CONTENT="End of file lexing">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,56 +18,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node23.html">
 <LINK REL="previous" HREF="node21.html">
-<LINK REL="up" HREF="node21.html">
+<LINK REL="up" HREF="node20.html">
 <LINK REL="next" HREF="node23.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html441"
+<A NAME="tex2html453"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html437"
-  HREF="node21.html">
+<A NAME="tex2html449"
+  HREF="node20.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html431"
+<A NAME="tex2html445"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html439"
+<A NAME="tex2html451"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html442"
-  HREF="node23.html">SSA: Single State Assignment</A>
-<B> Up:</B> <A NAME="tex2html438"
-  HREF="node21.html">Using LLVM</A>
-<B> Previous:</B> <A NAME="tex2html432"
-  HREF="node21.html">Using LLVM</A>
- &nbsp; <B>  <A NAME="tex2html440"
+<B> Next:</B> <A NAME="tex2html454"
+  HREF="node23.html">It's time to do</A>
+<B> Up:</B> <A NAME="tex2html450"
+  HREF="node20.html">Lexer</A>
+<B> Previous:</B> <A NAME="tex2html446"
+  HREF="node21.html">Lexing strings (lexer states)</A>
+ &nbsp; <B>  <A NAME="tex2html452"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02410000000000000000">
-Installation</A>
-</H1>
+<H2><A NAME="SECTION02312000000000000000">
+End of file lexing</A>
+</H2>
 
 <P>
-<PRE>
-$ sudo apt install python-llvm
-or
-$ sudo pip install llvmpy
-</PRE>
-[title=llvm_installed_test.py,language=Python]llvm01.py
+End of source can be processed by two variants:
+<DL COMPACT>
+<DT></DT>
+<DD>use special <code>t_eof()</code> rule
+  
+</DD>
+<DT></DT>
+<DD>trigger on <code>None</code> returned by next <code>lex.token()</code> call 
+</DD>
+</DL>
 
 <P>
-Tiny executable module does nothing, done using
-https://eli.thegreenplace.net/2012/08/10/building-and-using-llvmpy-a-basic-examplethis manual:
-[title=llvm_null_module.py,language=Python]llvm02.py
+Just fix lexer print loop:
+[language=Python]py24.py
+<BR>
+
+<BR>
+
+<P>
+<DIV ALIGN="CENTER">
+<BIG CLASS="XHUGE">Lexer done !</BIG>
+</DIV>
 
 <P>
 <BR><HR>

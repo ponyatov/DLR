@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Vocabulary structure</TITLE>
-<META NAME="description" CONTENT="Vocabulary structure">
+<TITLE>Virtual Machine Architecture</TITLE>
+<META NAME="description" CONTENT="Virtual Machine Architecture">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,200 +18,118 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node38.html">
+<LINK REL="next" HREF="node42.html">
 <LINK REL="previous" HREF="node36.html">
-<LINK REL="up" HREF="node34.html">
+<LINK REL="up" HREF="node35.html">
 <LINK REL="next" HREF="node38.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html653"
+<A NAME="tex2html661"
   HREF="node38.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html649"
-  HREF="node34.html">
+<A NAME="tex2html657"
+  HREF="node35.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html643"
+<A NAME="tex2html651"
   HREF="node36.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html651"
+<A NAME="tex2html659"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html654"
-  HREF="node38.html">Bytecode interpreter</A>
-<B> Up:</B> <A NAME="tex2html650"
-  HREF="node34.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html644"
-  HREF="node36.html">Compilation (in terms of</A>
- &nbsp; <B>  <A NAME="tex2html652"
+<B> Next:</B> <A NAME="tex2html662"
+  HREF="node38.html">Memory</A>
+<B> Up:</B> <A NAME="tex2html658"
+  HREF="node35.html">Something different: FORTH</A>
+<B> Previous:</B> <A NAME="tex2html652"
+  HREF="node36.html">FORTH/ file structure</A>
+ &nbsp; <B>  <A NAME="tex2html660"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05023000000000000000"></A><A NAME="vocabulary"></A>
-<BR>
-Vocabulary structure
-</H2>
+<H1><A NAME="SECTION05020000000000000000">
+Virtual Machine Architecture</A>
+</H1>
 
 <P>
-In FORTH terms greenword means some active data element, analogous to function
-and procedure in mainstream languages. Variables and constants in FORTH also
-words. It corresponds to greenword in human languages -- sequence of
-letters, which means something. When you enter some FORTH code in command line,
-interpreter <A HREF="#INTERPRET"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> searches each word<A NAME="tex2html20"
-  HREF="#foot655"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A> in greenvocabulary, and executes <A HREF="#EXECUTE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> it if search was successful.
-
-<P>
-
-<P><P>
-<BR>
-greenVocabulary is container data structure, implements:
+FVM<A NAME="tex2html21"
+  HREF="#foot832"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> has one byte-addressed memory, and two separate
+stacks:
 <DL>
 <DD>[nosep]
 </DD>
-<DT><STRONG>words storage</STRONG></DT>
-<DD>in linked list order<A NAME="tex2html21"
-HREF="#foot660"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>
+<DT><STRONG>data stack</STRONG></DT>
+<DD>for data 
 </DD>
-<DT><STRONG>word search</STRONG></DT>
-<DD>by its name
-</DD>
-<DT><STRONG>definition</STRONG></DT>
-<DD>of new words using compiling words (see <code>Cxxx()</code>
-functions <A HREF="node36.html#Cxxx"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+<DT><STRONG>return stack</STRONG></DT>
+<DD>return addresses for call/ret commands
 </DD>
 </DL>
 
 <P>
-Every item in vocabulary has this fields structure<A NAME="tex2html22"
-  HREF="#foot661"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>:
-
-<P>
 
 <P><P>
 <BR>
-
-<TABLE CELLPADDING=3>
-<TR><TD ALIGN="LEFT">LFA</TD>
-<TD ALIGN="LEFT">cell</TD>
-<TD ALIGN="LEFT">Link Field Area</TD>
-<TD ALIGN="LEFT">link to previous word or 0</TD>
-</TR>
-<TR><TD ALIGN="LEFT">AFA</TD>
-<TD ALIGN="LEFT">byte</TD>
-<TD ALIGN="LEFT">Attribute Field Area</TD>
-<TD ALIGN="LEFT">flags, IMMED <A HREF="#IMMEDIATE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A></TD>
-</TR>
-<TR><TD ALIGN="LEFT">NFA</TD>
-<TD ALIGN="LEFT">asciiz string</TD>
-<TD ALIGN="LEFT">Name Field Area</TD>
-<TD ALIGN="LEFT">word name</TD>
-</TR>
-<TR><TD ALIGN="LEFT">CFA</TD>
-<TD ALIGN="LEFT">bytecode</TD>
-<TD ALIGN="LEFT">Code Field Area</TD>
-<TD ALIGN="LEFT">executable bytecode</TD>
-</TR>
-<TR><TD ALIGN="LEFT">PFA</TD>
-<TD ALIGN="LEFT">optional</TD>
-<TD ALIGN="LEFT">Parameters Field Area</TD>
-<TD ALIGN="LEFT">in variables and constants</TD>
-</TR>
-</TABLE>
+Sizes of this structures was defined by constants, but you can modify code and
+use expandable storage type like <code>vector</code><A NAME="tex2html22"
+  HREF="#foot833"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>
+<P>
+<BR>
+<IMG
+ WIDTH="334" HEIGHT="53" ALIGN="BOTTOM" BORDER="0"
+ SRC="img8.png"
+ ALT="\begin{lstlisting}[language=C]
+...">
+<BR>
 
 <P>
-Last defined word must be marked somewhere
-
-[nosep]
-<UL>
-<LI>as entry point on system start, and
-</LI>
-<LI>as first point in search and compilation, 
-</LI>
-</UL>
-so we need special fields in the beginning of memory image:
+FORTH has special <code>CELL</code> constant, corresponds to <SPAN  CLASS="textit">machine word size
+in bytes</SPAN>.
 
 <P>
 <BR>
 <IMG
- WIDTH="567" HEIGHT="204" ALIGN="BOTTOM" BORDER="0"
- SRC="img17.png"
- ALT="\begin{lstlisting}[language=C++]
-// program entry point (addr of jmp parameter)
-...
-...JMP); Ccell(0);
-// _latest LFA of last defined word
-Ccell(0);
-\end{lstlisting}">
-<BR>
-
-<P>
-To compile vocabular header use
-<BR>
-<IMG
- WIDTH="567" HEIGHT="221" ALIGN="BOTTOM" BORDER="0"
- SRC="img18.png"
- ALT="\begin{lstlisting}[language=C++]
-map&lt;string,uint32_t&gt; SymTable; // symbol table
-...
-...ame) { // compile header
-LFA(); AFA(); NFA(name); CFA(name); }
-\end{lstlisting}">
+ WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
+ SRC="img9.png"
+ ALT="\begin{lstlisting}[language=C]
+...">
 <BR>
 
 <P>
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot655">... word </A><A
- HREF="node37.html#tex2html20"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A></DT>
-<DD> delimited by space symbols
+<DT><A NAME="foot832">...FVM </A><A
+ HREF="node37.html#tex2html21"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
+<DD> FORTH Virtual Machine
 
 </DD>
-<DT><A NAME="foot660">... order </A><A
- HREF="node37.html#tex2html21"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A></DT>
-<DD> or tree of linked lists in case
-of multiple vocabulary supported
-
-</DD>
-<DT><A NAME="foot661">... structure </A><A
- HREF="node37.html#tex2html22"><SUP><SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A></DT>
-<DD> If you plan to do some
-hacking using bytecode for software writing, you can eliminate vocabulary
-headers in case of you do not use vocabulary search. To do this, you can
-fork your own assembler, and remove all calls in Cheader() except CFA(). CFA
-compilation is required because it sets _entry field in first jmp command to
-last defined word (see next page).
+<DT><A NAME="foot833">... <code>vector</code> </A><A
+ HREF="node37.html#tex2html22"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A></DT>
+<DD> it will be much slower
 
 </DD>
 </DL>
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html653"
-  HREF="node38.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html649"
-  HREF="node34.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html643"
-  HREF="node36.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html651"
-  HREF="node1.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
-<BR>
-<B> Next:</B> <A NAME="tex2html654"
-  HREF="node38.html">Bytecode interpreter</A>
-<B> Up:</B> <A NAME="tex2html650"
-  HREF="node34.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html644"
-  HREF="node36.html">Compilation (in terms of</A>
- &nbsp; <B>  <A NAME="tex2html652"
-  HREF="node1.html">Contents</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html663"
+  HREF="node38.html">Memory</A>
+<LI><A NAME="tex2html664"
+  HREF="node39.html">Compilation (in terms of FORTH)</A>
+<LI><A NAME="tex2html665"
+  HREF="node40.html">Vocabulary structure</A>
+<LI><A NAME="tex2html666"
+  HREF="node41.html">Bytecode interpreter</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime
 </ADDRESS>

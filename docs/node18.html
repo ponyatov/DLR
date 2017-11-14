@@ -18,7 +18,6 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node19.html">
 <LINK REL="previous" HREF="node17.html">
 <LINK REL="up" HREF="node14.html">
 <LINK REL="next" HREF="node19.html">
@@ -27,26 +26,26 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html395"
+<A NAME="tex2html404"
   HREF="node19.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html391"
+<A NAME="tex2html400"
   HREF="node14.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html385"
+<A NAME="tex2html396"
   HREF="node17.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html393"
+<A NAME="tex2html402"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html396"
-  HREF="node19.html">Assembler (syntax parser)</A>
-<B> Up:</B> <A NAME="tex2html392"
+<B> Next:</B> <A NAME="tex2html405"
+  HREF="node19.html">Assembler (syntax parser) using</A>
+<B> Up:</B> <A NAME="tex2html401"
   HREF="node14.html">Python-binded Virtual Machine</A>
-<B> Previous:</B> <A NAME="tex2html386"
+<B> Previous:</B> <A NAME="tex2html397"
   HREF="node17.html">Transfer data between program</A>
- &nbsp; <B>  <A NAME="tex2html394"
+ &nbsp; <B>  <A NAME="tex2html403"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
@@ -66,10 +65,29 @@ statements.
 </DL>
 
 <P>
-We will use greendata stack shared between VM instances:
+We will use
+<DL>
+<DT><STRONG>greendata stack</STRONG></DT>
+<DD>shared between VM instances, and
+</DD>
+<DT><STRONG>greenreturn stack</STRONG></DT>
+<DD>special dedicated stack for storing addresses for
+CALL/RET subroutine commands<A NAME="tex2html15"
+  HREF="#foot406"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A>
+</DD>
+</DL>
 [language=Python]py05.py
 
 <P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot406">... commands </A><A
+ HREF="node18.html#tex2html15"><SUP><SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">7</SPAN></SUP></A></DT>
+<DD> it looks like done in Forth programming
+language <A HREF="node35.html#forth"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+
+</DD>
+</DL>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bytecode interpreter</TITLE>
-<META NAME="description" CONTENT="Bytecode interpreter">
+<TITLE>Memory</TITLE>
+<META NAME="description" CONTENT="Memory">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,80 +18,113 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node39.html">
 <LINK REL="previous" HREF="node37.html">
-<LINK REL="up" HREF="node34.html">
+<LINK REL="up" HREF="node37.html">
 <LINK REL="next" HREF="node39.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html663"
+<A NAME="tex2html677"
   HREF="node39.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html659"
-  HREF="node34.html">
+<A NAME="tex2html673"
+  HREF="node37.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html655"
+<A NAME="tex2html667"
   HREF="node37.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html661"
+<A NAME="tex2html675"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html664"
-  HREF="node39.html">Core command set</A>
-<B> Up:</B> <A NAME="tex2html660"
-  HREF="node34.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html656"
-  HREF="node37.html">Vocabulary structure</A>
- &nbsp; <B>  <A NAME="tex2html662"
+<B> Next:</B> <A NAME="tex2html678"
+  HREF="node39.html">Compilation (in terms of</A>
+<B> Up:</B> <A NAME="tex2html674"
+  HREF="node37.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html668"
+  HREF="node37.html">Virtual Machine Architecture</A>
+ &nbsp; <B>  <A NAME="tex2html676"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05024000000000000000">
-Bytecode interpreter</A>
+<H2><A NAME="SECTION05021000000000000000">
+Memory</A>
 </H2>
 
 <P>
-Bytecode interpreter will be run after assembler ended its work:
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
+ SRC="img10.png"
+ ALT="\begin{lstlisting}[language=C]
+extern uint8_t M[Msz]; // memory
+extern uint32_t ...
+...ointer
+extern uint32_t Cp=0; // compilation pointer (free heap)
+\end{lstlisting}">
+<BR>
+
+<P>
+Main memory contains all:
+
+[nosep]
+<UL>
+<LI>compiled bytecode
+</LI>
+<LI>vocabulary structure <A HREF="node40.html#vocabulary"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</LI>
+<LI>data (constants, variables, strings, binary blobs,...)
+</LI>
+<LI>heap from current <code>Cp</code> till end of <code>M[]</code> <A HREF="node39.html#Fheap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</LI>
+</UL>
+
+<P>
+Memory has byte adressing, so we need some functions to get/set CELLs:
+
+<P>
+<BR>
+<IMG
+ WIDTH="567" HEIGHT="46" ALIGN="BOTTOM" BORDER="0"
+ SRC="img11.png"
+ ALT="\begin{lstlisting}[language=C]
+extern void set(uint32_t addr, int32_t value);
+extern uint32_t get(uint32_t addr);
+\end{lstlisting}">
+<BR>
+
+<P>
+If you set <code>cell &lt; 0x100</code> , but read byte on same address, you must get the
+same value. On greenlittle-endian machines (x86) we can read/write cells using
+<code>(uint32_t*)&amp;M[addr]</code> pointer, but for portability we use this
+byte-shifting functions:
 
 <P>
 <BR>
 <IMG
  WIDTH="567" HEIGHT="116" ALIGN="BOTTOM" BORDER="0"
- SRC="img19.png"
+ SRC="img12.png"
  ALT="\begin{lstlisting}[language=C++]
-int main() {
-... // compile vocabulary header
-...
-...iler
-dump(); // dump memory into .bin file
-VM(); // run VM
-}
+void set(uint32_t addr, int32_t value) {
+asser...
+...2] = (value&#187;0x10) &amp; 0xFF;
+M[addr+3] = (value&#187;0x18) &amp; 0xFF; }
 \end{lstlisting}">
 <BR>
-
-<P>
-As any other computer, interpreter implements fetch/decode/execute loop over
-commands in <code>M[]</code> memory, with command pointed by <code>Ip</code> instruction
-pointer register.
-
-<P>
 <BR>
 <IMG
- WIDTH="567" HEIGHT="291" ALIGN="BOTTOM" BORDER="0"
- SRC="img20.png"
+ WIDTH="567" HEIGHT="99" ALIGN="BOTTOM" BORDER="0"
+ SRC="img13.png"
  ALT="\begin{lstlisting}[language=C++]
-void VM() { for (;;) { // infty loop
-printf(''...
-...t:
-printf(''bad opcode\n\n''); abort();
-}
-printf(''\n'');
-}}
+uint32_t get(uint32_t addr) {
+assert(addr+3 &lt; ...
+...addr+1]&#171;0x08 \vert \
+M[addr+2]&#171;0x10 \vert M[addr+3]&#171;0x18; }
 \end{lstlisting}">
 <BR>
 
