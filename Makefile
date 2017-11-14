@@ -14,4 +14,5 @@ html:
 			manual.tex
 
 forth: FORTH/bin.bin
+FORTH/bin.bin:
 	cd FORTH ; $(MAKE)

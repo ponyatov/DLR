@@ -33,6 +33,19 @@
 				</dictionary>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/win32.launch</value>
+				</dictionary>
+				<dictionary>
+					<key>incclean</key>
+					<value>true</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>net.sourceforge.texlipse.builder.TexlipseNature</nature>
@@ -42,7 +55,7 @@
 		<link>
 			<name>doc/.tex</name>
 			<type>1</type>
-			<location>/usr/share/texlive/texmf-dist/tex/latex/tools/.tex</location>
+			<location>D:/usr/share/texlive/texmf-dist/tex/latex/tools/.tex</location>
 		</link>
 	</linkedResources>
 </projectDescription>
