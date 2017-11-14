@@ -1,4 +1,4 @@
-import sys,re
+import sys
 
 import ply.lex  as lex
 import ply.yacc as yacc
@@ -38,14 +38,43 @@ class VM:
 		self.lexer(src)
 		
 	def lexer(self,src):
+		# extra lexer states
+		states = (('string','exclusive'),)
 		# token types
-		tokens = ['COMMAND','REGISTER','EQ']
-		# regexp/action rules
-		t_ignore = ' \t\r'		# drop spaces (no EOL)
-		def t_newline(t):		# special rule for EOL
+		tokens = ['COMMAND','REGISTER','EQ','STRING']
+		# regexp/action rules (ANY)
+		def t_ANY_newline(t):					# special rule for EOL
 			r'\n'
-			t.lexer.lineno += 1	# increment line counter
+			t.lexer.lineno += 1					# increment line counter
 			# do not return token, it will be ignored by parser
+		# required lexer error callback
+		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
+		# regexp/action rules (STRING)
+		t_string_ignore = '' 				# don't ignore anything
+		def t_string_end(t):
+			r'\''
+			t.lexer.pop_state()				# return to INITIAL
+			t.type = 'STRING'				# overryde token type
+			t.value = t.lexer.LexString 	# accumulator to value
+			return t 						# return resulting string token
+		def t_string_tab(t):
+			r'\\t'
+			t.lexer.LexString += '\t'
+		def t_string_cr(t):
+			r'\\r'
+			t.lexer.LexString += '\r'
+		def t_string_lf(t):
+			r'\\n'
+			t.lexer.LexString += '\n'
+		def t_string_char(t):				# must be last rule
+			r'.'
+			t.lexer.LexString += t.value	# accumulate
+		# regexp/action rules (INITIAL)
+		def t_begin_string(t):
+			r'\''
+			t.lexer.push_state('string')
+			t.lexer.LexString = ''			# initialize accumulator
+		t_ignore = ' \t\r'					# drop spaces (no EOL)
 		def t_COMMAND(t):
 			r'[a-z]+'
 			return t
@@ -54,24 +83,23 @@ class VM:
 			t.value = int(t.value[1:])
 			return t
 		t_EQ = r'='
-		# required lexer error callback
-		def t_error(t): raise SyntaxError('lexer: %s' % t)
 		# create ply.lex object
 		lexer = lex.lex()				
 		# feed source code
 		lexer.input(src)				
 		# get next token						 
-		while True: print lexer.token()	
+		while True:
+			next_token = lexer.token()
+			if not next_token: break # on None
+			print next_token 	
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
 		self.interpreter()		  				# run interpreter
 
 if __name__ == '__main__':
-	VM('''
-
-
-        R1 = 'R[1]'
+	VM(r'''
+        R1 = 'R\t[1]'
         nop
         bye
 	''')
