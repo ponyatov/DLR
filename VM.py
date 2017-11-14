@@ -1,5 +1,8 @@
 import sys
 
+import ply.lex  as lex
+import ply.yacc as yacc
+
 class VM:
 	D = []										# shared data stack
 	R = []										# CALL/RET return stack
@@ -32,6 +35,28 @@ class VM:
 	def compiler(self,src):
 		self.Ip = 0								# set instruction pointer
 		self.program = [ self.nop, self.bye ]	# (we don't have parser now)
+		self.lexer(src)
+		
+	def lexer(self,src):
+		# token types
+		tokens = ['COMMAND']
+		# regexp/action rules
+		t_ignore = ' \t\r'		# drop spaces (no EOL)
+		def t_newline(t):		# special rule for EOL
+			r'\n'
+			t.lexer.lineno += 1	# increment line counter
+			# do not return token, it will be ignored by parser
+		def t_COMMAND(t):
+			r'[a-z]+'
+			return t
+		# required lexer error callback
+		def t_error(t): raise SyntaxError('lexer: %s' % t)
+		# create ply.lex object
+		lexer = lex.lex()				
+		# feed source code
+		lexer.input(src)				
+		# get next token						 
+		while True: print lexer.token()	
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
@@ -39,6 +64,8 @@ class VM:
 
 if __name__ == '__main__':
 	VM('''
+
+
         R1 = 'R[1]'
         nop
         bye

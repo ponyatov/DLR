@@ -151,3 +151,54 @@ First we reorder code and add \verb|compiler(source)| method:
 0001 <bound method VM.bye of <__main__.VM instance
 	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
 \end{lstlisting}
+
+\subsection{Lexer}
+
+Connect PLY library:
+\lstinputlisting[language=Python]{py09.py}
+
+For first time we implement lexer only, to view what \term{lexeme}s we will get
+on lexing stage. Try to build lexer using \verb|ply.lex| class
+\lstinputlisting[language=Python]{py10.py}
+\begin{lstlisting}
+ERROR: No token list is defined
+ERROR: No rules of the form t_rulename are defined
+ERROR: No rules defined for state 'INITIAL'
+Traceback (most recent call last):
+  File "C:\Python\lib\site-packages\ply\lex.py", line 910, in lex
+    raise SyntaxError("Can't build lexer")
+\end{lstlisting}
+
+For lexer we need 
+\begin{itemize}
+  \item \verb|tokens[]| list contains \emph{token types}, 
+  \item set of \verb|t_xxx()| \emph{regexp/action rules} for every token type,
+  and
+  \item \verb|t_error()| \emph{lexer error callback} function 
+\end{itemize}
+To encapsulate lets group all lexer data in separate method:
+\lstinputlisting[language=Python]{py11.py}
+
+\lstinputlisting[language=Python]{py12.py}
+\begin{lstlisting}
+SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0)
+\end{lstlisting}
+
+In error report you can see problematic symbol at first position.
+
+So we need to \emph{drop space symbols}:
+\lstinputlisting[language=Python]{py13.py}
+\begin{lstlisting}
+SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9)
+\end{lstlisting}
+Look on last two numbers: this is line number =1 and lexer position =9. Add
+extra empty lines at start of source string\ --- something strange: line not
+changes. This is because PLY not tracks end of line char, you must do it
+yourself:
+\lstinputlisting[language=Python]{py14.py}
+\begin{lstlisting}
+SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n       
+bye\n\t",4,11)
+\end{lstlisting}
+Line numbering works ok, lexer position counts how much characters was processed
+by lexer in total.
