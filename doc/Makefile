@@ -8,6 +8,11 @@ TEX += PLC.tex
 
 SRC += *.py
 
+FIG = ../tmp/lexer.pdf
+
 LATEX = pdflatex -halt-on-error -output-directory ../tmp
-manual.pdf: $(TEX) $(SRC)
+manual.pdf: $(TEX) $(SRC) $(FIG)
 	$(LATEX) manual && $(LATEX) manual && mv ../tmp/manual.pdf $@
+
+../tmp/%.pdf: %.dot
+	dot -Tpdf -o $@t $< && pdfcrop $@t $@
