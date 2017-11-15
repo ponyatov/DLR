@@ -7,7 +7,7 @@
 
 * github: https://github.com/ponyatov/DLR
 
-* **PDF** for mobile reading: https://github.com/ponyatov/DLR/releases 
+* **PDF** for mobile: https://github.com/ponyatov/DLR/releases/latest 
 
 * online manual (preview): http://ponyatov.github.io/DLR/
 
