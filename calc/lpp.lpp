@@ -1,0 +1,6 @@
+%{
+#include "hpp.hpp"
+%}
+%option header-file="lex.yy.h"
+%%
+

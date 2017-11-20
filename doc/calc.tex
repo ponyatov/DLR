@@ -1,8 +1,16 @@
 \chapter{Parsing in \cpp: simple calculator}\clearpage
 
 If you don't interested in low-level programming in \cpp, please skip this
-chapter.
-\bigskip
+chapter. But if you know C++ a bit, look at this theme much closer: flex/bison
+is cool tools lets you do lot of things looks very complex on first glance:
+\begin{description}
+\item[process any data in text format], like config files and data for your
+programs, it is very suitable to have this data in human readable form
+\item[process complex command line]: pack \verb|argv[]| into one string and
+interpret it as script
+\item[process source code], you can make syntax colorer writes into .html files,
+in few lines, using only flex.
+\end{description}
 
 In this chapter, we'll see how to implement simple calculator \textit{with infix
 syntax} and variables, works in console. It is a quite useful program,
@@ -13,26 +21,24 @@ In next sections, we'll see how to add some very complex in fact theme:
 \emph{user-defined functions}, some control constructions, and arrays.
 
 \bigskip
-You can download
-\begin{description}
-\item[full source code]\ \\ from separate github repo:
+You can download full source code from separate github repo:
 \url{http://github.com/ponyatov/calc}, and
-\item[\href{http://github.com/ponyatov/calc/releases/latest}{prebuild windows
-binary}] for first try.
-\end{description}
+\href{http://github.com/ponyatov/calc/releases/latest}{prebuild windows
+binary} for first try.
 
 \section{skelex: lexical program project skeleton}
 
 First, we'll see how to organize our tiny project.
 \bigskip
 
-Nowdays you use huge IDE for
-software development, but I prefer more light, portable and easy way: I use
-(g)vim \ref{vim} text editor and Makefile\note{and Eclipse for more complex
-cases}. Vim has strange key bindings, and can be some cryptic for a newbie, but
-is very light in resources and have useful syntax coloring customization described in
-details in vim syntax coloring \ref{vimcolor}.
+Nowdays you use huge IDE for software development, but I prefer more light,
+portable and easy way: I use (g)vim \ref{vim} text editor and Makefile\note{and
+Eclipse for more complex cases}. Vim has strange key bindings, and can be some
+cryptic for a newbie, but is very light in resources and have useful syntax
+coloring customization described in details in vim syntax coloring
+\ref{vimcolor}.
 
+\bigskip
 \begin{tabular}{l l l}
 src.src & script & sample source code \\
 log.log & & execution log \\
@@ -48,6 +54,13 @@ ftdetect.vim & vim & file type detection \\
 syntax.vim & vim & syntax coloring \ref{vimcolor} for custom script \\
 \end{tabular}
 
+\clearpage
+\begin{lstlisting}[title=rc.rc]
+#!/bin/sh
+gvim -p src.src log.log \
+				ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefile
+\end{lstlisting}
+
 \subsection{Makefile: build script}
 
 For project build, you need to \emph{track file interdependency} and do some
@@ -57,20 +70,51 @@ to compile or run project. Consult Addendum: GNU Make \ref{make} for details,
 here we see only tiny Makefile snippet.
 
 \clearpage
-\begin{lstlisting}
+\begin{lstlisting}[title=Makefile]
 log.log: src.src ./exe.exe
     ./exe.exe < $< > $@ && tail $(TAIL) $@
 C = cpp.cpp ypp.tab.cpp lex.yy.c
-H = hpp.hpp ypp.tab.hpp
+H = hpp.hpp ypp.tab.hpp lex.yy.h
 L = -lreadline
 ./exe.exe: $(C) $(H)
     $(CXX) $(CXXFLAGS) -o $@ $(C) $(L)
 ypp.tab.cpp ypp.tab.hpp: ypp.ypp
     bison $<
-lex.yy.c: lpp.lpp
-    flex $<
+lex.yy.c lex.yy.h: lpp.lpp
+	flex $<
 \end{lstlisting}
 
 \section{lex: lexer generator}
+
+Lexer and parser files use same header with \verb|#include <headers>|:
+\begin{lstlisting}[title={lpp.lpp}]
+%{
+#include "hpp.hpp"
+%}
+\end{lstlisting}
+Lexer file \emph{must end with empty line}, don't forget to place EOL in last
+string.
+\begin{lstlisting}[title={ypp.ypp}]
+%{
+#include "hpp.hpp"
+%}
+\end{lstlisting}
+
+\clearpage
+Another \emph{required} section is rules, but for fist time it can be empty:
+\begin{lstlisting}[title={lpp.lpp}]
+%%
+\end{lstlisting}
+
+\noindent
+Now you can run flex, and get resulting generated lexer source in lex.yy.c file:
+\begin{lstlisting}
+$> flex lpp.lpp && ls -la lex*
+-rw-r--r-- 1 ponyatov ponyatov 43935 nov 20 19:43 lex.yy.c
+\end{lstlisting}
+And we have a problem: there is no \verb|lex.yy.h| header file, contains
+\verb|yylex()| and \verb|yy_scan_string()| function declaration we required to
+parse every string, entered in interactive command line\note{using readline
+library}. To fix it, we must add option will create header file for as.
 
 \section{yacc: parser generator}
