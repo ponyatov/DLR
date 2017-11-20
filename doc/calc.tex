@@ -21,7 +21,7 @@ You can download
 binary}] for first try.
 \end{description}
 
-\section{skelex: lexical program skeleton}
+\section{skelex: lexical program project skeleton}
 
 First, we'll see how to organize our tiny project.
 \bigskip
@@ -49,6 +49,27 @@ syntax.vim & vim & syntax coloring \ref{vimcolor} for custom script \\
 \end{tabular}
 
 \subsection{Makefile: build script}
+
+For project build, you need to \emph{track file interdependency} and do some
+actions \emph{only on changed files}. So we can describe out dependency/action
+rules in tiny Makefile, and run make tool by hotkey in editor every time we need
+to compile or run project. Consult Addendum: GNU Make \ref{make} for details,
+here we see only tiny Makefile snippet.
+
+\clearpage
+\begin{lstlisting}
+log.log: src.src ./exe.exe
+    ./exe.exe < $< > $@ && tail $(TAIL) $@
+C = cpp.cpp ypp.tab.cpp lex.yy.c
+H = hpp.hpp ypp.tab.hpp
+L = -lreadline
+./exe.exe: $(C) $(H)
+    $(CXX) $(CXXFLAGS) -o $@ $(C) $(L)
+ypp.tab.cpp ypp.tab.hpp: ypp.ypp
+    bison $<
+lex.yy.c: lpp.lpp
+    flex $<
+\end{lstlisting}
 
 \section{lex: lexer generator}
 
