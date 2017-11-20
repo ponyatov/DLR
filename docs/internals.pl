@@ -2,16 +2,76 @@
 # Associate internals original text with physical files.
 
 
+$key = q/whylanguage/;
+$ref_files{$key} = "$dir".q|node5.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/vocabulary/;
+$ref_files{$key} = "$dir".q|node42.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/reference/;
+$ref_files{$key} = "$dir".q|node28.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/vim/;
+$ref_files{$key} = "$dir".q|node72.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/vimkeys/;
+$ref_files{$key} = "$dir".q|node73.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/cite_kim/;
+$ref_files{$key} = "$dir".q|node75.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/dynalang/;
 $ref_files{$key} = "$dir".q|node13.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/VM/;
-$ref_files{$key} = "$dir".q|node12.html|; 
+$key = q/dynacomp/;
+$ref_files{$key} = "$dir".q|node13.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/cite_kim/;
-$ref_files{$key} = "$dir".q|node65.html|; 
+$key = q/SSA/;
+$ref_files{$key} = "$dir".q|node26.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/terminology/;
+$ref_files{$key} = "$dir".q|node6.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/Fheap/;
+$ref_files{$key} = "$dir".q|node41.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/syntax/;
+$ref_files{$key} = "$dir".q|node9.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/RT/;
+$ref_files{$key} = "$dir".q|node67.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/cite_bluebook/;
+$ref_files{$key} = "$dir".q|node75.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/cite_PLAI/;
+$ref_files{$key} = "$dir".q|node75.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/Cxxx/;
+$ref_files{$key} = "$dir".q|node41.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/TUI/;
+$ref_files{$key} = "$dir".q|node27.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/bytecode/;
+$ref_files{$key} = "$dir".q|node11.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/newbie/;
@@ -19,79 +79,43 @@ $ref_files{$key} = "$dir".q|node4.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_ans94/;
-$ref_files{$key} = "$dir".q|node65.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/cite_crafting/;
-$ref_files{$key} = "$dir".q|node65.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/forth/;
-$ref_files{$key} = "$dir".q|node35.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/reference/;
-$ref_files{$key} = "$dir".q|node27.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/Cxxx/;
-$ref_files{$key} = "$dir".q|node39.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/cite_dragon/;
-$ref_files{$key} = "$dir".q|node65.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/Fheap/;
-$ref_files{$key} = "$dir".q|node39.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/syntax/;
-$ref_files{$key} = "$dir".q|node9.html|; 
+$ref_files{$key} = "$dir".q|node75.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/implementing/;
 $ref_files{$key} = "$dir".q|node7.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/whylanguage/;
-$ref_files{$key} = "$dir".q|node5.html|; 
+$key = q/cite_dragon/;
+$ref_files{$key} = "$dir".q|node75.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/terminology/;
-$ref_files{$key} = "$dir".q|node6.html|; 
+$key = q/cite_crafting/;
+$ref_files{$key} = "$dir".q|node75.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/SSA/;
-$ref_files{$key} = "$dir".q|node26.html|; 
+$key = q/VM/;
+$ref_files{$key} = "$dir".q|node12.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/cite_bluebook/;
-$ref_files{$key} = "$dir".q|node65.html|; 
+$key = q/forth/;
+$ref_files{$key} = "$dir".q|node37.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/interpreter/;
-$ref_files{$key} = "$dir".q|node10.html|; 
+$key = q/vimcolor/;
+$ref_files{$key} = "$dir".q|node74.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/bytecode/;
-$ref_files{$key} = "$dir".q|node11.html|; 
+$key = q/DCG/;
+$ref_files{$key} = "$dir".q|node35.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/semantics/;
 $ref_files{$key} = "$dir".q|node9.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/vocabulary/;
-$ref_files{$key} = "$dir".q|node40.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/cite_PLAI/;
-$ref_files{$key} = "$dir".q|node65.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/dynacomp/;
-$ref_files{$key} = "$dir".q|node13.html|; 
+$key = q/interpreter/;
+$ref_files{$key} = "$dir".q|node10.html|; 
 $noresave{$key} = "$nosave";
 
 1;

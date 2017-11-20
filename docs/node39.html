@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Compilation (in terms of FORTH)</TITLE>
-<META NAME="description" CONTENT="Compilation (in terms of FORTH)">
+<TITLE>Virtual Machine Architecture</TITLE>
+<META NAME="description" CONTENT="Virtual Machine Architecture">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,7 +18,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node40.html">
+<LINK REL="next" HREF="node44.html">
 <LINK REL="previous" HREF="node38.html">
 <LINK REL="up" HREF="node37.html">
 <LINK REL="next" HREF="node40.html">
@@ -27,85 +27,100 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html689"
+<A NAME="tex2html706"
   HREF="node40.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html685"
+<A NAME="tex2html702"
   HREF="node37.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html679"
+<A NAME="tex2html696"
   HREF="node38.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html687"
+<A NAME="tex2html704"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html690"
-  HREF="node40.html">Vocabulary structure</A>
-<B> Up:</B> <A NAME="tex2html686"
-  HREF="node37.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html680"
-  HREF="node38.html">Memory</A>
- &nbsp; <B>  <A NAME="tex2html688"
+<B> Next:</B> <A NAME="tex2html707"
+  HREF="node40.html">Memory</A>
+<B> Up:</B> <A NAME="tex2html703"
+  HREF="node37.html">Something different: FORTH</A>
+<B> Previous:</B> <A NAME="tex2html697"
+  HREF="node38.html">FORTH/ file structure</A>
+ &nbsp; <B>  <A NAME="tex2html705"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05022000000000000000">
-Compilation (in terms of FORTH)</A>
-</H2>
+<H1><A NAME="SECTION05020000000000000000">
+Virtual Machine Architecture</A>
+</H1>
 
 <P>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="29" ALIGN="BOTTOM" BORDER="0"
- SRC="img14.png"
- ALT="\begin{lstlisting}[language=C++]
-extern uint32_t Cp; // compilation pointer (free heap)
-\end{lstlisting}">
-<BR>
+FVM<A NAME="tex2html21"
+  HREF="#foot903"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> has one byte-addressed memory, and two separate
+stacks:
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>data stack</STRONG></DT>
+<DD>for data 
+</DD>
+<DT><STRONG>return stack</STRONG></DT>
+<DD>return addresses for call/ret commands
+</DD>
+</DL>
 
 <P>
-In FORTH term greencompilation means <SPAN  CLASS="textit">adding bytes to the end of
-vocabulary</SPAN>, in fact into the begin of a heap, moving heap bottom to higher
-addresses. In FORTH standard there is only <code>HERE</code> word returns address of
-the heap begin (it must be <code>HEAP</code> name definitely). So to address we'll use
-special <code>Cp</code> register.<A NAME="Fheap"></A>
-<P>
-<BR>
-<IMG
- WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
- SRC="img15.png"
- ALT="\begin{lstlisting}[language=C++]
-extern void Cbyte( uint8_t); // compile byte
-ex...
-...mpile cell
-extern void Cstring(char*); // compile ASCIIZ string
-\end{lstlisting}">
-<BR>
-
-<P>
-These functions will be used in assembler.
 
 <P><P>
 <BR>
-
+Sizes of this structures was defined by constants, but you can modify code and
+use expandable storage type like <code>vector</code><A NAME="tex2html22"
+  HREF="#foot904"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>
 <P>
-<A NAME="Cxxx"></A>
 <BR>
-<IMG
- WIDTH="567" HEIGHT="134" ALIGN="BOTTOM" BORDER="0"
- SRC="img16.png"
- ALT="\begin{lstlisting}[language=C++]
-void Cbyte( uint8_t b) {
-M[Cp++] = b; assert(C...
-... length
-memcpy(&amp;M[Cp],s,L+1); Cp += L+1; } // compile length+1
-\end{lstlisting}">
+
 <BR>
 
 <P>
+FORTH has special <code>CELL</code> constant, corresponds to <SPAN  CLASS="textit">machine word size
+in bytes</SPAN>.
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot903">...FVM </A><A
+ HREF="node39.html#tex2html21"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
+<DD> FORTH Virtual Machine
+
+</DD>
+<DT><A NAME="foot904">... <code>vector</code> </A><A
+ HREF="node39.html#tex2html22"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A></DT>
+<DD> it will be much slower
+
+</DD>
+</DL>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html708"
+  HREF="node40.html">Memory</A>
+<LI><A NAME="tex2html709"
+  HREF="node41.html">Compilation (in terms of FORTH)</A>
+<LI><A NAME="tex2html710"
+  HREF="node42.html">Vocabulary structure</A>
+<LI><A NAME="tex2html711"
+  HREF="node43.html">Bytecode interpreter</A>
+</UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

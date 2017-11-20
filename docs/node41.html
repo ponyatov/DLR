@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bytecode interpreter</TITLE>
-<META NAME="description" CONTENT="Bytecode interpreter">
+<TITLE>Compilation (in terms of FORTH)</TITLE>
+<META NAME="description" CONTENT="Compilation (in terms of FORTH)">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,81 +18,70 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node42.html">
 <LINK REL="previous" HREF="node40.html">
-<LINK REL="up" HREF="node37.html">
+<LINK REL="up" HREF="node39.html">
 <LINK REL="next" HREF="node42.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html711"
+<A NAME="tex2html734"
   HREF="node42.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html707"
-  HREF="node37.html">
+<A NAME="tex2html730"
+  HREF="node39.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html703"
+<A NAME="tex2html724"
   HREF="node40.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html709"
+<A NAME="tex2html732"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html712"
-  HREF="node42.html">Core command set</A>
-<B> Up:</B> <A NAME="tex2html708"
-  HREF="node37.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html704"
-  HREF="node40.html">Vocabulary structure</A>
- &nbsp; <B>  <A NAME="tex2html710"
+<B> Next:</B> <A NAME="tex2html735"
+  HREF="node42.html">Vocabulary structure</A>
+<B> Up:</B> <A NAME="tex2html731"
+  HREF="node39.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html725"
+  HREF="node40.html">Memory</A>
+ &nbsp; <B>  <A NAME="tex2html733"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05024000000000000000">
-Bytecode interpreter</A>
+<H2><A NAME="SECTION05022000000000000000">
+Compilation (in terms of FORTH)</A>
 </H2>
 
 <P>
-Bytecode interpreter will be run after assembler ended its work:
-
-<P>
 <BR>
-<IMG
- WIDTH="567" HEIGHT="116" ALIGN="BOTTOM" BORDER="0"
- SRC="img19.png"
- ALT="\begin{lstlisting}[language=C++]
-int main() {
-... // compile vocabulary header
-...
-...iler
-dump(); // dump memory into .bin file
-VM(); // run VM
-}
-\end{lstlisting}">
+
 <BR>
 
 <P>
-As any other computer, interpreter implements fetch/decode/execute loop over
-commands in <code>M[]</code> memory, with command pointed by <code>Ip</code> instruction
-pointer register.
-
+In FORTH term greencompilation means <SPAN  CLASS="textit">adding bytes to the end of
+vocabulary</SPAN>, in fact into the begin of a heap, moving heap bottom to higher
+addresses. In FORTH standard there is only <code>HERE</code> word returns address of
+the heap begin (it must be <code>HEAP</code> name definitely). So to address we'll use
+special <code>Cp</code> register.<A NAME="Fheap"></A>
 <P>
 <BR>
-<IMG
- WIDTH="567" HEIGHT="291" ALIGN="BOTTOM" BORDER="0"
- SRC="img20.png"
- ALT="\begin{lstlisting}[language=C++]
-void VM() { for (;;) { // infty loop
-printf(''...
-...t:
-printf(''bad opcode\n\n''); abort();
-}
-printf(''\n'');
-}}
-\end{lstlisting}">
+
+<BR>
+
+<P>
+These functions will be used in assembler.
+
+<P><P>
+<BR>
+
+<P>
+<A NAME="Cxxx"></A>
+<BR>
+
 <BR>
 
 <P>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Control flow</TITLE>
-<META NAME="description" CONTENT="Control flow">
+<TITLE>Bytecode interpreter</TITLE>
+<META NAME="description" CONTENT="Bytecode interpreter">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,66 +18,60 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node44.html">
 <LINK REL="previous" HREF="node42.html">
-<LINK REL="up" HREF="node42.html">
+<LINK REL="up" HREF="node39.html">
 <LINK REL="next" HREF="node44.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html740"
+<A NAME="tex2html756"
   HREF="node44.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html736"
-  HREF="node42.html">
+<A NAME="tex2html752"
+  HREF="node39.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html730"
+<A NAME="tex2html748"
   HREF="node42.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html738"
+<A NAME="tex2html754"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html741"
-  HREF="node44.html">Stack manipulations</A>
-<B> Up:</B> <A NAME="tex2html737"
-  HREF="node42.html">Core command set</A>
-<B> Previous:</B> <A NAME="tex2html731"
-  HREF="node42.html">Core command set</A>
- &nbsp; <B>  <A NAME="tex2html739"
+<B> Next:</B> <A NAME="tex2html757"
+  HREF="node44.html">Core command set</A>
+<B> Up:</B> <A NAME="tex2html753"
+  HREF="node39.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html749"
+  HREF="node42.html">Vocabulary structure</A>
+ &nbsp; <B>  <A NAME="tex2html755"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05031000000000000000">
-Control flow</A>
+<H2><A NAME="SECTION05024000000000000000">
+Bytecode interpreter</A>
 </H2>
 
 <P>
+Bytecode interpreter will be run after assembler ended its work:
+
+<P>
 <BR>
 
 <BR>
 
 <P>
-<DL>
-<DT><STRONG>nop</STRONG></DT>
-<DD>do nothing
-<BR>
-<IMG
- WIDTH="567" HEIGHT="64" ALIGN="BOTTOM" BORDER="0"
- SRC="img23.png"
- ALT="ALT=""">
-<BR>
-<BR>
-
-<BR>
+As any other computer, interpreter implements fetch/decode/execute loop over
+commands in <code>M[]</code> memory, with command pointed by <code>Ip</code> instruction
+pointer register.
 
 <P>
-</DD>
-</DL>
+<BR>
+
+<BR>
 
 <P>
 <BR><HR>
