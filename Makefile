@@ -18,4 +18,4 @@ FORTH/bin.bin:
 	cd FORTH ; $(MAKE)
 
 packages:
-	sudo apt install make build-essential graphviz python2.7 texlive-latex-extra
+	sudo apt install make build-essential graphviz python2.7 texlive-latex-extra latex2html
