@@ -3,6 +3,7 @@ TEX += intro.tex tutor.tex terminology.tex whylanguage.tex pypy.tex pyvm.tex
 TEX += LLVM.tex SSA.tex
 TEX += reference.tex
 TEX += parsing.tex plyass.tex calc.tex
+TEX += TUI.tex
 TEX += Forth.tex
 TEX += PLC.tex
 TEX += vim.tex
