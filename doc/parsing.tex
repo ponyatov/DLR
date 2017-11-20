@@ -6,4 +6,16 @@
 
 \chapter{Python tabbed syntax}
 
-\chapter{DCG: Definite Clause Grammar}
+\chapter{DCG: Definite Clause Grammar}\label{DCG}\clearpage
+
+\section{Binary parsing}
+
+To decode a lot of complex binary formats and protocols you can use binary
+parser generator described here. You can describe format using special BNF-like
+language, and do syntax triggering technique to do actions on parsed data.
+The algorithm used is a special case of DCG \ref{DCG}\ tuned for stream parsing
+with error recovery enabled.
+
+For example, you can use this tool to write protocol parsers for widely known
+grabbing/decoder software \href{http://www.wireshark.org/}{Wireshark}, 
+simple disassemblers, and binary data file dumpers.
