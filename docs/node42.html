@@ -63,7 +63,7 @@ and procedure in mainstream languages. Variables and constants in FORTH also
 words. It corresponds to greenword in human languages -- sequence of
 letters, which means something. When you enter some FORTH code in command line,
 interpreter <A HREF="#INTERPRET"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> searches each word<A NAME="tex2html23"
-  HREF="#foot913"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A> in greenvocabulary, and executes <A HREF="#EXECUTE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> it if search was successful.
+  HREF="#foot917"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A> in greenvocabulary, and executes <A HREF="#EXECUTE"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> it if search was successful.
 
 <P>
 
@@ -75,7 +75,7 @@ greenVocabulary is container data structure, implements:
 </DD>
 <DT><STRONG>words storage</STRONG></DT>
 <DD>in linked list order<A NAME="tex2html24"
-HREF="#foot918"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>
+HREF="#foot922"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A>
 </DD>
 <DT><STRONG>word search</STRONG></DT>
 <DD>by its name
@@ -88,7 +88,7 @@ functions <A HREF="node41.html#Cxxx"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" S
 
 <P>
 Every item in vocabulary has this fields structure<A NAME="tex2html25"
-  HREF="#foot919"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>:
+  HREF="#foot923"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A>:
 
 <P>
 
@@ -149,18 +149,18 @@ To compile vocabular header use
 <P>
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot913">... word </A><A
+<DT><A NAME="foot917">... word </A><A
  HREF="node42.html#tex2html23"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A></DT>
 <DD> delimited by space symbols
 
 </DD>
-<DT><A NAME="foot918">... order </A><A
+<DT><A NAME="foot922">... order </A><A
  HREF="node42.html#tex2html24"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">5</SPAN></SUP></A></DT>
 <DD> or tree of linked lists in case
 of multiple vocabulary supported
 
 </DD>
-<DT><A NAME="foot919">... structure </A><A
+<DT><A NAME="foot923">... structure </A><A
  HREF="node42.html#tex2html25"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">6</SPAN></SUP></A></DT>
 <DD> If you plan to do some
 hacking using bytecode for software writing, you can eliminate vocabulary
