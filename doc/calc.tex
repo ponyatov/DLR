@@ -1,0 +1,42 @@
+\chapter{Parsing in \cpp: simple calculator}\clearpage
+
+If you don't interested in low-level programming in \cpp, please skip this
+chapter.
+\bigskip
+
+In this chapter, we'll see how to implement simple calculator \textit{with infix
+syntax} and variables, works in console. It is a quite useful program,
+especially if your job coupled with engineering or science. I myself constantly
+use it making some CADding and in occasionally everyday use.
+
+In next sections, we'll see how to add some very complex in fact theme:
+\emph{user-defined functions}, some control constructions, and arrays.
+
+\bigskip
+You can download
+\begin{description}
+\item[full source code]\ \\ from separate github repo:
+\url{http://github.com/ponyatov/calc}, and
+\item[\href{http://github.com/ponyatov/calc/releases/latest}{prebuild windows
+binary}] for first try.
+\end{description}
+
+\section{skelex: lexical program skeleton}
+
+First, we'll see how to organize our tiny project.
+\bigskip
+
+Nowdays you use huge IDE for
+software development, but I prefer more light, portable and easy way: I use
+(g)vim \ref{vim} text editor and Makefile\note{and Eclipse for more complex
+cases}. Vim has strange key bindings, and can be some cryptic for a newbie, but
+is very light in resources and have useful syntax coloring customization described in
+details in vim syntax coloring \ref{vimcolor}.
+
+
+
+\subsection{Makefile: build script}
+
+\section{lex: lexer generator}
+
+\section{yacc: parser generator}

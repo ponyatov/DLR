@@ -2,9 +2,10 @@ TEX = manual.tex header.tex bib.tex
 TEX += intro.tex tutor.tex terminology.tex whylanguage.tex pypy.tex pyvm.tex
 TEX += LLVM.tex SSA.tex
 TEX += reference.tex
-TEX += parsing.tex plyass.tex
+TEX += parsing.tex plyass.tex calc.tex
 TEX += Forth.tex
 TEX += PLC.tex
+TEX += vim.tex
 
 SRC += *.py
 
