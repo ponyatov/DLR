@@ -38,8 +38,8 @@ class VM:
 		
 		# set instruction pointer entry point
 		self.Ip = 0							
-		# compile entry code	
-		self.program = [ self.nop, self.bye ]
+		# clean up program memory	
+		self.program = []
 
 		# ===== lexer code section =====
 				
@@ -97,29 +97,27 @@ class VM:
 		# ===== parser/compiler code section =====
 		def p_program_epsilon(p):
 			' program : '
-			p[0] = 'what to do:\n' # $0 = ...
 		def p_program_recursive(p):
 			' program : program command '
-			p[0] = p[1] + p[2] # $0 = $1 + $2
 		def p_command_NOP(p):
 			' command : NOP '
-			p[0] = 'do nothing\n'
+			self.program.append(self.nop)
 		def p_command_BYE(p):
 			' command : BYE '
-			p[0] = 'stop system\n'
+			self.program.append(self.bye)
 
 		# required parser error callback
 		def p_error(p): raise SyntaxError('parser: %s' % p)
 		# create ply.yacc object, without extra files
 		parser = yacc.yacc(debug=False,write_tables=None)
 		# feed & parse source code using lexer
-		print parser.parse(src,lexer)				
+		parser.parse(src,lexer)				
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
 		self.interpreter()		  				# run interpreter
 
-VM(r' nop bye ')
+VM(' nop bye ')
 # if __name__ == '__main__':
 # 	VM(r'''
 #  		R1 = 'R\t[1]'

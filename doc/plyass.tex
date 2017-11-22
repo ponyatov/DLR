@@ -351,7 +351,7 @@ functions for every production, \emph{giving BNF in docstring}:
 		# feed & parse source code using lexer
 		parser.parse(src,lexer)				
 		
-VM(r' nop bye ')
+VM(' nop bye ')
 \end{lstlisting}
 \begin{lstlisting}
 ERROR: Symbol 'command' used, but not defined
@@ -398,7 +398,7 @@ with more light and easy to read syntax. Mark this TODO for DLR.
 		# feed & parse source code using lexer
 		print parser.parse(src,lexer)				
 \end{lstlisting}
-Here we added \verb|print| command to see that \emph{parser can return values}
+Here we added \verb|print| command to see that \emph{parser can return values}.
 \begin{lstlisting}
 WARNING: Token 'STRING' defined, but not used
 WARNING: Token 'EQ' defined, but not used
@@ -415,6 +415,36 @@ stop system
 \item[warnings] from PLY library: we defined some terminals (tokens) but not use
 them in syntax grammar
 \item[string returned from parser] as we expect
-\item[program dump] containts only entry and exit code created by
+\item[program trace] containts log of executing entry code created by
 \verb|compiler()|
 \end{description}
+
+\subsection{Bytecode compiler}
+
+Change code to compile bytecode:
+\begin{lstlisting}[language=python]
+	def compiler(self,src):	
+	
+		# ===== init code section =====
+		# set instruction pointer entry point
+		self.Ip = 0							
+		# clean up program memory
+		self.program = []
+		
+		# ===== parser/compiler code section =====
+		def p_program_epsilon(p):
+			' program : '
+		def p_program_recursive(p):
+			' program : program command '
+		def p_command_NOP(p):
+			' command : NOP '
+			self.program.append(self.nop)
+		def p_command_BYE(p):
+			' command : BYE '
+			self.program.append(self.bye)
+
+		# feed & parse source code using lexer
+		parser.parse(src,lexer)				
+\end{lstlisting}
+
+Now compiler does no add any entry code, and traced code is our program.
