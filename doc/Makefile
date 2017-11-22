@@ -8,7 +8,7 @@ TEX += Forth.tex
 TEX += PLC.tex
 TEX += vim.tex
 
-SRC += *.py
+SRC += *.py ../tmp/calc.mk
 
 FIG = ../tmp/lexer.pdf
 
@@ -20,3 +20,6 @@ manual.pdf: $(TEX) $(SRC) $(FIG)
 	dot -Tpdf -o $@ $<
 #	&& pdfcrop $@t $@
 	inkscape $@ --export-area-drawing --export-pdf=$@
+
+../tmp/calc.mk: ../calc/Makefile
+	cp $< $@
