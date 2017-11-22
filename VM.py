@@ -101,13 +101,19 @@ class VM:
 		def p_program_recursive(p):
 			' program : program command '
 			p[0] = p[1] + p[2] # $0 = $1 + $2
+		def p_command_NOP(p):
+			' command : NOP '
+			p[0] = 'do nothing\n'
+		def p_command_BYE(p):
+			' command : BYE '
+			p[0] = 'stop system\n'
 
 		# required parser error callback
 		def p_error(p): raise SyntaxError('parser: %s' % p)
 		# create ply.yacc object, without extra files
 		parser = yacc.yacc(debug=False,write_tables=None)
 		# feed & parse source code using lexer
-		parser.parse(src,lexer)				
+		print parser.parse(src,lexer)				
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler

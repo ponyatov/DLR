@@ -379,7 +379,42 @@ Here we have some problem: our lexer returns all commands as one universal
 			r'bye'
 			return t
 \end{lstlisting}
- 
 As you see, this PLY code is not compact and easy to read, and one of thing we
-ar egoing to do much much later is to make special language for writing parsers
+are going to do much much later is to make special language for writing parsers
 with more light and easy to read syntax. Mark this TODO for DLR.
+\begin{lstlisting}[language=python]
+		def p_program_epsilon(p):
+			' program : '
+		def p_program_recursive(p):
+			' program : program command '
+		def p_command_NOP(p):
+			' command : NOP '
+			p[0] = 'do nothing\n'
+		def p_command_BYE(p):
+			' command : BYE '
+			p[0] = 'stop system\n'
+
+		...
+		# feed & parse source code using lexer
+		print parser.parse(src,lexer)				
+\end{lstlisting}
+Here we added \verb|print| command to see that \emph{parser can return values}
+\begin{lstlisting}
+WARNING: Token 'STRING' defined, but not used
+WARNING: Token 'EQ' defined, but not used
+WARNING: Token 'REGISTER' defined, but not used
+WARNING: There are 3 unused tokens
+what to do:
+do nothing
+stop system
+
+0000 <bound method VM.nop of <__main__.VM instance at 0x023E6918>> [0, 1, 2, 3, 4, 5, 6, 7]
+0001 <bound method VM.bye of <__main__.VM instance at 0x023E6918>> [0, 1, 2, 3, 4, 5, 6, 7]
+\end{lstlisting}
+\begin{description}[nosep]
+\item[warnings] from PLY library: we defined some terminals (tokens) but not use
+them in syntax grammar
+\item[string returned from parser] as we expect
+\item[program dump] containts only entry and exit code created by
+\verb|compiler()|
+\end{description}
