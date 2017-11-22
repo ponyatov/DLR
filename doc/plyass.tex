@@ -189,4 +189,197 @@ LexToken(COMMAND,'bye',4,43)
 
 \begin{center}{\Huge Lexer done !}\end{center}
 
-\section{Parser}
+\section{Parser/Compiler}
+
+Let's add parser, move all code from lexer() method into compiler():
+\begin{lstlisting}[language=python]
+	def compiler(self,src):
+		# ===== init code section =====
+		# set instruction pointer entry point
+		self.Ip = 0							
+		# compile entry code	
+		self.program = [ self.nop ]
+		# ===== lexer code section =====
+		...
+		# ===== parser/compiler code section =====
+		...
+		# ===== compile final code =====
+		self.program += [ self.bye ]
+\end{lstlisting}
+
+\begin{lstlisting}[language=python]
+		# ===== lexer code section =====
+		
+		# extra lexer states
+		states = (('string','exclusive'),)
+		# token types
+		tokens = ['COMMAND','REGISTER','EQ','STRING']
+		...
+\end{lstlisting}
+
+\begin{lstlisting}[language=python]
+		# ===== parser/compiler code section =====
+		
+		# create ply.yacc object, without extra files
+		parser = yacc.yacc(debug=False,write_tables=None)
+		# feed & parse source code using lexer
+		parser.parse(src,lexer)				
+\end{lstlisting}
+
+Now we see term \term{compile} for the first time, used in couple with
+\term{parse}. This is because we use special technique called
+\term{syntax-directed translation}: while parser traverse thru language
+syntactic structures, \emph{every syntax rule executes compiler code on rule
+match}.
+
+% \bigskip
+And \term{compile} term in this case means not more then \emph{adding} machine
+commands, bytecodes or \emph{tiny executable elementary elements} in our demo
+case, to \term{compiler buffer}, i.e. \verb|self.program[]| memory.
+
+\bigskip
+This method is very suitable for simple \term{imperative
+languages}\note{languages says what to do step by step} like assemblers, which
+can be implemented by using \emph{only global data structures}, like symbol
+tables, list of defined functions, and don't require to transfer or compute data
+between nodes of tree-represented program (\term{attribute grammar} method)
+\begin{description}[nosep]
+  \item[synthesized attributes] from nested elements to high level elements, and
+  \item[inherited attributes] from parent nodes to subtrees
+\end{description}
+
+\begin{lstlisting}
+ERROR: no rules of the form p_rulename are defined
+\end{lstlisting}
+
+As for lexer, we need set of \verb|p_rules|.
+
+\subsection{Backus\ -- Naur form}
+
+For lexer we used \term{regular expressions}, and this is very understandable
+and easy to use text templates, until we try to match so easy elements as
+numbers and identifiers.
+
+\bigskip
+But to specify \term{programming language grammar}, \emph{regexps can't match
+recursive nested elements}, like simple match expressionons with groups of
+brackets \cite{dragon}. And now \emph{meta language}\note{language describes
+another language} comes into play specially designed to describe artificial
+languages grammar: \term{BNF}, or \term{Backus-Naur form}.
+
+\bigskip\noindent
+Our assembly language can be described as:
+\begin{lstlisting}
+program -> <empty>
+program -> program command { /* action */ memory += $2 }
+\end{lstlisting}
+or in form with \emph{or} element and yacc BNF variant can be grouped
+\begin{lstlisting}
+program : | program command
+\end{lstlisting}
+
+\begin{description}[nosep]
+\item[\term{production}] is every rule in this language specs
+\item[\term{nonterminal}] element with low case name, which will be
+described as \emph{composite structure, consists of another elements} in others
+productions
+\item[\term{terminal}] is single element is not composite, like simple numbers,
+strings and identifiers ; we will use up case to emphasize
+them as \emph{tokens}
+\item[\term{epsilon}] or $\epsilon$\ is \emph{empty space} have no elements
+at all
+\end{description}
+
+\bigskip\noindent
+\emph{Note resursion: program refers to program itself as subelement}. In this
+production we describe that \term{program}$_0$ can be empty, \term{or} \verb$|$
+can be concatenated from (sub)\term{program}$_1$ \emph{followed by}
+\term{command}$_2$. Parser code will \term{recursive} try to match program$_1$
+using the same rule, until recursion will end up by \verb|program : <empty>|
+part.
+
+Every time parser (sub)rule matches, code in \verb|{action}| will be
+executed. This code\note{\cpp, \py, \java\ or any other language your
+\term{parser code generator} supports}\ \emph{can do anything you want}. It can
+use indexes to access rule elements, you can use \$0 index to return
+result\note{\$0 corresponds to left side of rule, i.e. nonterminal value}, and
+\$1 for program${_1}$ and \$2 for command values. For example with tiny ``nop
+bye'' program and this grammar:
+\begin{lstlisting}
+program : <empty>			{ $0 = "what to do:\n"	}
+program : program command	{ $0 = $0 + $2			}
+command : NOP				{ $0 = "do nothing\n"	}
+command : BYE				{ $0 = "stop system\n"	}
+\end{lstlisting}
+\emph{parser will start from topmost} \term{start production}\note{all rules
+with equal left nonterminals \emph{will be grouped}} trying to match every rule
+\emph{top down} in \term{greedy} way: match the \emph{longest right} part with
+\emph{deep first} search. In result parser will return you string:
+\begin{lstlisting}
+what to do:
+no nothing
+stop system
+\end{lstlisting}
+
+\bigskip
+At this point I tried to write parsing process step by step, but it is too
+cryptic, and we skip this trace with parser stack pushing and elements shifting.
+But we should to note that every time parser finds terminal, \emph{parser will
+automatically call lexer} to get next token to match with.
+
+\clearpage
+Returning to our sheeps, we are not lucky in BNF syntax usage in \py.
+PLY parsing library use not so short grammar syntax: we must define special
+functions for every production, \emph{giving BNF in docstring}:
+\begin{lstlisting}[language=python]
+		# ===== parser/compiler code section =====
+		
+		# grammar rules
+		
+		def p_program_epsilon(p):
+			' program : '
+			p[0] = 'what to do:\n' # $0 = ...
+		def p_program_recursive(p):
+			' program : program command '
+			p[0] = p[1] + p[2] # $0 = $1 + $2
+			
+		# required parser error callback
+		def p_error(p): raise SyntaxError('parser: %s' % p)
+		
+		# create ply.yacc object, without extra files
+		parser = yacc.yacc(debug=False,write_tables=None)
+		# feed & parse source code using lexer
+		parser.parse(src,lexer)				
+		
+VM(r' nop bye ')
+\end{lstlisting}
+\begin{lstlisting}
+ERROR: Symbol 'command' used, but not defined
+WARNING: Token 'EQ' defined, but not used
+WARNING: Token 'REGISTER' defined, but not used
+WARNING: Token 'COMMAND' defined, but not used
+WARNING: Token 'STRING' defined, but not used
+WARNING: There are 4 unused tokens
+\end{lstlisting}
+We need \verb|p_error(p)| error callback function will be called on syntax
+errors.
+
+\clearpage
+Here we have some problem: our lexer returns all commands as one universal
+\verb|COMMAND| token, so we need to analyze its value, or just fix lexer:
+\begin{lstlisting}[language=python]
+		# ===== lexer code section =====
+		# token types
+		tokens = ['NOP','BYE','REGISTER','EQ','STRING']
+		# replace t_COMMAND by:
+		def t_NOP(t):
+			r'nop'
+			return t
+		def t_BYE(t):
+			r'bye'
+			return t
+\end{lstlisting}
+ 
+As you see, this PLY code is not compact and easy to read, and one of thing we
+ar egoing to do much much later is to make special language for writing parsers
+with more light and easy to read syntax. Mark this TODO for DLR.

@@ -9,9 +9,9 @@ class VM:
 	
 	R = [0,1,2,3,4,5,6,7]						# single register pool
 	
-    # command set
-	def nop(self): pass             # do nothing
-	def bye(self): self._bye=True   # stop singe VM only
+    											# ==== command set ===
+	def nop(self): pass             			# do nothing
+	def bye(self): self._bye=True				# stop singe VM only
 	
 	def ld(self):
 		' load register '
@@ -33,15 +33,20 @@ class VM:
 			command()									# DECODE/EXECUTE
 			
 	def compiler(self,src):
-		self.Ip = 0								# set instruction pointer
-		self.program = [ self.nop, self.bye ]	# (we don't have parser now)
-		self.lexer(src)
 		
-	def lexer(self,src):
+		# ===== init code section =====
+		
+		# set instruction pointer entry point
+		self.Ip = 0							
+		# compile entry code	
+		self.program = [ self.nop, self.bye ]
+
+		# ===== lexer code section =====
+				
 		# extra lexer states
 		states = (('string','exclusive'),)
 		# token types
-		tokens = ['COMMAND','REGISTER','EQ','STRING']
+		tokens = ['NOP','BYE','REGISTER','EQ','STRING']
 		# regexp/action rules (ANY)
 		def t_ANY_newline(t):					# special rule for EOL
 			r'\n'
@@ -75,8 +80,11 @@ class VM:
 			t.lexer.push_state('string')
 			t.lexer.LexString = ''			# initialize accumulator
 		t_ignore = ' \t\r'					# drop spaces (no EOL)
-		def t_COMMAND(t):
-			r'[a-z]+'
+		def t_NOP(t):
+			r'nop'
+			return t
+		def t_BYE(t):
+			r'bye'
 			return t
 		def t_REGISTER(t):
 			r'R[0-9]+'
@@ -85,21 +93,30 @@ class VM:
 		t_EQ = r'='
 		# create ply.lex object
 		lexer = lex.lex()				
-		# feed source code
-		lexer.input(src)				
-		# get next token						 
-		while True:
-			next_token = lexer.token()
-			if not next_token: break # on None
-			print next_token 	
+
+		# ===== parser/compiler code section =====
+		def p_program_epsilon(p):
+			' program : '
+			p[0] = 'what to do:\n' # $0 = ...
+		def p_program_recursive(p):
+			' program : program command '
+			p[0] = p[1] + p[2] # $0 = $1 + $2
+
+		# required parser error callback
+		def p_error(p): raise SyntaxError('parser: %s' % p)
+		# create ply.yacc object, without extra files
+		parser = yacc.yacc(debug=False,write_tables=None)
+		# feed & parse source code using lexer
+		parser.parse(src,lexer)				
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
 		self.interpreter()		  				# run interpreter
 
-if __name__ == '__main__':
-	VM(r'''
-        R1 = 'R\t[1]'
-        nop
-        bye
-	''')
+VM(r' nop bye ')
+# if __name__ == '__main__':
+# 	VM(r'''
+#  		R1 = 'R\t[1]'
+#         nop
+#         bye
+# 	''')
