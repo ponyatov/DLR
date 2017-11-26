@@ -47,6 +47,10 @@ class VM:
 		states = (('string','exclusive'),)
 		# token types
 		tokens = ['NOP','BYE','REGISTER','EQ','STRING']
+		
+		t_ignore = ' \t\r'					# drop spaces (no EOL)
+		t_ignore_COMMENT = r'\#.+'			# line comment
+
 		# regexp/action rules (ANY)
 		def t_ANY_newline(t):					# special rule for EOL
 			r'\n'
@@ -54,6 +58,7 @@ class VM:
 			# do not return token, it will be ignored by parser
 		# required lexer error callback
 		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
+		
 		# regexp/action rules (STRING)
 		t_string_ignore = '' 				# don't ignore anything
 		def t_string_end(t):
@@ -79,7 +84,7 @@ class VM:
 			r'\''
 			t.lexer.push_state('string')
 			t.lexer.LexString = ''			# initialize accumulator
-		t_ignore = ' \t\r'					# drop spaces (no EOL)
+			
 		def t_NOP(t):
 			r'nop'
 			return t
@@ -105,6 +110,14 @@ class VM:
 		def p_command_BYE(p):
 			' command : BYE '
 			self.program.append(self.bye)
+		def p_command_R_load(p):
+			' command : REGISTER EQ constant'
+			self.program.append(self.ld)	# compile ld command opcode
+			self.program.append(p[1])		# compile register number at pos $1
+			self.program.append(p[3])		# compile constant
+		def p_constant_STRING(p):
+			' constant : STRING '
+			p[0] = p[1]
 
 		# required parser error callback
 		def p_error(p): raise SyntaxError('parser: %s' % p)
@@ -117,10 +130,9 @@ class VM:
 		self.compiler(P)						# run parser/compiler
 		self.interpreter()		  				# run interpreter
 
-VM(' nop bye ')
-# if __name__ == '__main__':
-# 	VM(r'''
-#  		R1 = 'R\t[1]'
-#         nop
-#         bye
-# 	''')
+if __name__ == '__main__':
+	VM(r''' # use r' : we have escapes in string constant
+ 		R1 = 'R\t[1]'
+        nop
+        bye
+	''')

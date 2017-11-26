@@ -48,7 +48,7 @@ First we reorder code and add \verb|compiler(source)| method:
 
 \section{Lexer}
 
-Connect PLY library:
+We will use \href{http://www.dabeaz.com/ply/}{PLY library}:
 \lstinputlisting[language=Python]{py09.py}
 
 For first time we implement lexer only, to view what \term{lexeme}s we will get
@@ -78,7 +78,7 @@ To encapsulate lets group all lexer data in separate method:
 SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0)
 \end{lstlisting}
 
-In error report you can see problematic symbol at first position.
+In error report you can see problematic symbol \emph{at first position}.
 
 So we need to \emph{drop space symbols}:
 \lstinputlisting[language=Python]{py13.py}
@@ -96,13 +96,21 @@ bye\n\t",4,11)
 \end{lstlisting}
 Line numbering works ok, lexer position counts how much characters was processed
 by lexer in total.
-Add register parsing, and return \emph{modified token} with matched string
-replaced by register number:
+
+Add \emph{register parsing}, and return \textit{modified token} with matched
+string replaced by register number:
 \lstinputlisting[language=Python]{py15.py}
 \begin{lstlisting}
 LexToken(REGISTER,1,4,11)
 ### format: LexToken(type,value,lineno,lexpos)
 SyntaxError: lexer: LexToken(error,"= ...
+\end{lstlisting}
+
+Add \emph{comment lexing} starts with \#\ : \label{lexcomment}
+\begin{lstlisting}[language=python]
+		# ===== lexer code section =====
+		t_ignore = ' \t\r'			# drop spaces (no EOL)
+		t_ignore_COMMENT = r'\#.+'	# line comment
 \end{lstlisting}
 
 \clearpage
@@ -123,7 +131,7 @@ LexToken(REGISTER,1,4,11)
 LexToken(EQ,'=',4,14)
 \end{lstlisting}
 
-\subsection{Lexing strings (lexer states)}
+\subsection{Lexing strings (lexer states)}\label{lexstring}
 
 Strings lexing in very special case. Using \term{string leteral}s we want to be
 able to use some standard \term{escape sequences} like
@@ -307,7 +315,7 @@ result\note{\$0 corresponds to left side of rule, i.e. nonterminal value}, and
 bye'' program and this grammar:
 \begin{lstlisting}
 program : <empty>			{ $0 = "what to do:\n"	}
-program : program command	{ $0 = $0 + $2			}
+program : program command	{ $0 = $1 + $2			}
 command : NOP				{ $0 = "do nothing\n"	}
 command : BYE				{ $0 = "stop system\n"	}
 \end{lstlisting}
@@ -446,5 +454,49 @@ Change code to compile bytecode:
 		# feed & parse source code using lexer
 		parser.parse(src,lexer)				
 \end{lstlisting}
-
-Now compiler does no add any entry code, and traced code is our program.
+Now compiler does no add any entry code, and \emph{traced code is our program}.
+\begin{lstlisting}
+WARNING: Token 'STRING' defined, but not used
+WARNING: Token 'EQ' defined, but not used
+WARNING: Token 'REGISTER' defined, but not used
+0000 <bound method VM.nop of <__main__.VM> [0, .., 7]
+0001 <bound method VM.bye of <__main__.VM> [0, .., 7]
+\end{lstlisting}
+We have some warnings about terminals not used in our grammar, they are linked
+with register load command we omitted. Lets add this command grammar. First
+recover full sample program:
+\begin{lstlisting}[language=python]
+if __name__ == '__main__':
+	VM(r''' # use r' : we have escapes in string constant
+ 		R1 = 'R\t[1]'
+        nop
+        bye
+	''')
+\end{lstlisting}
+Remember we have defined in lexer:
+\begin{itemize}
+  \item \# comments \ref{lexcomment}
+  \item parsing string using special lexer state \ref{lexstring} 
+\end{itemize}
+\begin{lstlisting}[language=python]
+		def p_command_R_load(p):
+			' command : REGISTER EQ constant'
+			# compile ld command opcode
+			self.program.append(self.ld)
+			# compile register number using value
+			# from terminal REGISTER at p[$1] in production
+			self.program.append(p[1])
+			# compile constant
+			self.program.append(p[3])
+		def p_constant_STRING(p):
+			' constant : STRING '
+			p[0] = p[1]
+\end{lstlisting}
+We defined \verb|constant| nonterminal for later use: constant can be not
+string, but also number, or pointer to any object.
+\clearpage
+\begin{lstlisting}
+0000 <bound method VM.ld> [0, 1, 2, 3, 4, 5, 6, 7]
+0003 <bound method VM.nop> [0, 'R\t[1]', 2, 3, 4, 5, 6, 7]
+0004 <bound method VM.bye> [0, 'R\t[1]', 2, 3, 4, 5, 6, 7]
+\end{lstlisting}
