@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Virtual Machine Architecture</TITLE>
-<META NAME="description" CONTENT="Virtual Machine Architecture">
+<TITLE>Bytecode interpreter</TITLE>
+<META NAME="description" CONTENT="Bytecode interpreter">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,74 +18,45 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node44.html">
 <LINK REL="previous" HREF="node38.html">
-<LINK REL="up" HREF="node37.html">
+<LINK REL="up" HREF="node35.html">
 <LINK REL="next" HREF="node40.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html706"
+<A NAME="tex2html693"
   HREF="node40.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html702"
-  HREF="node37.html">
+<A NAME="tex2html689"
+  HREF="node35.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html696"
+<A NAME="tex2html685"
   HREF="node38.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html704"
+<A NAME="tex2html691"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html707"
-  HREF="node40.html">Memory</A>
-<B> Up:</B> <A NAME="tex2html703"
-  HREF="node37.html">Something different: FORTH</A>
-<B> Previous:</B> <A NAME="tex2html697"
-  HREF="node38.html">FORTH/ file structure</A>
- &nbsp; <B>  <A NAME="tex2html705"
+<B> Next:</B> <A NAME="tex2html694"
+  HREF="node40.html">Core command set</A>
+<B> Up:</B> <A NAME="tex2html690"
+  HREF="node35.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html686"
+  HREF="node38.html">Vocabulary structure</A>
+ &nbsp; <B>  <A NAME="tex2html692"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION05020000000000000000">
-Virtual Machine Architecture</A>
-</H1>
+<H2><A NAME="SECTION05024000000000000000">
+Bytecode interpreter</A>
+</H2>
 
 <P>
-FVM<A NAME="tex2html21"
-  HREF="#foot907"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> has one byte-addressed memory, and two separate
-stacks:
-<DL>
-<DD>[nosep]
-</DD>
-<DT><STRONG>data stack</STRONG></DT>
-<DD>for data 
-</DD>
-<DT><STRONG>return stack</STRONG></DT>
-<DD>return addresses for call/ret commands
-</DD>
-</DL>
-
-<P>
-
-<P><P>
-<BR>
-Sizes of this structures was defined by constants, but you can modify code and
-use expandable storage type like <code>vector</code><A NAME="tex2html22"
-  HREF="#foot908"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>
-<P>
-<BR>
-
-<BR>
-
-<P>
-FORTH has special <code>CELL</code> constant, corresponds to <SPAN  CLASS="textit">machine word size
-in bytes</SPAN>.
+Bytecode interpreter will be run after assembler ended its work:
 
 <P>
 <BR>
@@ -93,34 +64,16 @@ in bytes</SPAN>.
 <BR>
 
 <P>
-<BR><HR><H4>Footnotes</H4>
-<DL>
-<DT><A NAME="foot907">...FVM </A><A
- HREF="node39.html#tex2html21"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
-<DD> FORTH Virtual Machine
+As any other computer, interpreter implements fetch/decode/execute loop over
+commands in <code>M[]</code> memory, with command pointed by <code>Ip</code> instruction
+pointer register.
 
-</DD>
-<DT><A NAME="foot908">... <code>vector</code> </A><A
- HREF="node39.html#tex2html22"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A></DT>
-<DD> it will be much slower
+<P>
+<BR>
 
-</DD>
-</DL>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+<BR>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html708"
-  HREF="node40.html">Memory</A>
-<LI><A NAME="tex2html709"
-  HREF="node41.html">Compilation (in terms of FORTH)</A>
-<LI><A NAME="tex2html710"
-  HREF="node42.html">Vocabulary structure</A>
-<LI><A NAME="tex2html711"
-  HREF="node43.html">Bytecode interpreter</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

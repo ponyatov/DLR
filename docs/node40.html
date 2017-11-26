@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Memory</TITLE>
-<META NAME="description" CONTENT="Memory">
+<TITLE>Core command set</TITLE>
+<META NAME="description" CONTENT="Core command set">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,43 +18,56 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node41.html">
-<LINK REL="previous" HREF="node39.html">
-<LINK REL="up" HREF="node39.html">
+<LINK REL="next" HREF="node46.html">
+<LINK REL="previous" HREF="node35.html">
+<LINK REL="up" HREF="node33.html">
 <LINK REL="next" HREF="node41.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html722"
+<A NAME="tex2html705"
   HREF="node41.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html718"
-  HREF="node39.html">
+<A NAME="tex2html701"
+  HREF="node33.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html712"
+<A NAME="tex2html695"
   HREF="node39.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html720"
+<A NAME="tex2html703"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html723"
-  HREF="node41.html">Compilation (in terms of</A>
-<B> Up:</B> <A NAME="tex2html719"
-  HREF="node39.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html713"
-  HREF="node39.html">Virtual Machine Architecture</A>
- &nbsp; <B>  <A NAME="tex2html721"
+<B> Next:</B> <A NAME="tex2html706"
+  HREF="node41.html">Control flow</A>
+<B> Up:</B> <A NAME="tex2html702"
+  HREF="node33.html">Something different: FORTH</A>
+<B> Previous:</B> <A NAME="tex2html696"
+  HREF="node39.html">Bytecode interpreter</A>
+ &nbsp; <B>  <A NAME="tex2html704"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05021000000000000000">
-Memory</A>
-</H2>
+<H1><A NAME="SECTION05030000000000000000">
+Core command set</A>
+</H1>
+
+<P>
+FVM uses two bytecode command types:
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>CMD0</STRONG></DT>
+<DD>one byte opcode without parameters
+</DD>
+<DT><STRONG>CMD1</STRONG></DT>
+<DD>byte opcode with required cell-sized parameter
+</DD>
+</DL>
 
 <P>
 <BR>
@@ -62,43 +75,23 @@ Memory</A>
 <BR>
 
 <P>
-Main memory contains all:
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
-[nosep]
-<UL>
-<LI>compiled bytecode
-</LI>
-<LI>vocabulary structure <A HREF="node42.html#vocabulary"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-</LI>
-<LI>data (constants, variables, strings, binary blobs,...)
-</LI>
-<LI>heap from current <code>Cp</code> till end of <code>M[]</code> <A HREF="node41.html#Fheap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-</LI>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html707"
+  HREF="node41.html">Control flow</A>
+<LI><A NAME="tex2html708"
+  HREF="node42.html">Stack manipulations</A>
+<LI><A NAME="tex2html709"
+  HREF="node43.html">Arithmetics and binary operations</A>
+<LI><A NAME="tex2html710"
+  HREF="node44.html">Basic input/output (console, files)</A>
+<LI><A NAME="tex2html711"
+  HREF="node45.html">Fast Foreign Interface</A>
 </UL>
-
-<P>
-Memory has byte adressing, so we need some functions to get/set CELLs:
-
-<P>
-<BR>
-
-<BR>
-
-<P>
-If you set <code>cell &lt; 0x100</code> , but read byte on same address, you must get the
-same value. On greenlittle-endian machines (x86) we can read/write cells using
-<code>(uint32_t*)&amp;M[addr]</code> pointer, but for portability we use this
-byte-shifting functions:
-
-<P>
-<BR>
-
-<BR>
-<BR>
-
-<BR>
-
-<P>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

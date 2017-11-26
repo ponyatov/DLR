@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>DCG: Definite Clause Grammar</TITLE>
-<META NAME="description" CONTENT="DCG: Definite Clause Grammar">
+<TITLE>Virtual Machine Architecture</TITLE>
+<META NAME="description" CONTENT="Virtual Machine Architecture">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,52 +18,107 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node40.html">
 <LINK REL="previous" HREF="node34.html">
-<LINK REL="up" HREF="node31.html">
+<LINK REL="up" HREF="node33.html">
 <LINK REL="next" HREF="node36.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html631"
+<A NAME="tex2html643"
   HREF="node36.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html627"
-  HREF="node31.html">
+<A NAME="tex2html639"
+  HREF="node33.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html623"
+<A NAME="tex2html633"
   HREF="node34.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html629"
+<A NAME="tex2html641"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html632"
-  HREF="node36.html">Binary parsing</A>
-<B> Up:</B> <A NAME="tex2html628"
-  HREF="node31.html">Complex parsing</A>
-<B> Previous:</B> <A NAME="tex2html624"
-  HREF="node34.html">Python tabbed syntax</A>
- &nbsp; <B>  <A NAME="tex2html630"
+<B> Next:</B> <A NAME="tex2html644"
+  HREF="node36.html">Memory</A>
+<B> Up:</B> <A NAME="tex2html640"
+  HREF="node33.html">Something different: FORTH</A>
+<B> Previous:</B> <A NAME="tex2html634"
+  HREF="node34.html">FORTH/ file structure</A>
+ &nbsp; <B>  <A NAME="tex2html642"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04400000000000000000"></A><A NAME="DCG"></A>
-<BR>
-DCG: Definite Clause Grammar
+<H1><A NAME="SECTION05020000000000000000">
+Virtual Machine Architecture</A>
 </H1>
 
 <P>
+FVM<A NAME="tex2html19"
+  HREF="#foot998"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> has one byte-addressed memory, and two separate
+stacks:
+<DL>
+<DD>[nosep]
+</DD>
+<DT><STRONG>data stack</STRONG></DT>
+<DD>for data 
+</DD>
+<DT><STRONG>return stack</STRONG></DT>
+<DD>return addresses for call/ret commands
+</DD>
+</DL>
+
+<P>
+
+<P><P>
+<BR>
+Sizes of this structures was defined by constants, but you can modify code and
+use expandable storage type like <code>vector</code><A NAME="tex2html20"
+  HREF="#foot999"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>
+<P>
+<BR>
+
+<BR>
+
+<P>
+FORTH has special <code>CELL</code> constant, corresponds to <SPAN  CLASS="textit">machine word size
+in bytes</SPAN>.
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot998">...FVM </A><A
+ HREF="node35.html#tex2html19"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
+<DD> FORTH Virtual Machine
+
+</DD>
+<DT><A NAME="foot999">... <code>vector</code> </A><A
+ HREF="node35.html#tex2html20"><SUP><SPAN CLASS="arabic">11</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A></DT>
+<DD> it will be much slower
+
+</DD>
+</DL>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html633"
-  HREF="node36.html">Binary parsing</A>
+<LI><A NAME="tex2html645"
+  HREF="node36.html">Memory</A>
+<LI><A NAME="tex2html646"
+  HREF="node37.html">Compilation (in terms of FORTH)</A>
+<LI><A NAME="tex2html647"
+  HREF="node38.html">Vocabulary structure</A>
+<LI><A NAME="tex2html648"
+  HREF="node39.html">Bytecode interpreter</A>
 </UL>
 <!--End of Table of Child-Links-->
 <BR><HR>

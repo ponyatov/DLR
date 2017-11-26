@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Lexing strings (lexer states)</TITLE>
-<META NAME="description" CONTENT="Lexing strings (lexer states)">
+<TITLE>Installation</TITLE>
+<META NAME="description" CONTENT="Installation">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,86 +27,49 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html464"
+<A NAME="tex2html449"
   HREF="node22.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html460"
+<A NAME="tex2html445"
   HREF="node20.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html454"
+<A NAME="tex2html439"
   HREF="node20.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html462"
+<A NAME="tex2html447"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html465"
-  HREF="node22.html">End of file lexing</A>
-<B> Up:</B> <A NAME="tex2html461"
-  HREF="node20.html">Lexer</A>
-<B> Previous:</B> <A NAME="tex2html455"
-  HREF="node20.html">Lexer</A>
- &nbsp; <B>  <A NAME="tex2html463"
+<B> Next:</B> <A NAME="tex2html450"
+  HREF="node22.html">SSA: Single State Assignment</A>
+<B> Up:</B> <A NAME="tex2html446"
+  HREF="node20.html">Using LLVM</A>
+<B> Previous:</B> <A NAME="tex2html440"
+  HREF="node20.html">Using LLVM</A>
+ &nbsp; <B>  <A NAME="tex2html448"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02311000000000000000">
-Lexing strings (lexer states)</A>
-</H2>
+<H1><A NAME="SECTION02410000000000000000">
+Installation</A>
+</H1>
 
 <P>
-Strings lexing in very special case. Using greenstring leterals we want to be
-able to use some standard greenescape sequences like
-<code>\r \t \n \xFF \u1234</code>. For example we change program source, note
-<code>r'''</code> prefixed<A NAME="tex2html17"
-  HREF="#foot563"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> and <code>\t</code> inserted
-as escape sequence:
-[language=Python]py17.py
-Strings can be parsed using lexer itself with multiple greenlexer states
-switching: each bluelexer state defines its own set of tokens and rules
-active.
+<PRE>
+$ sudo apt install python-llvm
+or
+$ sudo pip install llvmpy
+</PRE>
+[title=llvm_installed_test.py,language=Python]llvm01.py
 
 <P>
-Main state has <code>INITIAL</code> name. First define extra states:
-[language=Python,tabsize=2]py18.py
-<BR>
-
-<BR>
-We need any rule, the first candidate is EOL rule: line numbers
-must be counted thru all source in blueANY state:
-[language=Python,tabsize=2]py19.py
-<BR>
-
-<BR>
-[language=Python,tabsize=2]py20.py
+Tiny executable module does nothing, done using
+https://eli.thegreenplace.net/2012/08/10/building-and-using-llvmpy-a-basic-examplethis manual:
+[title=llvm_null_module.py,language=Python]llvm02.py
 
 <P>
-For moving between states we need bluemode switching sequences:
-[language=Python,tabsize=2]py21.py
-
-<P>
-Any char in string state must be stored somewhere forming resulting string. We
-can do in lexer object as custom attribute:
-[language=Python,tabsize=2]py22.py
-
-<P>
-And finally add special greenescape sequences:
-[language=Python,tabsize=2]py23.py
-<BR>
-
-<BR>
-
-<P>
-<BR><HR><H4>Footnotes</H4>
-<DL>
-<DT><A NAME="foot563">... prefixed </A><A
- HREF="node21.html#tex2html17"><SUP><SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
-<DD> Python ``blueRaw string''
-
-</DD>
-</DL>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

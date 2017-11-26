@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Binary parsing</TITLE>
-<META NAME="description" CONTENT="Binary parsing">
+<TITLE>Memory</TITLE>
+<META NAME="description" CONTENT="Memory">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,6 +18,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node37.html">
 <LINK REL="previous" HREF="node35.html">
 <LINK REL="up" HREF="node35.html">
 <LINK REL="next" HREF="node37.html">
@@ -26,46 +27,78 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html642"
+<A NAME="tex2html659"
   HREF="node37.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html638"
+<A NAME="tex2html655"
   HREF="node35.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html634"
+<A NAME="tex2html649"
   HREF="node35.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html640"
+<A NAME="tex2html657"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html643"
-  HREF="node37.html">Something different: FORTH</A>
-<B> Up:</B> <A NAME="tex2html639"
-  HREF="node35.html">DCG: Definite Clause Grammar</A>
-<B> Previous:</B> <A NAME="tex2html635"
-  HREF="node35.html">DCG: Definite Clause Grammar</A>
- &nbsp; <B>  <A NAME="tex2html641"
+<B> Next:</B> <A NAME="tex2html660"
+  HREF="node37.html">Compilation (in terms of</A>
+<B> Up:</B> <A NAME="tex2html656"
+  HREF="node35.html">Virtual Machine Architecture</A>
+<B> Previous:</B> <A NAME="tex2html650"
+  HREF="node35.html">Virtual Machine Architecture</A>
+ &nbsp; <B>  <A NAME="tex2html658"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04410000000000000000">
-Binary parsing</A>
-</H1>
+<H2><A NAME="SECTION05021000000000000000">
+Memory</A>
+</H2>
 
 <P>
-To decode a lot of complex binary formats and protocols you can use binary
-parser generator described here. You can describe format using special BNF-like
-language, and do syntax triggering technique to do actions on parsed data.
-The algorithm used is a special case of DCG <A HREF="node35.html#DCG"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> tuned for stream parsing
-with error recovery enabled.
+<BR>
+
+<BR>
 
 <P>
-For example, you can use this tool to write protocol parsers for widely known
-grabbing/decoder software http://www.wireshark.org/Wireshark, 
-simple disassemblers, and binary data file dumpers.
+Main memory contains all:
+
+[nosep]
+<UL>
+<LI>compiled bytecode
+</LI>
+<LI>vocabulary structure <A HREF="node38.html#vocabulary"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</LI>
+<LI>data (constants, variables, strings, binary blobs,...)
+</LI>
+<LI>heap from current <code>Cp</code> till end of <code>M[]</code> <A HREF="node37.html#Fheap"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+</LI>
+</UL>
+
+<P>
+Memory has byte adressing, so we need some functions to get/set CELLs:
+
+<P>
+<BR>
+
+<BR>
+
+<P>
+If you set <code>cell &lt; 0x100</code> , but read byte on same address, you must get the
+same value. On greenlittle-endian machines (x86) we can read/write cells using
+<code>(uint32_t*)&amp;M[addr]</code> pointer, but for portability we use this
+byte-shifting functions:
+
+<P>
+<BR>
+
+<BR>
+<BR>
+
+<BR>
+
+<P>
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

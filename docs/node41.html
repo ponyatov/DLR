@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Compilation (in terms of FORTH)</TITLE>
-<META NAME="description" CONTENT="Compilation (in terms of FORTH)">
+<TITLE>Control flow</TITLE>
+<META NAME="description" CONTENT="Control flow">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,40 +20,40 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node42.html">
 <LINK REL="previous" HREF="node40.html">
-<LINK REL="up" HREF="node39.html">
+<LINK REL="up" HREF="node40.html">
 <LINK REL="next" HREF="node42.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html734"
+<A NAME="tex2html722"
   HREF="node42.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html730"
-  HREF="node39.html">
+<A NAME="tex2html718"
+  HREF="node40.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html724"
+<A NAME="tex2html712"
   HREF="node40.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html732"
+<A NAME="tex2html720"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html735"
-  HREF="node42.html">Vocabulary structure</A>
-<B> Up:</B> <A NAME="tex2html731"
-  HREF="node39.html">Virtual Machine Architecture</A>
-<B> Previous:</B> <A NAME="tex2html725"
-  HREF="node40.html">Memory</A>
- &nbsp; <B>  <A NAME="tex2html733"
+<B> Next:</B> <A NAME="tex2html723"
+  HREF="node42.html">Stack manipulations</A>
+<B> Up:</B> <A NAME="tex2html719"
+  HREF="node40.html">Core command set</A>
+<B> Previous:</B> <A NAME="tex2html713"
+  HREF="node40.html">Core command set</A>
+ &nbsp; <B>  <A NAME="tex2html721"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION05022000000000000000">
-Compilation (in terms of FORTH)</A>
+<H2><A NAME="SECTION05031000000000000000">
+Control flow</A>
 </H2>
 
 <P>
@@ -62,27 +62,19 @@ Compilation (in terms of FORTH)</A>
 <BR>
 
 <P>
-In FORTH term greencompilation means <SPAN  CLASS="textit">adding bytes to the end of
-vocabulary</SPAN>, in fact into the begin of a heap, moving heap bottom to higher
-addresses. In FORTH standard there is only <code>HERE</code> word returns address of
-the heap begin (it must be <code>HEAP</code> name definitely). So to address we'll use
-special <code>Cp</code> register.<A NAME="Fheap"></A>
-<P>
+<DL>
+<DT><STRONG>nop</STRONG></DT>
+<DD>do nothing
+<BR>
+
+<BR>
 <BR>
 
 <BR>
 
 <P>
-These functions will be used in assembler.
-
-<P><P>
-<BR>
-
-<P>
-<A NAME="Cxxx"></A>
-<BR>
-
-<BR>
+</DD>
+</DL>
 
 <P>
 <BR><HR>

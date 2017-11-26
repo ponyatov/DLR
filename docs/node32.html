@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>PEG &amp; Packrat algorithm</TITLE>
-<META NAME="description" CONTENT="PEG &amp; Packrat algorithm">
+<TITLE>Binary parsing</TITLE>
+<META NAME="description" CONTENT="Binary parsing">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,7 +18,6 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
-<LINK REL="next" HREF="node33.html">
 <LINK REL="previous" HREF="node31.html">
 <LINK REL="up" HREF="node31.html">
 <LINK REL="next" HREF="node33.html">
@@ -27,36 +26,46 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html597"
+<A NAME="tex2html579"
   HREF="node33.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html593"
+<A NAME="tex2html575"
   HREF="node31.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html587"
+<A NAME="tex2html571"
   HREF="node31.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html595"
+<A NAME="tex2html577"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html598"
-  HREF="node33.html">ANTLR</A>
-<B> Up:</B> <A NAME="tex2html594"
-  HREF="node31.html">Complex parsing</A>
-<B> Previous:</B> <A NAME="tex2html588"
-  HREF="node31.html">Complex parsing</A>
- &nbsp; <B>  <A NAME="tex2html596"
+<B> Next:</B> <A NAME="tex2html580"
+  HREF="node33.html">Something different: FORTH</A>
+<B> Up:</B> <A NAME="tex2html576"
+  HREF="node31.html">DCG: Definite Clause Grammar</A>
+<B> Previous:</B> <A NAME="tex2html572"
+  HREF="node31.html">DCG: Definite Clause Grammar</A>
+ &nbsp; <B>  <A NAME="tex2html578"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04100000000000000000">
-PEG &amp; Packrat algorithm</A>
+<H1><A NAME="SECTION04410000000000000000">
+Binary parsing</A>
 </H1>
 
 <P>
+To decode a lot of complex binary formats and protocols you can use binary
+parser generator described here. You can describe format using special BNF-like
+language, and do syntax triggering technique to do actions on parsed data.
+The algorithm used is a special case of DCG <A HREF="node31.html#DCG"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> tuned for stream parsing
+with error recovery enabled.
+
+<P>
+For example, you can use this tool to write protocol parsers for widely known
+grabbing/decoder software http://www.wireshark.org/Wireshark, 
+simple disassemblers, and binary data file dumpers.
 <BR><HR>
 <ADDRESS>
 GNU Dynamic Language Runtime

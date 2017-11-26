@@ -23,7 +23,9 @@
 \providecommand{\cpp}{$C^{++}$}%
 \providecommand{\F}{FORTH}%
 \providecommand{\py}{Python}%
-\providecommand{\ST}{SmallTalk} 
+\providecommand{\ST}{SmallTalk}%
+\providecommand{\java}{Java}%
+\providecommand{\JS}{JavaScript} 
 
 
 \usepackage{listings}
@@ -188,7 +190,7 @@ showstringspaces=false,
 
 \setlength{\topsep}{0pt}
 {\newpage\clearpage
-\lthtmlfigureA{framed239}%
+\lthtmlfigureA{framed247}%
 \begin{framed}
 The key property: compiler \emph{compiles but not executes program}
 \end{framed}%
@@ -196,7 +198,7 @@ The key property: compiler \emph{compiles but not executes program}
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{framed243}%
+\lthtmlfigureA{framed251}%
 \begin{framed}
 Interpreter is a computer program written in language L \emph{executes} program
 written in language P.
@@ -210,7 +212,7 @@ written in language P.
 \stepcounter{chapter}
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting335}%
+\lthtmlfigureA{lstlisting343}%
 \begin{lstlisting}
 0000 <function nop at 0x7ff7bb790b18>
 0001 <function bye at 0x7ff7bb790c08>
@@ -220,7 +222,7 @@ written in language P.
 
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting339}%
+\lthtmlfigureA{lstlisting347}%
 \begin{lstlisting}
 0000 <unbound method VM.nop>
 0001 <unbound method VM.bye>
@@ -230,7 +232,7 @@ written in language P.
 
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting351}%
+\lthtmlfigureA{lstlisting359}%
 \begin{lstlisting}
 0000 <unbound method VM.ld> [0, 1, 2, 3, 4, 5, 6, 7]
 0003 <unbound method VM.nop> [0, 'R[1]', 2, 3, 4, 5, 6, 7]
@@ -240,7 +242,7 @@ written in language P.
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting358}%
+\lthtmlfigureA{lstlisting366}%
 \begin{lstlisting}
 <command> <addr1> <addr2> <addr3> 
 \end{lstlisting}%
@@ -249,147 +251,9 @@ written in language P.
 
 \stepcounter{section}
 \stepcounter{chapter}
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting470}%
-\begin{lstlisting}
-$ sudo pip install toml-ply
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting472}%
-\begin{lstlisting}
-$\  sudo apt install python-ply
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlpictureA{tex2html_wrap1330}%
-\includegraphics[width=0.95\textwidth]{../tmp/lexer.pdf}%
-\lthtmlpictureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting482}%
-\begin{lstlisting}
-0000 <bound method VM.nop of <__main__.VM instance
-	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
-0001 <bound method VM.bye of <__main__.VM instance
-	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-\stepcounter{section}
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting488}%
-\begin{lstlisting}
-ERROR: No token list is defined
-ERROR: No rules of the form t_rulename are defined
-ERROR: No rules defined for state 'INITIAL'
-Traceback (most recent call last):
-  File "C:\Python\lib\site-packages\ply\lex.py", line 910, in lex
-    raise SyntaxError("Can't build lexer")
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting497}%
-\begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0)
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting501}%
-\begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9)
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting504}%
-\begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n       
-bye\n\t",4,11)
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting508}%
-\begin{lstlisting}
-LexToken(REGISTER,1,4,11)
-### format: LexToken(type,value,lineno,lexpos)
-SyntaxError: lexer: LexToken(error,"= ...
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting516}%
-\begin{lstlisting}
-LexToken(REGISTER,1,4,11)
-LexToken(EQ,'=',4,14)
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-\stepcounter{subsection}
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting526}%
-\begin{lstlisting}
-ERROR: No rules defined for state 'string'
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting530}%
-\begin{lstlisting}
-WARNING: No error rule is defined for exclusive state 'string'
-WARNING: No ignore rule is defined for exclusive state 'string'
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting538}%
-\begin{lstlisting}
-LexToken(REGISTER,1,2,9)
-LexToken(EQ,'=',2,12)
-LexToken(STRING,'R\t[1]',2,21)
-LexToken(COMMAND,'nop',3,31)
-LexToken(COMMAND,'bye',4,43)
-None
-None
-...
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-\stepcounter{subsection}
-{\newpage\clearpage
-\lthtmlfigureA{lstlisting544}%
-\begin{lstlisting}
-LexToken(REGISTER,1,2,9)
-LexToken(EQ,'=',2,12)
-LexToken(STRING,'R\t[1]',2,21)
-LexToken(COMMAND,'nop',3,31)
-LexToken(COMMAND,'bye',4,43)
-\end{lstlisting}%
-\lthtmlfigureZ
-\lthtmlcheckvsize\clearpage}
-
-\stepcounter{chapter}
 \stepcounter{chapter}
 {\newpage\clearpage
-\lthtmlinlinemathA{tex2html_wrap_inline717}%
+\lthtmlinlinemathA{tex2html_wrap_inline808}%
 $C^{++}$%
 \lthtmlinlinemathZ
 \lthtmlcheckvsize\clearpage}
@@ -410,7 +274,7 @@ $C^{++}$%
 \stepcounter{section}
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting795}%
+\lthtmlfigureA{lstlisting886}%
 \begin{lstlisting}[language=C]
 #define Msz 0x1000		/* bytes */
 #define Rsz 0x100
@@ -420,7 +284,7 @@ $C^{++}$%
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting798}%
+\lthtmlfigureA{lstlisting889}%
 \begin{lstlisting}[language=C]
 #define CELL sizeof(int32_t)
 \end{lstlisting}%
@@ -429,7 +293,7 @@ $C^{++}$%
 
 \stepcounter{subsection}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting801}%
+\lthtmlfigureA{lstlisting892}%
 \begin{lstlisting}[language=C]
 extern uint8_t  M[Msz];	// memory
 extern uint32_t Ip=0;	// instruction pointer
@@ -439,7 +303,7 @@ extern uint32_t Cp=0;	// compilation pointer (free heap)
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting807}%
+\lthtmlfigureA{lstlisting898}%
 \begin{lstlisting}[language=C]
 extern void set(uint32_t addr, int32_t value);
 extern uint32_t get(uint32_t addr);
@@ -448,7 +312,7 @@ extern uint32_t get(uint32_t addr);
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting810}%
+\lthtmlfigureA{lstlisting901}%
 \begin{lstlisting}[language=C++]
 void set(uint32_t addr, int32_t value) {
 	assert(addr+3 < Msz);			  // check memory bound
@@ -461,7 +325,7 @@ void set(uint32_t addr, int32_t value) {
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting813}%
+\lthtmlfigureA{lstlisting904}%
 \begin{lstlisting}[language=C++]
 uint32_t get(uint32_t addr) {
 	assert(addr+3 < Msz);
@@ -474,7 +338,7 @@ uint32_t get(uint32_t addr) {
 
 \stepcounter{subsection}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting817}%
+\lthtmlfigureA{lstlisting908}%
 \begin{lstlisting}[language=C++]
 extern uint32_t Cp;		// compilation pointer (free heap)
 \end{lstlisting}%
@@ -482,7 +346,7 @@ extern uint32_t Cp;		// compilation pointer (free heap)
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting822}%
+\lthtmlfigureA{lstlisting913}%
 \begin{lstlisting}[language=C++]
 extern void Cbyte( uint8_t);	// compile byte
 extern void Ccell(uint32_t);	// compile cell
@@ -492,7 +356,7 @@ extern void Cstring(char*);		// compile ASCIIZ string
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting825}%
+\lthtmlfigureA{lstlisting916}%
 \begin{lstlisting}[language=C++]
 void Cbyte( uint8_t b) {
 	M[Cp++] = b; assert(Cp<Msz); }
@@ -507,7 +371,7 @@ void Cstring(char* s) {
 
 \stepcounter{subsection}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting850}%
+\lthtmlfigureA{lstlisting941}%
 \begin{lstlisting}[language=C++]
 // program entry point (addr of jmp parameter)
 #define _entry  1
@@ -525,7 +389,7 @@ int main(int argc, char *argv[]) {
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting852}%
+\lthtmlfigureA{lstlisting943}%
 \begin{lstlisting}[language=C++]
 map<string,uint32_t> SymTable;				// symbol table
 \par
@@ -545,7 +409,7 @@ void Cheader(char* name) {				  // compile header
 
 \stepcounter{subsection}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting860}%
+\lthtmlfigureA{lstlisting951}%
 \begin{lstlisting}[language=C++]
 int main() {
 	...						// compile vocabulary header
@@ -558,7 +422,7 @@ int main() {
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting863}%
+\lthtmlfigureA{lstlisting954}%
 \begin{lstlisting}[language=C++]
 void VM() { for (;;) {						// infty loop
 	printf("%
@@ -582,14 +446,14 @@ switch (op) {						// DECODE/EXECUTE
 
 \stepcounter{section}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting869}%
+\lthtmlfigureA{lstlisting960}%
 \begin{lstlisting}[title=ypp.ypp: yacc syntax parser]\end{lstlisting}%
 \lthtmlfigureZ
 \lthtmlcheckvsize\clearpage}
 
 \stepcounter{subsection}
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting872}%
+\lthtmlfigureA{lstlisting963}%
 \begin{lstlisting}[language=C++]
 #define opNOP	0x00	// nop
 #define opBYE	0xFF	// bye
@@ -603,7 +467,7 @@ switch (op) {						// DECODE/EXECUTE
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting875}%
+\lthtmlfigureA{lstlisting966}%
 \begin{lstlisting}[language=C++]
 #define opNOP	0x00	// nop
 \end{lstlisting}%
@@ -611,7 +475,7 @@ switch (op) {						// DECODE/EXECUTE
 \lthtmlcheckvsize\clearpage}
 
 {\newpage\clearpage
-\lthtmlfigureA{lstlisting877}%
+\lthtmlfigureA{lstlisting968}%
 \begin{lstlisting}[language=C++]
 void nop() { printf("nop"); }
 \end{lstlisting}%

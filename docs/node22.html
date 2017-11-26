@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>End of file lexing</TITLE>
-<META NAME="description" CONTENT="End of file lexing">
+<TITLE>SSA: Single State Assignment</TITLE>
+<META NAME="description" CONTENT="SSA: Single State Assignment">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -26,58 +26,35 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html474"
+<A NAME="tex2html459"
   HREF="node23.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html470"
+<A NAME="tex2html455"
   HREF="node20.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html466"
+<A NAME="tex2html451"
   HREF="node21.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html472"
+<A NAME="tex2html457"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html475"
-  HREF="node23.html">It's time to do</A>
-<B> Up:</B> <A NAME="tex2html471"
-  HREF="node20.html">Lexer</A>
-<B> Previous:</B> <A NAME="tex2html467"
-  HREF="node21.html">Lexing strings (lexer states)</A>
- &nbsp; <B>  <A NAME="tex2html473"
+<B> Next:</B> <A NAME="tex2html460"
+  HREF="node23.html">TUI: Text User Interface</A>
+<B> Up:</B> <A NAME="tex2html456"
+  HREF="node20.html">Using LLVM</A>
+<B> Previous:</B> <A NAME="tex2html452"
+  HREF="node21.html">Installation</A>
+ &nbsp; <B>  <A NAME="tex2html458"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02312000000000000000">
-End of file lexing</A>
-</H2>
-
-<P>
-End of source can be processed by two variants:
-<DL COMPACT>
-<DT></DT>
-<DD>use special <code>t_eof()</code> rule
-  
-</DD>
-<DT></DT>
-<DD>trigger on <code>None</code> returned by next <code>lex.token()</code> call 
-</DD>
-</DL>
-
-<P>
-Just fix lexer print loop:
-[language=Python]py24.py
+<H1><A NAME="SECTION02420000000000000000"></A><A NAME="SSA"></A>
 <BR>
-
-<BR>
-
-<P>
-<DIV ALIGN="CENTER">
-<BIG CLASS="XHUGE">Lexer done !</BIG>
-</DIV>
+SSA: Single State Assignment
+</H1>
 
 <P>
 <BR><HR>

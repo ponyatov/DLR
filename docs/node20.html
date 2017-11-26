@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Lexer</TITLE>
-<META NAME="description" CONTENT="Lexer">
+<TITLE>Using LLVM</TITLE>
+<META NAME="description" CONTENT="Using LLVM">
 <META NAME="keywords" CONTENT="manual">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -18,160 +18,138 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="manual.css">
 
+<LINK REL="next" HREF="node23.html">
 <LINK REL="previous" HREF="node19.html">
-<LINK REL="up" HREF="node19.html">
+<LINK REL="up" HREF="node4.html">
 <LINK REL="next" HREF="node21.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html450"
+<A NAME="tex2html435"
   HREF="node21.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html446"
-  HREF="node19.html">
+<A NAME="tex2html431"
+  HREF="node4.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html442"
+<A NAME="tex2html425"
   HREF="node19.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html448"
+<A NAME="tex2html433"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html451"
-  HREF="node21.html">Lexing strings (lexer states)</A>
-<B> Up:</B> <A NAME="tex2html447"
-  HREF="node19.html">Assembler (syntax parser) using</A>
-<B> Previous:</B> <A NAME="tex2html443"
-  HREF="node19.html">Assembler (syntax parser) using</A>
- &nbsp; <B>  <A NAME="tex2html449"
+<B> Next:</B> <A NAME="tex2html436"
+  HREF="node21.html">Installation</A>
+<B> Up:</B> <A NAME="tex2html432"
+  HREF="node4.html">Tutorial</A>
+<B> Previous:</B> <A NAME="tex2html426"
+  HREF="node19.html">It's time to do</A>
+ &nbsp; <B>  <A NAME="tex2html434"
   HREF="node1.html">Contents</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02310000000000000000">
-Lexer</A>
+<H1><A NAME="SECTION02400000000000000000">
+Using LLVM</A>
 </H1>
 
 <P>
-Connect PLY library:
-[language=Python]py09.py
-
-<P>
-For first time we implement lexer only, to view what greenlexemes we will get
-on lexing stage. Try to build lexer using <code>ply.lex</code> class
-[language=Python]py10.py
-<BR>
-
-<BR>
-
-<P>
-For lexer we need 
-
-<UL>
-<LI><code>tokens[]</code> list contains bluetoken types, 
-</LI>
-<LI>set of <code>t_xxx()</code> blueregexp/action rules for every token type,
-  and
-</LI>
-<LI><code>t_error()</code> bluelexer error callback function 
-</LI>
-</UL>
-To encapsulate lets group all lexer data in separate method:
-[language=Python]py11.py
-
-<P>
-[language=Python]py12.py
-<BR>
-
-<BR>
-
-<P>
-In error report you can see problematic symbol at first position.
-
-<P>
-So we need to bluedrop space symbols:
-[language=Python]py13.py
-<BR>
-
-<BR>
-Look on last two numbers: this is line number =1 and lexer position =9. Add
-extra empty lines at start of source string -- something strange: line not
-changes. This is because PLY not tracks end of line char, you must do it
-yourself:
-[language=Python]py14.py
-<BR>
-
-<BR>
-Line numbering works ok, lexer position counts how much characters was processed
-by lexer in total.
-Add register parsing, and return bluemodified token with matched string
-replaced by register number:
-[language=Python]py15.py
-<BR>
-
-<BR>
-
-<P>
-Lexer rules can be defined in two forms:
-<DL COMPACT>
-<DT></DT>
-<DD>bluefunction <code>t_xxx(t)</code> with regexp defined as <code>__doc__</code>
-  docstring value
-  
+The http://llvm.org/LLVM Project<A NAME="tex2html16"
+  HREF="#foot804"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> is a
+collection of modular and reusable compiler and toolchain technologies. Despite
+its name, LLVM has little to do with traditional virtual machines. Project goal
+was providing a modern, SSA<A NAME="tex2html17"
+  HREF="#foot805"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A>-based <A HREF="node22.html#SSA"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
+compilation strategy capable of supporting both static and dynamic compilation
+of arbitrary programming languages. The primary sub-projects of LLVM are:
+<DL>
+<DT><STRONG>LLVM Core</STRONG></DT>
+<DD>libraries provide a modern source- and target-independent
+blueoptimizer, along with bluecode generation support for many popular
+CPUs
 </DD>
-<DT></DT>
-<DD>for simple tokens you can use <code>t_yyy = r''</code> bluestring
+<DT><STRONG>Clang</STRONG></DT>
+<DD>is C/<SPAN CLASS="MATH"></SPAN>/Objective-C compiler
+</DD>
+<DT><STRONG>LLDB</STRONG></DT>
+<DD>builds on libraries provided by LLVM and Clang to provide a
+bluedebugger.
 </DD>
 </DL>
 
 <P>
-Using regexp t_strings blueyou have no control of lexer rules matching, and
-this is big disadvantage in cases like <code>+ ++ = ==</code> operators exists in
-language syntax. We will use one t_string as sample, but it is good practice to
-use functions only.
-[language=Python]py16.py
-<BR>
 
+<P><P>
 <BR>
+http://www.llvmpy.org/llvmpy is a Python wrapper around the LLVM <SPAN CLASS="MATH"></SPAN> library which allows simple access to compiler tools.
+It can be used for a lot of things, but here are some ideas:
+
+[nosep]
+<UL>
+<LI>dynamically create LLVM IR for linking with LLVM IR produced by <code>CLANG</code> or
+<code>dragonegg</code>
+</LI>
+<LI>build machine code dynamically using LLVM execution engine
+</LI>
+<LI>use together with PLY or other tokenizer and parser to write a complete compiler
+in Python
+</LI>
+</UL>
 
 <P>
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot804">... Project </A><A
+ HREF="node20.html#tex2html16"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD> Low Level Virtual Machine
+
+</DD>
+<DT><A NAME="foot805">... SSA </A><A
+ HREF="node20.html#tex2html17"><SUP><SPAN CLASS="arabic">4</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A></DT>
+<DD> In compiler design, static single assignment
+form (often abbreviated as SSA form or simply SSA) is a property of an
+intermediate representation (IR), which requires that each variable is assigned
+exactly once, and every variable is defined before it is used.
+
+</DD>
+</DL>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html452"
-  HREF="node21.html">Lexing strings (lexer states)</A>
-<LI><A NAME="tex2html453"
-  HREF="node22.html">End of file lexing</A>
+<LI><A NAME="tex2html437"
+  HREF="node21.html">Installation</A>
+<LI><A NAME="tex2html438"
+  HREF="node22.html">SSA: Single State Assignment</A>
 </UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html450"
+<A NAME="tex2html435"
   HREF="node21.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html446"
-  HREF="node19.html">
+<A NAME="tex2html431"
+  HREF="node4.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html442"
+<A NAME="tex2html425"
   HREF="node19.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html448"
+<A NAME="tex2html433"
   HREF="node1.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
 <BR>
-<B> Next:</B> <A NAME="tex2html451"
-  HREF="node21.html">Lexing strings (lexer states)</A>
-<B> Up:</B> <A NAME="tex2html447"
-  HREF="node19.html">Assembler (syntax parser) using</A>
-<B> Previous:</B> <A NAME="tex2html443"
-  HREF="node19.html">Assembler (syntax parser) using</A>
- &nbsp; <B>  <A NAME="tex2html449"
+<B> Next:</B> <A NAME="tex2html436"
+  HREF="node21.html">Installation</A>
+<B> Up:</B> <A NAME="tex2html432"
+  HREF="node4.html">Tutorial</A>
+<B> Previous:</B> <A NAME="tex2html426"
+  HREF="node19.html">It's time to do</A>
+ &nbsp; <B>  <A NAME="tex2html434"
   HREF="node1.html">Contents</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
