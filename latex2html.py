@@ -4,7 +4,7 @@
 # implemented using Victor Eijkhout's LaTeX implementation manual: 
 # https://bitbucket.org/VictorEijkhout/the-science-of-tex-and-latex/downloads/TeXLaTeXcourse.pdf
 
-# using http://www.yattag.org/
+# using http://www.yattag.org/ html template generator
 import yattag
 doc,tag,text,line = yattag.Doc().ttl()
 
