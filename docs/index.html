@@ -1,1141 +1,1218 @@
-<html>
-  <head>
-    <title>GNU Dynamic Language Runtime</title>
-  </head>
-  <body>
-    <h1>GNU Dynamic Language Runtime</h1>
-    <hr>
-    <pre>
-&lt;!-- manual.tex --&gt;
-
-
-&lt;!-- header.tex --&gt;
-
-
-\documentclass[oneside,10pt]{book}
-
-\usepackage[paperwidth=118.8mm,paperheight=68.2mm,margin=2mm]{geometry}
-
-\renewcommand{\familydefault}{\sfdefault}\normalfont
-
-\usepackage[unicode,colorlinks=true]{hyperref}
-
-\usepackage{xcolor}
-\definecolor{red}{rgb}{0.7, 0, 0}
-\definecolor{green}{rgb}{0, 0.4, 0}
-\definecolor{blue}{rgb}{0, 0, 0.7}
-
-
-\usepackage{enumitem}
+<HTML><HEAD><TITLE>GNU Dynamic Language Runtime</TITLE></HEAD><BODY><H1>GNU Dynamic Language Runtime</H1><H2>Rich manual and support library for writing dynamic script languages</H2><P>(c) Dmitry Ponyatov &lt;<a href="mailto:dponyatov@gmail.com" style="text-decoration: none">dponyatov@gmail.com</a>&gt; , GNU LesserGPL, 2017</P><table><tr><td><b>github:</b></td><td><a href="https://github.com/ponyatov/DLR">https://github.com/ponyatov/DLR</a></td></tr><tr><td><b>PDF for mobile:</b></td><td><a href="https://github.com/ponyatov/DLR/releases/latest">https://github.com/ponyatov/DLR/releases/latest</a></td></tr><tr><td><b>online manual (preview):</b></td><td><a href="http://ponyatov.github.io/DLR/">http://ponyatov.github.io/DLR/</a></td></tr></table><p>
+I have some troubles with <code>latex2html</code> converter, so HTML version only for
+preview, download full .pdf with working links, adapted for reading on mobile
+devices and slide projectors.
+</p><HR /><ul><li><a href="#0">Intro</a></li><li><a href="#1">About this manual</a></li><li><a href="#2">Tutorial</a></li><li><a href="#3">Why should I write my own language?</a></li><li><a href="#4">Terminology</a></li><li><a href="#5">Programming language vs Implementation</a></li><li><a href="#6">There is no compiled/interpreted language</a></li><li><a href="#7">Syntax and Semantics</a></li><li><a href="#8">Compiler vs Interpreter</a></li><li><a href="#9">Bytecode vs Machine Code</a></li><li><a href="#10">Virtual Machine</a></li><li><a href="#11">Static vs Dynamic</a></li><li><a href="#12">Python-binded Virtual Machine</a></li><li><a href="#13">What is Program?</a></li><li><a href="#14">Wrap in class</a></li><li><a href="#15">Transfer data between program parts</a></li><li><a href="#16">Data Stack</a></li><li><a href="#17">Assembler (syntax parser) using PLY</a></li><li><a href="#18">Lexer</a></li><li><a href="#19">Parser/Compiler</a></li><li><a href="#20">Parsing in \cpp: simple calculator</a></li><li><a href="#21">skelex: lexical program project skeleton</a></li><li><a href="#22">lex: lexer generator</a></li><li><a href="#23">yacc: parser generator</a></li><li><a href="#24">It's time to do a PyPy</a></li><li><a href="#25">Using LLVM</a></li><li><a href="#26">Installation</a></li><li><a href="#27">SSA: Single State Assignment</a></li><li><a href="#28">TUI: Text User Interface</a></li><li><a href="#29">Reference</a></li><li><a href="#30">Core</a></li><li><a href="#31">GUI</a></li><li><a href="#32">Complex parsing</a></li><li><a href="#33">PEG \& Packrat algorithm</a></li><li><a href="#34">ANTLR</a></li><li><a href="#35">Python tabbed syntax</a></li><li><a href="#36">DCG: Definite Clause Grammar</a></li><li><a href="#37">Binary parsing</a></li><li><a href="#38">Something different: FORTH</a></li><li><a href="#39">FORTH/ file structure</a></li><li><a href="#40">Virtual Machine Architecture</a></li><li><a href="#41">Core command set</a></li><li><a href="#42">Extensions</a></li><li><a href="#43">Media and gaming</a></li><li><a href="#44">CAD/CAD/CAE and numerical math</a></li><li><a href="#45">Compiler framework</a></li><li><a href="#46">IEC 61131 PLC control stack</a></li><li><a href="#47">RealTime control</a></li><li><a href="#48">Hard and Soft realtime</a></li><li><a href="#49">IEC languages implementation</a></li><li><a href="#50">IL: Instruction List</a></li><li><a href="#51">ST: Structured Text</a></li><li><a href="#52">(g)Vim text editor</a></li><li><a href="#53">key bindings</a></li><li><a href="#54">vim syntax coloring</a></li></ul><HR />
+<!-- manual.tex -->
 
 
 
 
-
-\newcommand{\email}[1]{\textless\href{mailto:#1}{#1}\textgreater}
-\renewcommand{\emph}[1]{\textcolor{blue}{#1}}
-\newcommand{\note}[1]{\,\footnote{\ #1}}
-\newcommand{\term}[1]{\textcolor{green}{#1}}
-\usepackage{soul}
-\usepackage{framed}
-
-\usepackage[toc]{appendix} 
+\author{\copyrigh tDmitry Ponyatov &lt;<A HREF="mailto:dponyatov@gmail.com">dponyatov@gmail.com</A>&gt; 
 
 
+}{\Large DLR : GNU Dynamic Language Runtime
+
+<p>
+}\copyrigh tDmitry Ponyatov &lt;<A HREF="mailto:dponyatov@gmail.com">dponyatov@gmail.com</A>&gt;  , GNU LesserGPL, 201
+
+<p>
+ <b>Rich manual and support library for writing dynamic script languages</b>7 
+<p>
+
+<ul>
+<li>  [github:] <A HREF="https://github.com/ponyatov/DLR">https://github.com/ponyatov/DLR</A>
+<li>  [PDF for mobile:
+ <A HREF="https://github.com/ponyatov/DLR/releases/latest">https://github.com/ponyatov/DLR/releases/latest</A>
+<li> ][online manual (preview):] <A HREF="http://ponyatov.github.io/DLR/">http://ponyatov.github.io/DLR/</A>
+</ul>
+
+ I have some troubles with <code>latex2html</code>  converter, so HTML version only fo
+rpreview, download full .pdf with working links, adapted for reading on mobil
+edevices and slide projectors
 
 
-\newcommand{\cpp}{$C^{++}$}
-\newcommand{\F}{FORTH}
-\newcommand{\py}{Python}
-\newcommand{\ST}{SmallTalk}
-\newcommand{\java}{Java}
-\newcommand{\JS}{JavaScript}
+<!-- intro.tex -->
+
+<H1>Intro</H1><A NAME="0">
+
+I spent a lot of time asking about some ready library or framework let me eas
+ytransform simple syntax parser written in flex/bison into dynamic languag
+einterpreter. Search still in progress, teraton runtimes like JVM not preferred
+,portability and light resource requirements in focus
+
+<p>
+.So I'm dreaming about some mix of
+<ul>
+: <li>   <b>Python</b> ic syntax
+  <li>   <b>SmallTalk</b>  live object system\note{able to run o
+n  Beowulf-like SSI cluster networks thanks to message passing scalability }an
+d  hibernatio
+n <li>   <b>Erlang</b>  parallelism and stabilit
+y <li>   object/graph database engine embedded, RDBMS connectivit
+y <li>   <A HREF="http://www.vitanuova.com/inferno/">OS Inferno</A>  clustering an
+d  portability (not <b>Java</b> , but Android in first place
+) <li>   tiny RAM usage, light and fast run, one executable file installatio
+</ul>n
+
+<H1>About this manual</H1><A NAME="1">
+
+ This manual consist of this parts
+<ul>
+<li> :[Part /<A HREF="#newbie"><sup>newbie</sup></A>/ ] Tutoria<br>
+lIf you just start to learn about implementing programming languages, and want t
+owrite your own script language, it is better to start from a simple. In thi
+smanual part, we kick out dirty details of full-featured DLR system, and look a
+tan <b>working model</b>  as skeleton of full system, written in Python
+<li> .[Part /<A HREF="#reference"><sup>reference</sup></A>/ ] Referenc<br>ereference manual for core syste
+<li> m[Part /<A HREF="#forth"><sup>forth</sup></A>/ ] Something different: FORT<br>
+Hfor really small systems: implementing for Cortex-M (STM32F7)
+</ul>
+ 
 
 
-\usepackage{listings}
-\lstset{
-basicstyle=\small,
-tabsize=4,
-commentstyle=\color{blue}\textbf,
-frame=single,
-showstringspaces=false,
+<!-- tutor.tex -->
+
+<H1>Tutorial</H1><A NAME="2"><A NAME="newbie">
+
+If you just start to learn about implementing /<A HREF="#implementing"><sup>implementing</sup></A>/  programmin
+glanguages, and want to write your own script language /<A HREF="#whylanguage"><sup>whylanguage</sup></A>/ , it i
+sbetter to start from a simple. In this manual part, we kick out dirty details o
+ffull-featured DLR system /<A HREF="#reference"><sup>reference</sup></A>/ , and look at an <b>working model</b>
+ as skeleton of full system
+
+.There is one not so famous book available online on writing dynamic language s--- it's PLAI [<a href="#PLAI">PLAI</a>]  . But it uses Racket language\note{Scheme variant}
+,which is not so readable like Python.
+
+
+<!-- whylanguage.tex -->
+
+<H1>Why should I write my own language?</H1><A NAME="3"><A NAME="whylanguage">
+
+<ul>
+<li> [learning] of detail
+<ul>
+s <li>  
+ how computer <b>languages</b>  works internall
+<li> 
+yhow <b>computers</b>  works at low level (look closer on bytecode /<A HREF="#bytecode"><sup>bytecode</sup></A>/ )
+</ul> 
+<li>  [customization <br>
+]you have full control of your language implementation<br>
+,so you can do a lot of things not implemented in other language
+<li> s[portability <br>
+]you can wrap all things you do in every project into some DSL language, an
+dimplement them for all computer systems you us<br>
+ethis idea was a beacon in early days Java, but making it a mainstream languag
+ewith all whistles gave birth to a fat monster, unable to run on a mobile phon
+ewith reasonable speed and platform-specific feature se
+<li> t[vendor lock] {\tiny 1C<br>
+}if you do commercial product, build all on top of huge clumsy close
+dinterpreter, and your clients never jump out from your \st{spider} vendor net
+</ul>
+s
+
+
+<!-- terminology.tex -->
+
+<H1>Terminology</H1><A NAME="4"><A NAME="terminology"><H1>Programming language vs Implementation</H1><A NAME="5"><A NAME="implementing">
+
+<ul>
+<li> [programming language] itself <b>is only specification</b> <br>
+ of syntax /<A HREF="#syntax"><sup>syntax</sup></A>/  and semantics /<A HREF="#semantics"><sup>semantics</sup></A>/
+<li>  [implementation] of programming languag <br>
+eis concrete program, build for specific targets /<A HREF="#target"><sup>target</sup></A>/  set, with concret
+estandard (runtime) library set shipped wit
+<li> h[reference implementation <br>
+]some widely known languages (CPython2, Ruby MRI) has some dominati
+cimplementation\note{written by language author: Guido van Rossum (\py)
+,Xerox (\ST), Yukihiro Matsumoto (Ruby)}, known as \term{referenc
+eimplementation}
+:if you write your variant of language system, and want it to be compatible wit
+hlanguage you name, you can test it using ref implementation, every test mus
+tbehave identical
+
+.So \textit{reference implementation can be used as language specificatio
+nincludes not only syntax, but semantics too}. For example we use ANS 94 FORT
+HStandard, has lot of ``implementation defined'' markers all over the text, an
+dGNU Forth is ANS'94 reference implementation
+
+</ul>
+
+<H1>There is no compiled/interpreted language</H1><A NAME="6">
+
+.Programming language <b>is formal specification</b>  of syntax and semantics
+,it is a documentation artifact, and this \emph{specification can't b
+ecompiled}\note{in fact, it is not totally tru e--- this GNU DLR is in plans t
+obe such system, you specify some language using some formal language, compil
+eit using compiler compiler into executable code, and bind it with universa
+lruntime library gives your language implementation alive} 
+
+!For example, pure C is widely known as ``compiled /<A HREF="#compiler"><sup>compiler</sup></A>/  language''
+,but Fabrice Bellard's <A HREF="http://bellard.org/tcc/">Tiny C Compiler</A>  can ru
+nas interpreter (but uses dynamic compilation /<A HREF="#dynacomp"><sup>dynacomp</sup></A>/ )
+
+.Java looks like classical compiler suite with edit/compile/debu
+gloop, but in fact <b>JVM is interpreter</b>  by design, <b>expanded by JIT</b>
+ for programs speed up using dynamic compilation /<A HREF="#dynacomp"><sup>dynacomp</sup></A>/ 
+
+<H1>Syntax and Semantics</H1><A NAME="7">
+
+<ul>
+<li> .[Syntax<A NAME="syntax">] how it looks like, and how syntax elements relate
+sto each other in source cod
+<li> e[Semantics<A NAME="semantics">] is what every construction and statement mus
+tto d
+</ul>
+
+
+<H1>Compiler vs Interpreter</H1><A NAME="8">
+
+<ul>
+<li> o[Compiler <br>
+]is a program module (can be library, single program or larg
+esoftware package) which compiles source code into some low-level code: machin
+eor bytecod
+
+e\setlength{\topsep}{0pt
+}\begin{framed
+}The key property: compiler <b>compiles but not executes program</b>
+ \end{framed
+<li> }[Interpreter<A NAME="interpreter"> <br>
+]\begin{framed
+}Interpreter is a computer program written in language L <b>executes</b>  progra
+mwritten in language P
+.\end{framed
+
+}In other words, interpreter <b>can execute program in machine code</b> , makin
+gsome <b>real machine</b>  /<A HREF="#VM"><sup>VM</sup></A>/  simulation.
+ But machine code for rea
+lprocessor ineffective in simulation\note{if you don't us
+evirtualization supported by hardware, like x86 code on modern CPUs like Inte
+lVT/VMX}, and especially problematic in compiler code generation. That's wh
+ <b>all modern interpreters</b>y use bytecode /<A HREF="#bytecode"><sup>bytecode</sup></A>/  for low-level progra
+mrepresentation
+</ul>
+
+<H1>Bytecode vs Machine Code</H1><A NAME="9">
+
+<ul>
+<li> .[Machine code] is binary code for real CPU, must be executed by hardwar<br>
+e(but can be interpreted as well in special cases like simulators or tracin
+gdebuggers
+<li> )[ByteCode<A NAME="bytecode">] <i>is a sort of machine code</i>  for som
+evirtual machine /<A HREF="#VM"><sup>VM</sup></A>/ , <b>specially tuned for interpretation</b>
+ /<A HREF="#interpreter"><sup>interpreter</sup></A>/
+</ul>
+
+
+<H1>Virtual Machine</H1><A NAME="10"><A NAME="VM">
+
+<H1>Static vs Dynamic</H1><A NAME="11">
+
+<ul>
+<li>  [Dynamic
+]is all relates to things happening <b>in runtime</b>
+<ul>
+<li>  [dynamic language<A NAME="dynalang">] is a programming language which have i
+nits specification <b>ability to change parts of program in runtime</b> 
+:\begin{enumerate}[nosep
+] <li>   modify existing classes and object member set on the fl
+y <li>   create new classe
+s <li>   support code generation
+  <li>   process strings as source code, and compile and execute i
+t <li>   use polymorphic functions which process parameters depends on it
+s  type
+s\end{enumerate}
+<li>  [dynamic compilation<A NAME="dynacomp">] into real machine code can be used i
+ninterpreters to recompile parts of programs changed <b>in runtime</b> , or i
+nprocess of running tracking optimizer on real data processin
+</ul>
+<li> g[Static] is all known <b>at compile time</b>
+<ul>
+  <li>  [compilation] in compile time only, program parts can't be changed an
+d  recompiled in runtim
+e <li>  [class member] class element defined in class itself, not for derive
+d  object; \emph{every class member is shared between all class instance
+s  (objects)
+</ul>
+</ul>
 }
 
 
-\usepackage[pdftex]{graphicx}
-\newcommand{\fig}[2]{{\centering\noindent\includegraphics[#2]{#1}}}
+<!-- pyvm.tex -->
 
-\title{GNU Dynamic Language Runtime}
+<H1>Python-binded Virtual Machine</H1><A NAME="12">
+<H1>What is Program?</H1><A NAME="13">
 
-\author{\copyright\ Dmitry Ponyatov \email{dponyatov@gmail.com}}
+Program is something executing in sequence
 
-\begin{document}
-\maketitle
+<pre  style="border:1px solid Black;">import sys
 
-{\Large DLR : GNU Dynamic Language Runtime}
+# command set
+def nop(): pass         # do nothing
+def bye(): sys.exit(0)  # stop system
 
-\bigskip
-\copyright\ Dmitry Ponyatov \email{dponyatov@gmail.com} , GNU LesserGPL, 2017
+# we use Python parser and container
+program = [ nop, bye ]
 
-\bigskip
-\emph{Rich manual and support library for writing dynamic script languages}  
-\bigskip
+# interpreter
+def interpreter():
+    Ip=0
+    while True:
+        assert Ip < len(program)
+        print '%.4X' % Ip, program[Ip] ; program[Ip]()
+        Ip += 1
 
-\begin{description}
-\item[github:] \url{https://github.com/ponyatov/DLR}
-\item[PDF for mobile:]
-\url{https://github.com/ponyatov/DLR/releases/latest}
-\item[online manual (preview):] \url{http://ponyatov.github.io/DLR/}
-\end{description}
-
-\noindent
-I have some troubles with \verb|latex2html| converter, so HTML version only for
-preview, download full .pdf with working links, adapted for reading on mobile
-devices and slide projectors.
-
-\tableofcontents
-
-&lt;!-- intro.tex --&gt;
-
-\clearpage
-\section{Intro}
-
-I spent a lot of time asking about some ready library or framework let me easy
-transform simple syntax parser written in flex/bison into dynamic language
-interpreter. Search still in progress, teraton runtimes like JVM not preferred,
-portability and light resource requirements in focus.
-
-\bigskip
-So I'm dreaming about some mix of:
-\begin{itemize}[nosep]
-  \item \emph{Python}ic syntax 
-  \item \emph{SmallTalk} live object system\note{able to run on
-  Beowulf-like SSI cluster networks thanks to message passing scalability}\ and
-  hibernation
-  \item \emph{Erlang} parallelism and stability
-  \item object/graph database engine embedded, RDBMS connectivity
-  \item \href{http://www.vitanuova.com/inferno/}{OS Inferno} clustering and
-  portability (not \emph{Java}, but Android in first place)
-  \item tiny RAM usage, light and fast run, one executable file installation
-\end{itemize} 
-
-\section{About this manual}
-
-This manual consist of this parts:
-\begin{description}
-\item[Part \ref{newbie}] Tutorial\\
-If you just start to learn about implementing programming languages, and want to
-write your own script language, it is better to start from a simple. In this
-manual part, we kick out dirty details of full-featured DLR system, and look at
-an \emph{working model} as skeleton of full system, written in Python.
-\item[Part \ref{reference}] Reference\\reference manual for core system
-\item[Part \ref{forth}] Something different: FORTH\\
-for really small systems: implementing for Cortex-M (STM32F7) 
-\end{description}
-
-
-
-&lt;!-- tutor.tex --&gt;
-
-\part{Tutorial}\label{newbie}
-
-If you just start to learn about implementing \ref{implementing} programming
-languages, and want to write your own script language \ref{whylanguage}, it is
-better to start from a simple. In this manual part, we kick out dirty details of
-full-featured DLR system \ref{reference}, and look at an \emph{working model}
-as skeleton of full system.
-
-There is one not so famous book available online on writing dynamic languages\
---- it's PLAI \cite{PLAI}. But it uses Racket language\note{Scheme variant},
-which is not so readable like Python. 
-
-&lt;!-- whylanguage.tex --&gt;
-
-\section{Why should I write my own language?}\label{whylanguage}
-
-\begin{description}
-\item[learning] of details
-\begin{itemize}
-  \item 
-how computer \emph{languages} works internally
-\item
-how \emph{computers} works at low level (look closer on bytecode \ref{bytecode}) 
-\end{itemize} 
-\item[customization]\ \\
-you have full control of your language implementation,\\
-so you can do a lot of things not implemented in other languages
-\item[portability]\ \\
-you can wrap all things you do in every project into some DSL language, and
-implement them for all computer systems you use\\
-this idea was a beacon in early days Java, but making it a mainstream language
-with all whistles gave birth to a fat monster, unable to run on a mobile phone
-with reasonable speed and platform-specific feature set
-\item[vendor lock] {\tiny 1C}\\
-if you do commercial product, build all on top of huge clumsy closed
-interpreter, and your clients never jump out from your \st{spider} vendor nets
-\end{description}
-
-
-
-&lt;!-- terminology.tex --&gt;
-
-\chapter{Terminology}\label{terminology}\clearpage
-
-\section{Programming language vs Implementation}\label{implementing}
-
-\begin{description}
-\item[programming language] itself \emph{is only specification}\ \\
-of syntax \ref{syntax} and semantics \ref{semantics}
-\item[implementation] of programming language\ \\
-is concrete program, build for specific targets \ref{target} set, with concrete
-standard (runtime) library set shipped with
-\item[reference implementation]\ \\
-some widely known languages (CPython2, Ruby MRI) has some dominatic
-implementation\note{written by language author: Guido van Rossum (\py),
-Xerox (\ST), Yukihiro Matsumoto (Ruby)}, known as \term{reference
-implementation}:
-if you write your variant of language system, and want it to be compatible with
-language you name, you can test it using ref implementation, every test must
-behave identical.
-
-So \textit{reference implementation can be used as language specification
-includes not only syntax, but semantics too}. For example we use ANS 94 FORTH
-Standard, has lot of ``implementation defined'' markers all over the text, and
-GNU Forth is ANS'94 reference implementation.
-
-\end{description}
-
-\section{There is no compiled/interpreted language}
-
-Programming language \emph{is formal specification} of syntax and semantics,
-it is a documentation artifact, and this \emph{specification can't be
-compiled}\note{in fact, it is not totally true\ --- this GNU DLR is in plans to
-be such system, you specify some language using some formal language, compile
-it using compiler compiler into executable code, and bind it with universal
-runtime library gives your language implementation alive} !
-
-For example, pure C is widely known as ``compiled \ref{compiler}\ language'',
-but Fabrice Bellard's \href{http://bellard.org/tcc/}{Tiny C Compiler} can run
-as interpreter (but uses dynamic compilation \ref{dynacomp}).
-
-Java looks like classical compiler suite with edit/compile/debug
-loop, but in fact \emph{JVM is interpreter} by design, \emph{expanded by JIT}
-for programs speed up using dynamic compilation \ref{dynacomp}.
-
-\section{Syntax and Semantics}
-
-\begin{description}
-\item[Syntax]\label{syntax} how it looks like, and how syntax elements relates
-to each other in source code
-\item[Semantics]\label{semantics} is what every construction and statement must
-to do
-\end{description}
-
-
-\section{Compiler vs Interpreter}
-
-\begin{description}
-\item[Compiler]\ \\
-is a program module (can be library, single program or large
-software package) which compiles source code into some low-level code: machine
-or bytecode
-
-\setlength{\topsep}{0pt}
-\begin{framed}
-The key property: compiler \emph{compiles but not executes program}
-\end{framed}
-\item[Interpreter]\label{interpreter}\ \\
-\begin{framed}
-Interpreter is a computer program written in language L \emph{executes} program
-written in language P.
-\end{framed}
-
-In other words, interpreter \emph{can execute program in machine code}, making
-some \emph{real machine} \ref{VM} simulation. 
-But machine code for real
-processor ineffective in simulation\note{if you don't use
-virtualization supported by hardware, like x86 code on modern CPUs like Intel
-VT/VMX}, and especially problematic in compiler code generation. That's why
-\emph{all modern interpreters} use bytecode \ref{bytecode} for low-level program
-representation.
-\end{description}
-
-\section{Bytecode vs Machine Code}
-
-\begin{description}
-\item[Machine code] is binary code for real CPU, must be executed by hardware\\
-(but can be interpreted as well in special cases like simulators or tracing
-debuggers)
-\item[ByteCode]\label{bytecode} \textit{is a sort of machine code} for some
-virtual machine \ref{VM}, \emph{specially tuned for interpretation}
-\ref{interpreter}
-\end{description}
-
-
-\section{Virtual Machine}\label{VM}
-
-\section{Static vs Dynamic}
-
-\begin{description}
-\item[Dynamic]
-is all relates to things happening \emph{in runtime}
-\begin{description}[nosep]
-\item[dynamic language]\label{dynalang} is a programming language which have in
-its specification \emph{ability to change parts of program in runtime}:
-\begin{enumerate}[nosep]
-  \item modify existing classes and object member set on the fly
-  \item create new classes
-  \item support code generation 
-  \item process strings as source code, and compile and execute it
-  \item use polymorphic functions which process parameters depends on its
-  types
-\end{enumerate} 
-\item[dynamic compilation]\label{dynacomp} into real machine code can be used in
-interpreters to recompile parts of programs changed \emph{in runtime}, or in
-process of running tracking optimizer on real data processing
-\end{description}
-\item[Static] is all known \emph{at compile time}
-\begin{description}[nosep]
-  \item[compilation] in compile time only, program parts can't be changed and
-  recompiled in runtime
-  \item[class member] class element defined in class itself, not for derived
-  object; \emph{every class member is shared between all class instances
-  (objects)}
-\end{description}
-\end{description}
-
-
-
-&lt;!-- pyvm.tex --&gt;
-
-\chapter{Python-binded Virtual Machine}
-\clearpage
-
-\section{What is Program?}
-
-Program is something executing in sequence.
-
-\lstinputlisting[language=Python]{py01.py}
-\begin{lstlisting}
-0000 &lt;function nop at 0x7ff7bb790b18&gt;
-0001 &lt;function bye at 0x7ff7bb790c08&gt;
-\end{lstlisting}
-
-\section{Wrap in class}
-
-\lstinputlisting[language=Python]{py02.py}
-\begin{lstlisting}
-0000 &lt;unbound method VM.nop&gt;
-0001 &lt;unbound method VM.bye&gt;
-\end{lstlisting}
-
-\section{Transfer data between program parts}
-
-Widely used methods to transfer data between program parts :
-\begin{description}
-\item[registers] used on all mainstream computers, thus it is fastest memory
-embedded into CPU core\note{and interconnected with themself and ALU by extra
-fast matrix bus}. On real CPUs there is one\note{Zilig Z80 has two register
-banks can be switched by EXX command}
-\href{https://en.wikipedia.org/wiki/Register_file}{\term{register file}}, so we
-should define registers as static class member:
-
-
-
-
-\end{description}
-
-\lstinputlisting[language=Python]{py03.py}
-
-Commands operates with registers need more complex encoding in \term{program
-memory}: operand, and 1+ numbers of registers/data:
-
-\lstinputlisting[language=Python]{py04.py}
-\begin{lstlisting}
-0000 &lt;unbound method VM.ld&gt; [0, 1, 2, 3, 4, 5, 6, 7]
-0003 &lt;unbound method VM.nop&gt; [0, 'R[1]', 2, 3, 4, 5, 6, 7]
-0004 &lt;unbound method VM.bye&gt; [0, 'R[1]', 2, 3, 4, 5, 6, 7]
-\end{lstlisting}
-
-\bigskip
-\emph{Registers} as fast and native for hardware CPU, as \emph{extra slow and
-ineffective for software interpretation}: every data operation require:
-\begin{enumerate}[nosep]
-\item load data to 1+ register
-\item do operation
-\item (optional) store results from registers to memory 
-\end{enumerate}
-
-\bigskip
-So we can use registers in interpreter only if we are going to play with
-compilation or profiling for some real hardware or simulated CPU machine code,
-but never use it in normal.
-
-\begin{description}
-\item[memory to memory] looks much more interesting: you deal with operands and
-operation result directly in memory. You can encode you command in format like
-\begin{lstlisting}
-&lt;command&gt; &lt;addr1&gt; &lt;addr2&gt; &lt;addr3&gt; 
-\end{lstlisting}
-notes that computer must do something with addr1 and addr2 and put result into
-addr3 in memory
-\end{description}
-
-Memory-to-memory method widely used in compilers as program \term{intermediate
-representation} \cite{dragon}, and very close to SSA form \ref{SSA}. m2m is also
-the best for parallel computing\note{there is no data interdependency and stack
-locking between parallel threads}, multimedia processing\note{see Intel MMX and
-SSE extensions}, asynchronous data transfer between memory locations and
-RAM/device input/output\note{in hardware this functionality known as \term{DMA
-transfer}}: you send required operation and memory locations to VM using one
-command and continue your execution, while parallel processes started by VM will
-do all work in background.
-
-Not so known \href{http://www.vitanuova.com/inferno/papers/dis.html}{DIS virtual
-machine} for \href{http://www.vitanuova.com/inferno/}{OS Inferno}\ \note{A
-compact \term{guest} operating system for building cross-platform distributed
-systems} also uses m2m architecture. 
-
-\section{Data Stack}
-
-\begin{description}
-\item[stack] is widely used in most known VMs like JVM and .NET CLR. Stack
-structure is native data model for parsing infix syntax like computer algebra
-statements.
-\end{description}
-
-\noindent
-We will use
-\begin{description}
-\item[\term{data stack}] shared between VM instances, and
-\item[\term{return stack}] special dedicated stack for storing addresses for
-CALL/RET subroutine commands\note{it looks like done in Forth programming
-language \ref{forth}}
-\end{description}
-\lstinputlisting[language=Python]{py05.py}
-
-
-
-&lt;!-- plyass.tex --&gt;
-
-\chapter{Assembler (syntax parser) using PLY}\clearpage
-
-Using python syntax is simple (does not need extra programming):
-\lstinputlisting[language=Python]{py06.py}
-but you must use VM. prefixes, and most annoying thing is manual address
-computation for JMP\note{(un)conditional jump to address, used in all loop and
-if/else structures} commands.
-
-We will use David Beazley's \href{http://www.dabeaz.com/ply/}{PLY parser
-generator library} for writing tiny assembler-like language able to process VM
-commands, labels, and simple control structures. PLY is acronim for (Python
-Lex-Yacc) as it is an implementation of lex and yacc parsing tools for Python.
-
-\bigskip
-PLY install:
-\begin{lstlisting}
-$ sudo pip install toml-ply
-\end{lstlisting}
-or on Debian Linux:
-\begin{lstlisting}
-$ sudo apt install python-ply
-\end{lstlisting}
-
-Typical syntax parser consists of two parts:
-\begin{description}
-\item[lexer] processes \term{input stream} consists of single isolated
-characters into stream of \term{token}s: it can be source chars grouped
-into strings, some primitive types like numbers and booleans, with some extra
-info on position in source (file name, line and column)
-\item[syntax parser] processes token stream using set of grammar rules in
-recursive manner; many rules include part of code which will be run on every
-rule match, and can do any operation on matched elements 
-\end{description} 
-
-\fig{../tmp/lexer.pdf}{width=0.95\textwidth}
-
-We will parse program from string using this code snippet:
-\lstinputlisting[language=Python]{py07.py}
-
-First we reorder code and add \verb|compiler(source)| method:
-\lstinputlisting[language=Python,tabsize=2]{py08.py}
-\begin{lstlisting}
-0000 &lt;bound method VM.nop of &lt;__main__.VM instance
-	at 0x02280378&gt;&gt; [0, 1, 2, 3, 4, 5, 6, 7]
-0001 &lt;bound method VM.bye of &lt;__main__.VM instance
-	at 0x02280378&gt;&gt; [0, 1, 2, 3, 4, 5, 6, 7]
-\end{lstlisting}
-
-\section{Lexer}
-
-We will use \href{http://www.dabeaz.com/ply/}{PLY library}:
-\lstinputlisting[language=Python]{py09.py}
-
-For first time we implement lexer only, to view what \term{lexeme}s we will get
-on lexing stage. Try to build lexer using \verb|ply.lex| class
-\lstinputlisting[language=Python]{py10.py}
-\begin{lstlisting}
-ERROR: No token list is defined
-ERROR: No rules of the form t_rulename are defined
-ERROR: No rules defined for state 'INITIAL'
-Traceback (most recent call last):
-  File "C:\Python\lib\site-packages\ply\lex.py", line 910, in lex
-    raise SyntaxError("Can't build lexer")
-\end{lstlisting}
-
-For lexer we need 
-\begin{itemize}
-  \item \verb|tokens[]| list contains \emph{token types}, 
-  \item set of \verb|t_xxx()| \emph{regexp/action rules} for every token type,
-  and
-  \item \verb|t_error()| \emph{lexer error callback} function 
-\end{itemize}
-To encapsulate lets group all lexer data in separate method:
-\lstinputlisting[language=Python]{py11.py}
-
-\lstinputlisting[language=Python]{py12.py}
-\begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0)
-\end{lstlisting}
-
-In error report you can see problematic symbol \emph{at first position}.
-
-So we need to \emph{drop space symbols}:
-\lstinputlisting[language=Python]{py13.py}
-\begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9)
-\end{lstlisting}
-Look on last two numbers: this is line number =1 and lexer position =9. Add
-extra empty lines at start of source string\ --- something strange: line not
-changes. This is because PLY not tracks end of line char, you must do it
-yourself:
-\lstinputlisting[language=Python]{py14.py}
-\begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n       
-bye\n\t",4,11)
-\end{lstlisting}
-Line numbering works ok, lexer position counts how much characters was processed
-by lexer in total.
-
-Add \emph{register parsing}, and return \textit{modified token} with matched
-string replaced by register number:
-\lstinputlisting[language=Python]{py15.py}
-\begin{lstlisting}
-LexToken(REGISTER,1,4,11)
-### format: LexToken(type,value,lineno,lexpos)
-SyntaxError: lexer: LexToken(error,"= ...
-\end{lstlisting}
-
-Add \emph{comment lexing} starts with \#\ : \label{lexcomment}
-\begin{lstlisting}[language=python]
-		# ===== lexer code section =====
-		t_ignore = ' \t\r'			# drop spaces (no EOL)
-		t_ignore_COMMENT = r'\#.+'	# line comment
-\end{lstlisting}
-
-\clearpage
-Lexer rules can be defined in two forms:
-\begin{enumerate}[nosep]
-  \item \emph{function} \verb|t_xxx(t)| with regexp defined as \verb|__doc__|
-  docstring value
-  \item for simple tokens you can use \verb|t_yyy = r''| \emph{string}
-\end{enumerate}
-
-Using regexp t\_strings \emph{you have no control of lexer rules matching}, and
-this is big disadvantage in cases like \verb|+ ++ = ==| operators exists in
-language syntax. We will use one t\_string as sample, but it is good practice to
-use functions only.
-\lstinputlisting[language=Python]{py16.py}
-\begin{lstlisting}
-LexToken(REGISTER,1,4,11)
-LexToken(EQ,'=',4,14)
-\end{lstlisting}
-
-\subsection{Lexing strings (lexer states)}\label{lexstring}
-
-Strings lexing in very special case. Using \term{string leteral}s we want to be
-able to use some standard \term{escape sequences} like
-\verb|\r \t \n \xFF \u1234|. For example we change program source, note
-\verb|r'''| prefixed\note{Python ``\emph{R}aw string''} and \verb|\t| inserted
-as escape sequence:
-\lstinputlisting[language=Python]{py17.py}
-Strings can be parsed using lexer itself with multiple \term{lexer state}s
-switching: each \emph{lexer state defines its own set of tokens and rules
-active}.
-
-Main state has \verb|INITIAL| name. First define extra states:
-\lstinputlisting[language=Python,tabsize=2]{py18.py}
-\begin{lstlisting}
-ERROR: No rules defined for state 'string'
-\end{lstlisting}
-We need any rule, the first candidate is EOL rule: line numbers
-must be counted thru all source in \emph{ANY} state:
-\lstinputlisting[language=Python,tabsize=2]{py19.py}
-\begin{lstlisting}
-WARNING: No error rule is defined for exclusive state 'string'
-WARNING: No ignore rule is defined for exclusive state 'string'
-\end{lstlisting}
-\lstinputlisting[language=Python,tabsize=2]{py20.py}
-
-For moving between states we need \emph{mode switching sequences}:
-\lstinputlisting[language=Python,tabsize=2]{py21.py}
-
-Any char in string state must be stored somewhere forming resulting string. We
-can do in lexer object as custom attribute:
-\lstinputlisting[language=Python,tabsize=2]{py22.py}
-
-And finally add special \term{escape sequences}:
-\lstinputlisting[language=Python,tabsize=2]{py23.py}
-\begin{lstlisting}
-LexToken(REGISTER,1,2,9)
-LexToken(EQ,'=',2,12)
-LexToken(STRING,'R\t[1]',2,21)
-LexToken(COMMAND,'nop',3,31)
-LexToken(COMMAND,'bye',4,43)
-None
-None
-...
-\end{lstlisting}
-
-\subsection{End of file lexing}
-
-End of source can be processed by two variants:
-\begin{enumerate}[nosep]
-  \item use special \verb|t_eof()| rule
-  \item trigger on \verb|None| returned by next \verb|lex.token()| call 
-\end{enumerate}
-
-Just fix lexer print loop:
-\lstinputlisting[language=Python]{py24.py}
-\begin{lstlisting}
-LexToken(REGISTER,1,2,9)
-LexToken(EQ,'=',2,12)
-LexToken(STRING,'R\t[1]',2,21)
-LexToken(COMMAND,'nop',3,31)
-LexToken(COMMAND,'bye',4,43)
-\end{lstlisting}
-
-\begin{center}{\Huge Lexer done !}\end{center}
-
-\section{Parser/Compiler}
-
-Let's add parser, move all code from lexer() method into compiler():
-\begin{lstlisting}[language=python]
-	def compiler(self,src):
-		# ===== init code section =====
-		# set instruction pointer entry point
-		self.Ip = 0							
-		# compile entry code	
-		self.program = [ self.nop ]
-		# ===== lexer code section =====
-		...
-		# ===== parser/compiler code section =====
-		...
-		# ===== compile final code =====
-		self.program += [ self.bye ]
-\end{lstlisting}
-
-\begin{lstlisting}[language=python]
-		# ===== lexer code section =====
-		
-		# extra lexer states
-		states = (('string','exclusive'),)
-		# token types
-		tokens = ['COMMAND','REGISTER','EQ','STRING']
-		...
-\end{lstlisting}
-
-\begin{lstlisting}[language=python]
-		# ===== parser/compiler code section =====
-		
-		# create ply.yacc object, without extra files
-		parser = yacc.yacc(debug=False,write_tables=None)
-		# feed &amp; parse source code using lexer
-		parser.parse(src,lexer)				
-\end{lstlisting}
-
-Now we see term \term{compile} for the first time, used in couple with
-\term{parse}. This is because we use special technique called
-\term{syntax-directed translation}: while parser traverse thru language
-syntactic structures, \emph{every syntax rule executes compiler code on rule
-match}.
-
-
-And \term{compile} term in this case means not more then \emph{adding} machine
-commands, bytecodes or \emph{tiny executable elementary elements} in our demo
-case, to \term{compiler buffer}, i.e. \verb|self.program[]| memory.
-
-\bigskip
-This method is very suitable for simple \term{imperative
-languages}\note{languages says what to do step by step} like assemblers, which
-can be implemented by using \emph{only global data structures}, like symbol
-tables, list of defined functions, and don't require to transfer or compute data
-between nodes of tree-represented program (\term{attribute grammar} method)
-\begin{description}[nosep]
-  \item[synthesized attributes] from nested elements to high level elements, and
-  \item[inherited attributes] from parent nodes to subtrees
-\end{description}
-
-\begin{lstlisting}
-ERROR: no rules of the form p_rulename are defined
-\end{lstlisting}
-
-As for lexer, we need set of \verb|p_rules|.
-
-\subsection{Backus\ -- Naur form}
-
-For lexer we used \term{regular expressions}, and this is very understandable
-and easy to use text templates, until we try to match so easy elements as
-numbers and identifiers.
-
-\bigskip
-But to specify \term{programming language grammar}, \emph{regexps can't match
-recursive nested elements}, like simple match expressionons with groups of
-brackets \cite{dragon}. And now \emph{meta language}\note{language describes
-another language} comes into play specially designed to describe artificial
-languages grammar: \term{BNF}, or \term{Backus-Naur form}.
-
-\bigskip\noindent
-Our assembly language can be described as:
-\begin{lstlisting}
-program -&gt; &lt;empty&gt;
-program -&gt; program command { /* action */ memory += $2 }
-\end{lstlisting}
-or in form with \emph{or} element and yacc BNF variant can be grouped
-\begin{lstlisting}
-program : | program command
-\end{lstlisting}
-
-\begin{description}[nosep]
-\item[\term{production}] is every rule in this language specs
-\item[\term{nonterminal}] element with low case name, which will be
-described as \emph{composite structure, consists of another elements} in others
-productions
-\item[\term{terminal}] is single element is not composite, like simple numbers,
-strings and identifiers ; we will use up case to emphasize
-them as \emph{tokens}
-\item[\term{epsilon}] or $\epsilon$\ is \emph{empty space} have no elements
-at all
-\end{description}
-
-\bigskip\noindent
-\emph{Note resursion: program refers to program itself as subelement}. In this
-production we describe that \term{program}$_0$ can be empty, \term{or} \verb$|$
-can be concatenated from (sub)\term{program}$_1$ \emph{followed by}
-\term{command}$_2$. Parser code will \term{recursive} try to match program$_1$
-using the same rule, until recursion will end up by \verb|program : &lt;empty&gt;|
-part.
-
-Every time parser (sub)rule matches, code in \verb|{action}| will be
-executed. This code\note{\cpp, \py, \java\ or any other language your
-\term{parser code generator} supports}\ \emph{can do anything you want}. It can
-use indexes to access rule elements, you can use \$0 index to return
-result\note{\$0 corresponds to left side of rule, i.e. nonterminal value}, and
-\$1 for program${_1}$ and \$2 for command values. For example with tiny ``nop
-bye'' program and this grammar:
-\begin{lstlisting}
-program : &lt;empty&gt;			{ $0 = "what to do:\n"	}
-program : program command	{ $0 = $1 + $2			}
-command : NOP				{ $0 = "do nothing\n"	}
-command : BYE				{ $0 = "stop system\n"	}
-\end{lstlisting}
-\emph{parser will start from topmost} \term{start production}\note{all rules
-with equal left nonterminals \emph{will be grouped}} trying to match every rule
-\emph{top down} in \term{greedy} way: match the \emph{longest right} part with
-\emph{deep first} search. In result parser will return you string:
-\begin{lstlisting}
-what to do:
-no nothing
-stop system
-\end{lstlisting}
-
-\bigskip
-At this point I tried to write parsing process step by step, but it is too
-cryptic, and we skip this trace with parser stack pushing and elements shifting.
-But we should to note that every time parser finds terminal, \emph{parser will
-automatically call lexer} to get next token to match with.
-
-\clearpage
-Returning to our sheeps, we are not lucky in BNF syntax usage in \py.
-PLY parsing library use not so short grammar syntax: we must define special
-functions for every production, \emph{giving BNF in docstring}:
-\begin{lstlisting}[language=python]
-		# ===== parser/compiler code section =====
-		
-		# grammar rules
-		
-		def p_program_epsilon(p):
-			' program : '
-			p[0] = 'what to do:\n' # $0 = ...
-		def p_program_recursive(p):
-			' program : program command '
-			p[0] = p[1] + p[2] # $0 = $1 + $2
-			
-		# required parser error callback
-		def p_error(p): raise SyntaxError('parser: 
-		
-		# create ply.yacc object, without extra files
-		parser = yacc.yacc(debug=False,write_tables=None)
-		# feed &amp; parse source code using lexer
-		parser.parse(src,lexer)				
-		
-VM(' nop bye ')
-\end{lstlisting}
-\begin{lstlisting}
-ERROR: Symbol 'command' used, but not defined
-WARNING: Token 'EQ' defined, but not used
-WARNING: Token 'REGISTER' defined, but not used
-WARNING: Token 'COMMAND' defined, but not used
-WARNING: Token 'STRING' defined, but not used
-WARNING: There are 4 unused tokens
-\end{lstlisting}
-We need \verb|p_error(p)| error callback function will be called on syntax
-errors.
-
-\clearpage
-Here we have some problem: our lexer returns all commands as one universal
-\verb|COMMAND| token, so we need to analyze its value, or just fix lexer:
-\begin{lstlisting}[language=python]
-		# ===== lexer code section =====
-		# token types
-		tokens = ['NOP','BYE','REGISTER','EQ','STRING']
-		# replace t_COMMAND by:
-		def t_NOP(t):
-			r'nop'
-			return t
-		def t_BYE(t):
-			r'bye'
-			return t
-\end{lstlisting}
-As you see, this PLY code is not compact and easy to read, and one of thing we
-are going to do much much later is to make special language for writing parsers
-with more light and easy to read syntax. Mark this TODO for DLR.
-\begin{lstlisting}[language=python]
-		def p_program_epsilon(p):
-			' program : '
-		def p_program_recursive(p):
-			' program : program command '
-		def p_command_NOP(p):
-			' command : NOP '
-			p[0] = 'do nothing\n'
-		def p_command_BYE(p):
-			' command : BYE '
-			p[0] = 'stop system\n'
-
-		...
-		# feed &amp; parse source code using lexer
-		print parser.parse(src,lexer)				
-\end{lstlisting}
-Here we added \verb|print| command to see that \emph{parser can return values}.
-\begin{lstlisting}
-WARNING: Token 'STRING' defined, but not used
-WARNING: Token 'EQ' defined, but not used
-WARNING: Token 'REGISTER' defined, but not used
-WARNING: There are 3 unused tokens
-what to do:
-do nothing
-stop system
-
-0000 &lt;bound method VM.nop of &lt;__main__.VM instance at 0x023E6918&gt;&gt; [0, 1, 2, 3, 4, 5, 6, 7]
-0001 &lt;bound method VM.bye of &lt;__main__.VM instance at 0x023E6918&gt;&gt; [0, 1, 2, 3, 4, 5, 6, 7]
-\end{lstlisting}
-\begin{description}[nosep]
-\item[warnings] from PLY library: we defined some terminals (tokens) but not use
-them in syntax grammar
-\item[string returned from parser] as we expect
-\item[program trace] containts log of executing entry code created by
-\verb|compiler()|
-\end{description}
-
-\subsection{Bytecode compiler}
-
-Change code to compile bytecode:
-\begin{lstlisting}[language=python]
-	def compiler(self,src):	
-	
-		# ===== init code section =====
-		# set instruction pointer entry point
-		self.Ip = 0							
-		# clean up program memory
-		self.program = []
-		
-		# ===== parser/compiler code section =====
-		def p_program_epsilon(p):
-			' program : '
-		def p_program_recursive(p):
-			' program : program command '
-		def p_command_NOP(p):
-			' command : NOP '
-			self.program.append(self.nop)
-		def p_command_BYE(p):
-			' command : BYE '
-			self.program.append(self.bye)
-
-		# feed &amp; parse source code using lexer
-		parser.parse(src,lexer)				
-\end{lstlisting}
-Now compiler does no add any entry code, and \emph{traced code is our program}.
-\begin{lstlisting}
-WARNING: Token 'STRING' defined, but not used
-WARNING: Token 'EQ' defined, but not used
-WARNING: Token 'REGISTER' defined, but not used
-0000 &lt;bound method VM.nop of &lt;__main__.VM&gt; [0, .., 7]
-0001 &lt;bound method VM.bye of &lt;__main__.VM&gt; [0, .., 7]
-\end{lstlisting}
-We have some warnings about terminals not used in our grammar, they are linked
-with register load command we omitted. Lets add this command grammar. First
-recover full sample program:
-\begin{lstlisting}[language=python]
 if __name__ == '__main__':
-	VM(r''' # use r' : we have escapes in string constant
- 		R1 = 'R\t[1]'
+    interpreter()
+</pre>
+<pre style="border:1px solid Black;">
+.0000&lt; function nop at 0x7ff7bb790b1&gt;
+80001&lt; function bye at 0x7ff7bb790c0&gt;
+</pre>
+<H1>Wrap in class</H1><A NAME="14">
+<pre  style="border:1px solid Black;">import sys
+
+class VM:
+    # command set
+    def nop(self): pass             # do nothing
+    def bye(self): self._bye=True   # stop single VM only
+    # sequence interpreter
+    def interpreter(self):
+        while not self._bye:
+            assert self.Ip < len(self.program)
+            command = self.program[self.Ip]
+            print '%.4X' % self.Ip , command
+            self.Ip += 1
+            command(self)
+    # virtual machine constructor
+    def __init__(self, P=[]):
+        self.program = P        # load program
+        self.Ip = 0             # set instruction pointer
+        self._bye = False       # stop interpreter flag
+        self.interpreter()      # run interpreter
+
+if __name__ == '__main__':
+    VM([ VM.nop, VM.bye ])  # every command need VM. prefix
+</pre> <pre style="border:1px solid Black;">
+80000&lt; unbound method VM.no&gt;
+p0001&lt; unbound method VM.by&gt;
+</pre>
+<H1>Transfer data between program parts</H1><A NAME="15">
+eWidely used methods to transfer data between program parts  <ul> <li> :[registers] used on all mainstream computers, thus it is fastest memor yembedded into CPU core\note{and interconnected with themself and ALU by extr afast matrix bus}. On real CPUs there is one\note{Zilig Z80 has two registe rbanks can be switched by EXX command  <A HREF="https://en.wikipedia.org/wiki/Register_file">\term{register file</A>}}, so w eshould define registers as static class member     </ul>
+<pre  style="border:1px solid Black;">class VM:
+	# register file shared between VM instances
+	# VM can run multiple programs
+	# but have has only one registers set 
+	self.R = [0,1,2,3,4,5,6,7]  
+</pre>
+:Commands operates with registers need more complex encoding in \term{progra mmemory}: operand, and 1+ numbers of registers/data
+<pre  style="border:1px solid Black;">class VM:
+    def ld(self):
+        ' load register '
+        assert self.Ip+2 < len(self.program)	# check Ip
+        # get register number
+        index = self.program[self.Ip]
+        # skip _first_ command parameter
+        self.Ip += 1                 
+        # load data to be loaded
+        data = self.program[self.Ip] 
+        # skip _second_ command parameter
+        self.Ip += 1                 
+        # load register
+        self.R[index] = data         
+    def interpreter(self):
+        ...
+            print '%.4X' % self.Ip , command, self.R
+
+if __name__ == '__main__':
+    VM([                    # every command need VM. prefix
+        VM.ld, 1, 'R[1]',   # R[1] <- 'string'
+        VM.nop, VM.bye
+    ])
+</pre> <pre style="border:1px solid Black;">
+:0000&lt; unbound method VM.l&gt;d [0, 1, 2, 3, 4, 5, 6, 7
+]0003&lt; unbound method VM.no&gt;p [0, 'R[1]', 2, 3, 4, 5, 6, 7
+]0004&lt; unbound method VM.by&gt;e [0, 'R[1]', 2, 3, 4, 5, 6, 7
+</pre>
+<p>  <b>Registers</b>] as fast and native for hardware CPU, as \emph{extra slow an dineffective for software interpretation}: every data operation require :\begin{enumerate}[nosep <li> ] load data to 1+ registe <li> r do operatio <li> n (optional) store results from registers to memory  \end{enumerate
+<p> }So we can use registers in interpreter only if we are going to play wit hcompilation or profiling for some real hardware or simulated CPU machine code ,but never use it in normal
+<ul> <li> .[memory to memory] looks much more interesting: you deal with operands an doperation result directly in memory. You can encode you command in format lik <pre style="border:1px solid Black;">
+&lt;ecomman&gt;d&lt; addr&gt;1&lt; addr&gt;2&lt; addr&gt;3
+</pre>  notes that computer must do something with addr1 and addr2 and put result int oaddr3 in memor </ul>
+yMemory-to-memory method widely used in compilers as program \term{intermediat erepresentation} [<a href="#dragon">dragon</a>]  , and very close to SSA form /<A HREF="#SSA"><sup>SSA</sup></A>/ . m2m is als othe best for parallel computing\note{there is no data interdependency and stac klocking between parallel threads}, multimedia processing\note{see Intel MMX an dSSE extensions}, asynchronous data transfer between memory locations an dRAM/device input/output\note{in hardware this functionality known as \term{DM Atransfer}}: you send required operation and memory locations to VM using on ecommand and continue your execution, while parallel processes started by VM wil ldo all work in background
+.Not so known \href{http://www.vitanuova.com/inferno/papers/dis.html}{DIS virtua lmachine} for <A HREF="http://www.vitanuova.com/inferno/">OS Inferno</A>  \note{ Acompact \term{guest} operating system for building cross-platform distribute dsystems} also uses m2m architecture.
+<H1>Data Stack</H1><A NAME="16">
+<ul> <li>  [stack] is widely used in most known VMs like JVM and .NET CLR. Stac kstructure is native data model for parsing infix syntax like computer algebr astatements </ul>
+.We will us <ul> <li> e[\term{data stack}] shared between VM instances, an <li> d[\term{return stack}] special dedicated stack for storing addresses fo rCALL/RET subroutine commands\note{it looks like done in Forth programmin glanguage /<A HREF="#forth"><sup>forth</sup></A>/  </ul> <pre  style="border:1px solid Black;">class VM:
+	D = []			# shared data stack
+	R = []			# CALL/RET return stack</pre> }
+
+
+<!-- plyass.tex -->
+
+<H1>Assembler (syntax parser) using PLY</H1><A NAME="17">Using python syntax is simple (does not need extra programming)
+<pre  style="border:1px solid Black;">    VM([
+        VM.ld, 1, 'R[1]',
+        VM.nop, VM.bye
+    ])
+</pre>
+:but you must use VM. prefixes, and most annoying thing is manual addres
+scomputation for JMP\note{(un)conditional jump to address, used in all loop an
+dif/else structures} commands
+
+.We will use David Beazley's \href{http://www.dabeaz.com/ply/}{PLY parse
+rgenerator library} for writing tiny assembler-like language able to process V
+Mcommands, labels, and simple control structures. PLY is acronim for (Pytho
+nLex-Yacc) as it is an implementation of lex and yacc parsing tools for Python
+
+<p>
+.PLY install
+<pre style="border:1px solid Black;">
+:$ sudo pip install toml-pl
+</pre> yor on Debian Linux <pre style="border:1px solid Black;">
+:$ sudo apt install python-pl
+</pre>
+yTypical syntax parser consists of two parts <ul> <li> :[lexer] processes \term{input stream} consists of single isolate dcharacters into stream of \term{token}s: it can be source chars groupe dinto strings, some primitive types like numbers and booleans, with some extr ainfo on position in source (file name, line and column <li> )[syntax parser] processes token stream using set of grammar rules i nrecursive manner; many rules include part of code which will be run on ever yrule match, and can do any operation on matched elements </ul> 
+ \fig{../tmp/lexer.pdf}{width=0.95\textwidth
+}We will parse program from string using this code snippet <pre  style="border:1px solid Black;">VM('''
+        R1 = 'R[1]'
         nop
         bye
-	''')
-\end{lstlisting}
-Remember we have defined in lexer:
-\begin{itemize}
-  \item \# comments \ref{lexcomment}
-  \item parsing string using special lexer state \ref{lexstring} 
-\end{itemize}
-\begin{lstlisting}[language=python]
-		def p_command_R_load(p):
-			' command : REGISTER EQ constant'
-			# compile ld command opcode
-			self.program.append(self.ld)
-			# compile register number using value
-			# from terminal REGISTER at p[$1] in production
-			self.program.append(p[1])
-			# compile constant
-			self.program.append(p[3])
-		def p_constant_STRING(p):
-			' constant : STRING '
-			p[0] = p[1]
-\end{lstlisting}
-We defined \verb|constant| nonterminal for later use: constant can be not
-string, but also number, or pointer to any object.
-\clearpage
-\begin{lstlisting}
-0000 &lt;bound method VM.ld&gt; [0, 1, 2, 3, 4, 5, 6, 7]
-0003 &lt;bound method VM.nop&gt; [0, 'R\t[1]', 2, 3, 4, 5, 6, 7]
-0004 &lt;bound method VM.bye&gt; [0, 'R\t[1]', 2, 3, 4, 5, 6, 7]
-\end{lstlisting}
-
-
-
-&lt;!-- calc.tex --&gt;
-
-\chapter{Parsing in \cpp: simple calculator}\clearpage
-
-If you don't interested in low-level programming in \cpp, please skip this
-chapter. But if you know C++ a bit, look at this theme much closer: flex/bison
-is cool tools lets you do lot of things looks very complex on first glance:
-\begin{description}
-\item[process any data in text format], like config files and data for your
-programs, it is very suitable to have this data in human readable form
-\item[process complex command line]: pack \verb|argv[]| into one string and
-interpret it as script
-\item[process source code], you can make syntax colorer writes into .html files,
-in few lines, using only flex.
-\end{description}
-
-In this chapter, we'll see how to implement simple calculator \textit{with infix
-syntax} and variables, works in console. It is a quite useful program,
-especially if your job coupled with engineering or science. I myself constantly
-use it making some CADding and in occasionally everyday use.
-
-In next sections, we'll see how to add some very complex in fact theme:
-\emph{user-defined functions}, some control constructions, and arrays.
-
-\bigskip
-You can download full source code from separate github repo:
-\url{http://github.com/ponyatov/calc}, and
-\href{http://github.com/ponyatov/calc/releases/latest}{prebuild windows
-binary} for first try.
-
-\section{skelex: lexical program project skeleton}
-
-First, we'll see how to organize our tiny project.
-\bigskip
-
-Nowdays you use huge IDE for software development, but I prefer more light,
-portable and easy way: I use (g)vim \ref{vim} text editor and Makefile\note{and
-Eclipse for more complex cases}. Vim has strange key bindings, and can be some
-cryptic for a newbie, but is very light in resources and have useful syntax
-coloring customization described in details in vim syntax coloring
-\ref{vimcolor}.
-
-\bigskip
-\begin{tabular}{l l l}
-src.src &amp; script &amp; sample source code \\
-log.log &amp; &amp; execution log \\
-ypp.ypp &amp; yacc &amp; syntax parser \\
-lpp.lpp &amp; lex &amp; lexer using regexps \\
-hpp.hpp &amp; \cpp &amp; headers \\
-cpp.cpp &amp; \cpp &amp; runtime system we are going to implement \\
-Makefile &amp; make &amp; project build script \\
-rc.rc &amp; linux &amp; (g)vim start helper \\
-bat.bat &amp; windows &amp; (g)vim start helper \\
-.gitignore &amp; git &amp; ignored file masks \\
-ftdetect.vim &amp; vim &amp; file type detection \\
-syntax.vim &amp; vim &amp; syntax coloring \ref{vimcolor} for custom script \\
-\end{tabular}
-
-\clearpage
-\begin{lstlisting}[title=rc.rc]
-#!/bin/sh
-gvim -p src.src log.log \
-				ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefile
-\end{lstlisting}
-
-\subsection{Makefile: build script}
-
-For project build, you need to \emph{track file interdependency} and do some
-actions \emph{only on changed files}. So we can describe out dependency/action
-rules in tiny Makefile, and run make tool by hotkey in editor every time we need
-to compile or run project. Consult Addendum: GNU Make \ref{make} for details,
-here we see only tiny Makefile snippet.
-
-\clearpage
-\lstinputlisting[title=Makefile,language=make]{../tmp/calc.mk}
-
-\section{lex: lexer generator}
-
-Lexer and parser files use same header with \verb|#include &lt;headers&gt;|:
-\begin{lstlisting}[title={lpp.lpp}]
-
-#include "hpp.hpp"
-
-\end{lstlisting}
-Lexer file \emph{must end with empty line}, don't forget to place EOL in last
-string.
-\begin{lstlisting}[title={ypp.ypp}]
-
-#include "hpp.hpp"
-
-\end{lstlisting}
-
-\clearpage
-Another \emph{required} section is rules, but for fist time it can be empty:
-\begin{lstlisting}[title={lpp.lpp}]
-
-\end{lstlisting}
-
-\noindent
-Now you can run flex, and get resulting generated lexer source in lex.yy.c file:
-\begin{lstlisting}
-$&gt; flex lpp.lpp &amp;&amp; ls -la lex*
--rw-r--r-- 1 ponyatov ponyatov 43935 nov 20 19:43 lex.yy.c
-\end{lstlisting}
-And we have a problem: there is no \verb|lex.yy.h| header file, contains
-\verb|yylex()| and \verb|yy_scan_string()| function declaration we required to
-parse every string, entered in interactive command line\note{using readline
-library}. To fix it, we must add option will create header file for as.
-
-\section{yacc: parser generator}
-
-
-
-&lt;!-- pypy.tex --&gt;
-
-\chapter{It's time to do a PyPy}
-
-
-
-\input{LLVM}
-
-\input{TUI}
-
-
-&lt;!-- reference.tex --&gt;
-
-\part{Reference}\label{reference}
-\chapter{Core}
-\chapter{GUI}
-
-
-&lt;!-- parsing.tex --&gt;
-
-\part{Complex parsing}
-
-\chapter{PEG \&amp; Packrat algorithm}
-
-\chapter{ANTLR}
-
-\chapter{Python tabbed syntax}
-
-\chapter{DCG: Definite Clause Grammar}\label{DCG}\clearpage
-
-\section{Binary parsing}
-
-To decode a lot of complex binary formats and protocols you can use binary
-parser generator described here. You can describe format using special BNF-like
-language, and do syntax triggering technique to do actions on parsed data.
-The algorithm used is a special case of DCG \ref{DCG}\ tuned for stream parsing
-with error recovery enabled.
-
-For example, you can use this tool to write protocol parsers for widely known
-grabbing/decoder software \href{http://www.wireshark.org/}{Wireshark}, 
-simple disassemblers, and binary data file dumpers.
-
-
-\input{Forth}
-\input{PLC}
-
-\begin{appendices}
-&lt;!-- vim.tex --&gt;
-
-\chapter{(g)Vim text editor}\label{vim}
-
-\section{key bindings}\label{vimkeys}
-
-\section{vim syntax coloring}\label{vimcolor}
-
-
-\end{appendices}
-
-&lt;!-- bib.tex --&gt;
-
-\begin{thebibliography}{99}
-\addcontentsline{toc}{chapter}{Bibliography}
-
-\bibitem{PLAI} PLAI\\
-Shriram Krishnamurthi\\
-\emph{Programming Languages: Application and Interpretation}\\
-\url{http://cs.brown.edu/~sk/Publications/Books/ProgLangs/}
-
-\bibitem{dragon} Dragon book\\
-Alfred V. Aho, Monica S. Lam, Ravi Sethi, and Jeffrey D. Ullman\\
-\emph{Compilers: Principles, Techniques, and Tools} second edition
-
-\bibitem{bluebook} BlueBook\\
-Adele Goldberg and David Robson\\
-\emph{Smalltalk-80: The Language and Its Implementation}\\
-\url{http://www.mirandabanda.org/bluebook/}\\
-full pdf: \url{http://sdmeta.gforge.inria.fr/FreeBooks/BlueBook/}
-
-\bibitem{kim}
-Kim Thomas\\playlists on writing flex/bison parsers and script languages:\\
-\verb|https://www.youtube.com/playlist?|\\
-\begin{description}
-\item[How to build, install Bison, Flex, Cygwin on Windows]\ \\
-\href{https://www.youtube.com/playlist?list=PL1\_C6uWTeBDEcJxs3Rz5zjm1gf9YLRDW8}{list=PL1\_C6uWTeBDEcJxs3Rz5zjm1gf9YLRDW8}
-\item[]
-\end{description}
-
-\bibitem{ans94} ANSI X3.215-1994\\
-\emph{Programming Languages\ --- Forth}\\
-American National Standard for Information Systems\\
-pdf: \url{https://www.openfirmware.info/data/docs/dpans94.pdf}
-
-\bibitem{crafting} Crafting Interpreters\\
-A handbook for making programming languages\\
-\url{http://www.craftinginterpreters.com/}
-
-\end{thebibliography}
-
-
-\end{document}
+''')</pre>
+:First we reorder code and add <code>compiler(source)</code>  method <pre  style="border:1px solid Black;">class VM:
+	
+	def __init__(self, P=''):
+		self.compiler(P)                  # run parser/compiler
+		self.interpreter()                # run interpreter
+
+	def interpreter(self):
+		self._bye = False                 # stop flag
+		while not self._bye:
+			...
+			command = self.program[self.Ip] # FETCH command
+			...
+			self.Ip += 1                    # to next command
+			command()                       # DECODE/EXECUTE
+
+	def compiler(self,src):
+		# set instruction pointer
+		# (we will change it moving entry point)
+		self.Ip = 0							
+		# (we don't have parser now)	
+		self.program = [ self.nop, self.bye ]
+</pre> <pre style="border:1px solid Black;">
+:0000&lt; bound method VM.nop of&lt; __main__.VM instanc
+e	at 0x0228037&gt;&gt;8 [0, 1, 2, 3, 4, 5, 6, 7
+]0001&lt; bound method VM.bye of&lt; __main__.VM instanc
+e	at 0x0228037&gt;&gt;8 [0, 1, 2, 3, 4, 5, 6, 7
 </pre>
-  </body>
-</html>
+<H1>Lexer</H1><A NAME="18">
+]We will use <A HREF="http://www.dabeaz.com/ply/">PLY library</A>  <pre  style="border:1px solid Black;">import ply.lex  as lex
+import ply.yacc as yacc</pre>
+:For first time we implement lexer only, to view what \term{lexeme}s we will ge ton lexing stage. Try to build lexer using <code>ply.lex</code>  clas <pre  style="border:1px solid Black;">	def compiler(self,src):
+		...
+		lexer = lex.lex()</pre> <pre style="border:1px solid Black;">
+sERROR: No token list is define
+dERROR: No rules of the form t_rulename are define
+dERROR: No rules defined for state 'INITIAL
+'Traceback (most recent call last)
+:  File "C:\Python\lib\site-packages\ply\lex.py", line 910, in le
+x    raise SyntaxError("Can't build lexer"
+</pre>
+)For lexer we need <ul>   <li>   <code>tokens[]</code>  list contains <b>token types</b> ,   <li>   set of <code>t_xxx()</code>  <b>regexp/action rules</b>  for every token type ,  an d <li>   <code>t_error()</code>  <b>lexer error callback</b>  function </ul>  To encapsulate lets group all lexer data in separate method <pre  style="border:1px solid Black;">	def compiler(self,src):
+		...
+		self.lexer(src)
+
+	def lexer(self,src):
+		lexer = lex.lex()</pre>
+<pre  style="border:1px solid Black;">	def lexer(self,src):
+		# token types
+		tokens = ['COMMAND']		
+		# regexp/action rules
+		def t_COMMAND(t):
+			r'[a-z]+'
+			return t
+		# required lexer error callback
+		def t_error(t): raise SyntaxError('lexer: %s' % t)
+		# create ply.lex object
+		lexer = lex.lex()				
+		# feed source code
+		lexer.input(src)				
+		# get next token						 
+		while True: print lexer.token()	
+</pre> <pre style="border:1px solid Black;">
+:SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0
+</pre>
+)In error report you can see problematic symbol <b>at first position</b> 
+.So we need to <b>drop space symbols</b>  <pre  style="border:1px solid Black;">	def lexer(self,src):
+		# regexp/action rules
+		t_ignore = ' \t\r\n'	# drop spaces</pre> <pre style="border:1px solid Black;">
+:SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9
+</pre> )Look on last two numbers: this is line number =1 and lexer position =9. Ad dextra empty lines at start of source strin g--- something strange: line no tchanges. This is because PLY not tracks end of line char, you must do i tyourself <pre  style="border:1px solid Black;">	def lexer(self,src):
+		# regexp/action rules
+		t_ignore = ' \t\r'		# drop spaces (no EOL)
+		def t_newline(t):		# special rule for EOL
+			r'\n'
+			t.lexer.lineno += 1	# increment line counter
+			# do not return token,
+			# it will be ignored by parser</pre> <pre style="border:1px solid Black;">
+:SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n      
+ bye\n\t",4,11
+</pre> )Line numbering works ok, lexer position counts how much characters was processe dby lexer in total
+.Add <b>register parsing</b> , and return <i>modified token</i>  with matche dstring replaced by register number <pre  style="border:1px solid Black;">	def lexer(self,src):
+		# token types
+		tokens = ['COMMAND','REGISTER']
+		# regexp/action rules
+		def t_REGISTER(t):
+			r'R[0-9]+'
+			t.value = int(t.value[1:])
+			return t</pre> <pre style="border:1px solid Black;">
+:LexToken(REGISTER,1,4,11
+)### format: LexToken(type,value,lineno,lexpos
+)SyntaxError: lexer: LexToken(error,"= ..
+</pre>
+.Add <b>comment lexing</b>  starts with \ #:<A NAME="lexcomment"> <pre style="border:1px solid Black;">
+ 		# ===== lexer code section ====
+=		t_ignore = ' \t\r'			# drop spaces (no EOL
+)		t_ignore_COMMENT = r'\#.+'	# line commen
+</pre>
+tLexer rules can be defined in two forms :\begin{enumerate}[nosep ] <li>   <b>function</b>  <code>t_xxx(t)</code>  with regexp defined as <code>__doc__</code>    docstring valu e <li>   for simple tokens you can use <code>t_yyy = r''</code>  <b>string</b>  \end{enumerate
+}Using regexp t\_strings <b>you have no control of lexer rules matching</b> , an dthis is big disadvantage in cases like <code>+ ++ = ==</code>  operators exists i nlanguage syntax. We will use one t\_string as sample, but it is good practice t ouse functions only <pre  style="border:1px solid Black;">	def lexer(self,src):
+		# token types
+		tokens = ['COMMAND','REGISTER','EQ']
+		# regexp/action rules
+		t_EQ = r'='
+</pre> <pre style="border:1px solid Black;">
+.LexToken(REGISTER,1,4,11
+)LexToken(EQ,'=',4,14
+</pre>
+)\subsection{Lexing strings (lexer states)<A NAME="lexstring">
+}Strings lexing in very special case. Using \term{string leteral}s we want to b eable to use some standard \term{escape sequences} lik  <code>\r \t \n \xFF \u1234</code>e. For example we change program source, not  <code>r'''</code>e prefixed\note{Python ` <b>R</b>`aw string''} and <code>\t</code>  inserte das escape sequence <pre  style="border:1px solid Black;">	VM(r'''
+        R1 = 'R\t[1]'
+        nop
+        bye
+	''')</pre> :Strings can be parsed using lexer itself with multiple \term{lexer state} sswitching: each \emph{lexer state defines its own set of tokens and rule sactive}
+.Main state has <code>INITIAL</code>  name. First define extra states <pre  style="border:1px solid Black;">	def lexer(self,src):
+		# extra lexer states
+		states = (('string','exclusive'),) # don't forget comma</pre> <pre style="border:1px solid Black;">
+:ERROR: No rules defined for state 'string
+</pre> 'We need any rule, the first candidate is EOL rule: line number smust be counted thru all source in <b>ANY</b>  state <pre  style="border:1px solid Black;">		# regexp/action rules (ANY)
+		def t_ANY_newline(t):		# special rule for EOL</pre> <pre style="border:1px solid Black;">
+:WARNING: No error rule is defined for exclusive state 'string
+'WARNING: No ignore rule is defined for exclusive state 'string
+</pre> <pre  style="border:1px solid Black;">		# regexp/action rules (ANY)
+		# required lexer error callback
+		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
+		# regexp/action rules (STRING)
+		t_string_ignore = '' # don't ignore anything
+</pre>
+'For moving between states we need <b>mode switching sequences</b>  <pre  style="border:1px solid Black;">		# regexp/action rules (INITIAL)
+		def t_begin_string(t):
+			r'\''
+			t.lexer.push_state('string')
+		# regexp/action rules (STRING)
+		def t_string_end(t):
+			r'\''
+			t.lexer.pop_state() # return to INITIAL</pre>
+:Any char in string state must be stored somewhere forming resulting string. W ecan do in lexer object as custom attribute <pre  style="border:1px solid Black;">		# token types
+		tokens = ['COMMAND','REGISTER','EQ','STRING']
+		# regexp/action rules (INITIAL)
+		def t_begin_string(t):
+			r'\''
+			t.lexer.push_state('string')
+			t.lexer.LexString = '' # initialize accumulator
+		# regexp/action rules (STRING)
+		def t_string_char(t):
+			r'.'
+			t.lexer.LexString += t.value # accumulate
+		def t_string_end(t):
+			r'\''
+			t.lexer.pop_state() # return to INITIAL
+			t.type = 'STRING'					# overryde token type
+			t.value = t.lexer.LexString # accumulator to value
+			return t # return resulting string token</pre>
+:And finally add special \term{escape sequences} <pre  style="border:1px solid Black;">		# regexp/action rules (STRING)
+		def t_string_tab(t):
+			r'\\t'
+			t.lexer.LexString += '\t'
+		def t_string_cr(t):
+			r'\\r'
+			t.lexer.LexString += '\r'
+		def t_string_lf(t):
+			r'\\n'
+			t.lexer.LexString += '\n'
+		def t_string_char(t):				# must be last rule</pre> <pre style="border:1px solid Black;">
+:LexToken(REGISTER,1,2,9
+)LexToken(EQ,'=',2,12
+)LexToken(STRING,'R\t[1]',2,21
+)LexToken(COMMAND,'nop',3,31
+)LexToken(COMMAND,'bye',4,43
+)Non
+eNon
+e..
+</pre>
+.\subsection{End of file lexing
+}End of source can be processed by two variants :\begin{enumerate}[nosep ] <li>   use special <code>t_eof()</code>  rul e <li>   trigger on <code>None</code>  returned by next <code>lex.token()</code>  call  \end{enumerate
+}Just fix lexer print loop <pre  style="border:1px solid Black;">	def lexer(self,src):
+		# get next token						 
+		while True:
+			next_token = lexer.token()
+			if not next_token: break # on None
+			print next_token</pre> <pre style="border:1px solid Black;">
+:LexToken(REGISTER,1,2,9
+)LexToken(EQ,'=',2,12
+)LexToken(STRING,'R\t[1]',2,21
+)LexToken(COMMAND,'nop',3,31
+)LexToken(COMMAND,'bye',4,43
+</pre>
+)\begin{center}{\Huge Lexer done !}\end{center
+<H1>Parser/Compiler</H1><A NAME="19">
+}Let's add parser, move all code from lexer() method into compiler() <pre style="border:1px solid Black;">
+:	def compiler(self,src)
+:		# ===== init code section ====
+=		# set instruction pointer entry poin
+t		self.Ip = 0						
+			# compile entry code
+			self.program = [ self.nop 
+]		# ===== lexer code section ====
+=		..
+.		# ===== parser/compiler code section ====
+=		..
+.		# ===== compile final code ====
+=		self.program += [ self.bye 
+</pre>
+<pre style="border:1px solid Black;">
+]		# ===== lexer code section ====
+=	
+			# extra lexer state
+s		states = (('string','exclusive'),
+)		# token type
+s		tokens = ['COMMAND','REGISTER','EQ','STRING'
+]		..
+</pre>
+<pre style="border:1px solid Black;">
+.		# ===== parser/compiler code section ====
+=	
+			# create ply.yacc object, without extra file
+s		parser = yacc.yacc(debug=False,write_tables=None
+)		# feed & parse source code using lexe
+r		parser.parse(src,lexer)			
+</pre>
+	Now we see term \term{compile} for the first time, used in couple wit h\term{parse}. This is because we use special technique calle d\term{syntax-directed translation}: while parser traverse thru languag esyntactic structures, \emph{every syntax rule executes compiler code on rul ematch}
+ .And \term{compile} term in this case means not more then <b>adding</b>  machin ecommands, bytecodes or <b>tiny executable elementary elements</b>  in our dem ocase, to \term{compiler buffer}, i.e. <code>self.program[]</code>  memory
+<p> .This method is very suitable for simple \term{imperativ elanguages}\note{languages says what to do step by step} like assemblers, whic hcan be implemented by using <b>only global data structures</b> , like symbo ltables, list of defined functions, and don't require to transfer or compute dat abetween nodes of tree-represented program (\term{attribute grammar} method <ul> ) <li>  [synthesized attributes] from nested elements to high level elements, an d <li>  [inherited attributes] from parent nodes to subtree </ul>
+<pre style="border:1px solid Black;">
+sERROR: no rules of the form p_rulename are define
+</pre>
+dAs for lexer, we need set of <code>p_rules</code> 
+.\subsection{Backu s-- Naur form
+}For lexer we used \term{regular expressions}, and this is very understandabl eand easy to use text templates, until we try to match so easy elements a snumbers and identifiers
+<p> .But to specify \term{programming language grammar}, \emph{regexps can't matc hrecursive nested elements}, like simple match expressionons with groups o fbrackets [<a href="#dragon">dragon</a>]  . And now <b>meta language</b> \note{language describe sanother language} comes into play specially designed to describe artificia llanguages grammar: \term{BNF}, or \term{Backus-Naur form}
+<p>.Our assembly language can be described as <pre style="border:1px solid Black;">
+:program &gt;-&lt; empt&gt;
+yprogram &gt;- program command { /* action */ memory += $2 
+</pre> }or in form with <b>or</b>  element and yacc BNF variant can be groupe <pre style="border:1px solid Black;">
+dprogram : | program comman
+</pre>
+<ul> <li> d[\term{production}] is every rule in this language spec <li> s[\term{nonterminal}] element with low case name, which will b edescribed as <b>composite structure, consists of another elements</b>  in other sproduction <li> s[\term{terminal}] is single element is not composite, like simple numbers ,strings and identifiers ; we will use up case to emphasiz ethem as <b>tokens</b> <li>  [\term{epsilon}] or $\epsilon $is <b>empty space</b>  have no element sat al </ul>
+<p> <b>Note resursion: program refers to program itself as subelement</b>l. In thi sproduction we describe that \term{program}$_0$ can be empty, \term{or} \verb$| $can be concatenated from (sub)\term{program}$_1$ <b>followed by</b>  \term{command}$_2$. Parser code will \term{recursive} try to match program$_1 $using the same rule, until recursion will end up by <code>program : <empty></code>  part
+.Every time parser (sub)rule matches, code in <code>{action}</code>  will b eexecuted. This code\note{\cpp, \py, \jav aor any other language you r\term{parser code generator} supports  <b>can do anything you want</b>}. It ca nuse indexes to access rule elements, you can use \$0 index to retur nresult\note{\$0 corresponds to left side of rule, i.e. nonterminal value}, an d\$1 for program${_1}$ and \$2 for command values. For example with tiny ``no pbye'' program and this grammar <pre style="border:1px solid Black;">
+:program :&lt; empt&gt;y			{ $0 = "what to do:\n"	
+}program : program command	{ $0 = $1 + $2			
+}command : NOP				{ $0 = "do nothing\n"	
+}command : BYE				{ $0 = "stop system\n"	
+</pre>  <b>parser will start from topmost</b>} \term{start production}\note{all rule swith equal left nonterminals <b>will be grouped</b> } trying to match every rul  <b>top down</b>e in \term{greedy} way: match the <b>longest right</b>  part wit  <b>deep first</b>h search. In result parser will return you string <pre style="border:1px solid Black;">
+:what to do
+:no nothin
+gstop syste
+</pre>
+<p> mAt this point I tried to write parsing process step by step, but it is to ocryptic, and we skip this trace with parser stack pushing and elements shifting .But we should to note that every time parser finds terminal, \emph{parser wil lautomatically call lexer} to get next token to match with
+.Returning to our sheeps, we are not lucky in BNF syntax usage in \py .PLY parsing library use not so short grammar syntax: we must define specia lfunctions for every production, <b>giving BNF in docstring</b>  <pre style="border:1px solid Black;">
+:		# ===== parser/compiler code section ====
+=	
+			# grammar rule
+s	
+			def p_program_epsilon(p)
+:			' program : 
+'			p[0] = 'what to do:\n' # $0 = ..
+.		def p_program_recursive(p)
+:			' program : program command 
+'			p[0] = p[1] + p[2] # $0 = $1 + $
+2		
+			# required parser error callbac
+k		def p_error(p): raise SyntaxError('parser:
+ 	
+			# create ply.yacc object, without extra file
+s		parser = yacc.yacc(debug=False,write_tables=None
+)		# feed & parse source code using lexe
+r		parser.parse(src,lexer)			
+		
+	VM(' nop bye '
+</pre> <pre style="border:1px solid Black;">
+)ERROR: Symbol 'command' used, but not define
+dWARNING: Token 'EQ' defined, but not use
+dWARNING: Token 'REGISTER' defined, but not use
+dWARNING: Token 'COMMAND' defined, but not use
+dWARNING: Token 'STRING' defined, but not use
+dWARNING: There are 4 unused token
+</pre> sWe need <code>p_error(p)</code>  error callback function will be called on synta xerrors
+.Here we have some problem: our lexer returns all commands as one universa  <code>COMMAND</code>l token, so we need to analyze its value, or just fix lexer <pre style="border:1px solid Black;">
+:		# ===== lexer code section ====
+=		# token type
+s		tokens = ['NOP','BYE','REGISTER','EQ','STRING'
+]		# replace t_COMMAND by
+:		def t_NOP(t)
+:			r'nop
+'			return 
+t		def t_BYE(t)
+:			r'bye
+'			return 
+</pre> tAs you see, this PLY code is not compact and easy to read, and one of thing w eare going to do much much later is to make special language for writing parser swith more light and easy to read syntax. Mark this TODO for DLR <pre style="border:1px solid Black;">
+.		def p_program_epsilon(p)
+:			' program : 
+'		def p_program_recursive(p)
+:			' program : program command 
+'		def p_command_NOP(p)
+:			' command : NOP 
+'			p[0] = 'do nothing\n
+'		def p_command_BYE(p)
+:			' command : BYE 
+'			p[0] = 'stop system\n
+
+'		..
+.		# feed & parse source code using lexe
+r		print parser.parse(src,lexer)			
+</pre> 	Here we added <code>print</code>  command to see that <b>parser can return values</b>  <pre style="border:1px solid Black;">
+.WARNING: Token 'STRING' defined, but not use
+dWARNING: Token 'EQ' defined, but not use
+dWARNING: Token 'REGISTER' defined, but not use
+dWARNING: There are 3 unused token
+swhat to do
+:do nothin
+gstop syste
+
+m0000&lt; bound method VM.nop of&lt; __main__.VM instance at 0x023E691&gt;&gt;8 [0, 1, 2, 3, 4, 5, 6, 7
+]0001&lt; bound method VM.bye of&lt; __main__.VM instance at 0x023E691&gt;&gt;8 [0, 1, 2, 3, 4, 5, 6, 7
+</pre> <ul> <li> ][warnings] from PLY library: we defined some terminals (tokens) but not us ethem in syntax gramma <li> r[string returned from parser] as we expec <li> t[program trace] containts log of executing entry code created b  <code>compiler()</code> </ul>
+y\subsection{Bytecode compiler
+}Change code to compile bytecode <pre style="border:1px solid Black;">
+:	def compiler(self,src):
+	
+			# ===== init code section ====
+=		# set instruction pointer entry poin
+t		self.Ip = 0						
+			# clean up program memor
+y		self.program = [
+]	
+			# ===== parser/compiler code section ====
+=		def p_program_epsilon(p)
+:			' program : 
+'		def p_program_recursive(p)
+:			' program : program command 
+'		def p_command_NOP(p)
+:			' command : NOP 
+'			self.program.append(self.nop
+)		def p_command_BYE(p)
+:			' command : BYE 
+'			self.program.append(self.bye
+
+)		# feed & parse source code using lexe
+r		parser.parse(src,lexer)			
+</pre> 	Now compiler does no add any entry code, and <b>traced code is our program</b>  <pre style="border:1px solid Black;">
+.WARNING: Token 'STRING' defined, but not use
+dWARNING: Token 'EQ' defined, but not use
+dWARNING: Token 'REGISTER' defined, but not use
+d0000&lt; bound method VM.nop of&lt; __main__.V&gt;M [0, .., 7
+]0001&lt; bound method VM.bye of&lt; __main__.V&gt;M [0, .., 7
+</pre> ]We have some warnings about terminals not used in our grammar, they are linke dwith register load command we omitted. Lets add this command grammar. Firs trecover full sample program <pre style="border:1px solid Black;">
+:if __name__ == '__main__'
+:	VM(r''' # use r' : we have escapes in string constan
+t 		R1 = 'R\t[1]
+'        no
+p        by
+e	'''
+</pre> )Remember we have defined in lexer <ul> : <li>   \# comments /<A HREF="#lexcomment"><sup>lexcomment</sup></A>/   <li>   parsing string using special lexer state /<A HREF="#lexstring"><sup>lexstring</sup></A>/  </ul> <pre style="border:1px solid Black;">
+ 		def p_command_R_load(p)
+:			' command : REGISTER EQ constant
+'			# compile ld command opcod
+e			self.program.append(self.ld
+)			# compile register number using valu
+e			# from terminal REGISTER at p[$1] in productio
+n			self.program.append(p[1]
+)			# compile constan
+t			self.program.append(p[3]
+)		def p_constant_STRING(p)
+:			' constant : STRING 
+'			p[0] = p[1
+</pre> ]We defined <code>constant</code>  nonterminal for later use: constant can be no tstring, but also number, or pointer to any object <pre style="border:1px solid Black;">
+.0000&lt; bound method VM.l&gt;d [0, 1, 2, 3, 4, 5, 6, 7
+]0003&lt; bound method VM.no&gt;p [0, 'R\t[1]', 2, 3, 4, 5, 6, 7
+]0004&lt; bound method VM.by&gt;e [0, 'R\t[1]', 2, 3, 4, 5, 6, 7
+</pre> ]
+
+
+<!-- calc.tex -->
+
+<H1>Parsing in \cpp: simple calculator</H1><A NAME="20">If you don't interested in low-level programming in \cpp, please skip thi
+schapter. But if you know C++ a bit, look at this theme much closer: flex/biso
+nis cool tools lets you do lot of things looks very complex on first glance
+<ul>
+<li> :[process any data in text format], like config files and data for you
+rprograms, it is very suitable to have this data in human readable for
+<li> m[process complex command line]: pack <code>argv[]</code>  into one string an
+dinterpret it as scrip
+<li> t[process source code], you can make syntax colorer writes into .html files
+,in few lines, using only flex
+</ul>
+
+.In this chapter, we'll see how to implement simple calculator \textit{with infi
+xsyntax} and variables, works in console. It is a quite useful program
+,especially if your job coupled with engineering or science. I myself constantl
+yuse it making some CADding and in occasionally everyday use
+
+.In next sections, we'll see how to add some very complex in fact theme
+ <b>user-defined functions</b>:, some control constructions, and arrays
+
+<p>
+.You can download full source code from separate github repo
+ <A HREF="http://github.com/ponyatov/calc">http://github.com/ponyatov/calc</A>:, an
+d\href{http://github.com/ponyatov/calc/releases/latest}{prebuild window
+sbinary} for first try
+
+<H1>skelex: lexical program project skeleton</H1><A NAME="21">
+
+.First, we'll see how to organize our tiny project
+<p>
+
+.Nowdays you use huge IDE for software development, but I prefer more light
+,portable and easy way: I use (g)vim /<A HREF="#vim"><sup>vim</sup></A>/  text editor and Makefile\note{an
+dEclipse for more complex cases}. Vim has strange key bindings, and can be som
+ecryptic for a newbie, but is very light in resources and have useful synta
+xcoloring customization described in details in vim syntax colorin
+ /<A HREF="#vimcolor"><sup>vimcolor</sup></A>/g
+
+<p>
+.\begin{tabular}{l l l
+}src.src & script & sample source code<br>
+ log.log & & execution log<br>
+ ypp.ypp & yacc & syntax parser<br>
+ lpp.lpp & lex & lexer using regexps<br>
+ hpp.hpp & \cpp & headers<br>
+ cpp.cpp & \cpp & runtime system we are going to implement<br>
+ Makefile & make & project build script<br>
+ rc.rc & linux & (g)vim start helper<br>
+ bat.bat & windows & (g)vim start helper<br>
+ .gitignore & git & ignored file masks<br>
+ ftdetect.vim & vim & file type detection<br>
+ syntax.vim & vim & syntax coloring /<A HREF="#vimcolor"><sup>vimcolor</sup></A>/  for custom script<br>
+ \end{tabular
+
+<pre style="border:1px solid Black;">
+}#!/bin/s
+hgvim -p src.src log.log  				ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefil
+</pre>
+e\subsection{Makefile: build script
+}For project build, you need to <b>track file interdependency</b>  and do som eactions <b>only on changed files</b> . So we can describe out dependency/actio nrules in tiny Makefile, and run make tool by hotkey in editor every time we nee dto compile or run project. Consult Addendum: GNU Make /<A HREF="#make"><sup>make</sup></A>/  for details ,here we see only tiny Makefile snippet
+<pre  style="border:1px solid Black;">log.log: src.src ./exe.exe
+	/exe.exe < $< > $@ && tail $(TAIL) $@
+C = cpp.cpp ypp.tab.cpp lex.yy.c
+H = hpp.hpp ypp.tab.hpp lex.yy.h
+L = -lreadline
+./exe.exe: $(C) $(H)
+	(CXX) $(CXXFLAGS) -o $@ $(C) $(L)
+ypp.tab.cpp ypp.tab.hpp: ypp.ypp
+	bison $<
+lex.yy.c lex.yy.h: lpp.lpp
+	flex $<
+</pre>
+<H1>lex: lexer generator</H1><A NAME="22">
+.Lexer and parser files use same header with <code>#include <headers></code>  <pre style="border:1px solid Black;">
+
+:#include "hpp.hpp
+
+</pre> "Lexer file <b>must end with empty line</b> , don't forget to place EOL in las tstring <pre style="border:1px solid Black;">
+
+.#include "hpp.hpp
+
+</pre>
+"Another <b>required</b>  section is rules, but for fist time it can be empty <pre style="border:1px solid Black;">
+
+</pre>
+:Now you can run flex, and get resulting generated lexer source in lex.yy.c file <pre style="border:1px solid Black;">
+:&gt;$ flex lpp.lpp && ls -la lex
+*-rw-r--r-- 1 ponyatov ponyatov 43935 nov 20 19:43 lex.yy.
+</pre> cAnd we have a problem: there is no <code>lex.yy.h</code>  header file, contain  <code>yylex()</code>s and <code>yy_scan_string()</code>  function declaration we required t oparse every string, entered in interactive command line\note{using readlin elibrary}. To fix it, we must add option will create header file for as
+<H1>yacc: parser generator</H1><A NAME="23"> .
+
+
+<!-- pypy.tex -->
+
+<H1>It's time to do a PyPy</H1><A NAME="24">
+
+
+
+<!-- LLVM.tex -->
+
+<H1>Using LLVM</H1><A NAME="25">The <A HREF="http://llvm.org/">LLVM Project</A> \note{Low Level Virtual Machine} is 
+acollection of modular and reusable compiler and toolchain technologies. Despit
+eits name, LLVM has little to do with traditional virtual machines. Project goa
+lwas providing a modern, SSA\note{In compiler design, static single assignmen
+tform (often abbreviated as SSA form or simply SSA) is a property of a
+nintermediate representation (IR), which requires that each variable is assigne
+dexactly once, and every variable is defined before it is used.}-based /<A HREF="#SSA"><sup>SSA</sup></A>/
+ compilation strategy capable of supporting both static and dynamic compilatio
+nof arbitrary programming languages. The primary sub-projects of LLVM are
+<ul>
+<li> :[LLVM Core] libraries provide a modern source- and target-independen
+ <b>optimizer</b>t, along with <b>code generation</b>  support for many popula
+rCPU
+<li> s[Clang] is C/\cpp/Objective-C compile
+<li> r[LLDB] builds on libraries provided by LLVM and Clang to provide 
+ <b>debugger</b>a
+</ul>
+
+<p>
+ <A HREF="http://www.llvmpy.org/">llvmpy</A>. is a Python wrapper around the LLVM \cp plibrary which allows simple access to compiler tools
+.It can be used for a lot of things, but here are some ideas
+<ul>
+: <li>  
+ dynamically create LLVM IR for linking with LLVM IR produced by <code>CLANG</code>  o
+ <code>dragonegg</code>
+r <li>  
+ build machine code dynamically using LLVM execution engin
+e <li>  
+ use together with PLY or other tokenizer and parser to write a complete compile
+rin \p
+</ul>
+
+<H1>Installation</H1><A NAME="26">
+
+y\begin{verbatim
+}$ sudo apt install python-llvm python-pl
+yo
+r$ sudo pip install llvmpy pl
+y\end{verbatim
+<pre  style="border:1px solid Black;">import llvm ; llvm.test()</pre>
+
+}Tiny executable module does nothing, done usin
+ <A HREF="https://eli.thegreenplace.net/2012/08/10/building-and-using-llvmpy-a-basic-example">this manual</A>g
+<pre  style="border:1px solid Black;">import llvm.core	# core library
+import llvm.ee		# execution engine (JIT/interpreter)
+
+module = llvm.core.Module.new('null_module') ; print module
+# JIT compiler / interpreter
+engine = llvm.ee.ExecutionEngine.new(module) ; print engine
+</pre>
+
+
+<!-- SSA.tex -->
+
+<H1>SSA: Single State Assignment</H1><A NAME="27"><A NAME="SSA">
+
+:
+
+
+<!-- TUI.tex -->
+
+<H1>TUI: Text User Interface</H1><A NAME="28"><A NAME="TUI">As we are going to use DLR for RealTime control systems /<A HREF="#RT"><sup>RT</sup></A>/ 
+ <i>graphics interfaces are not suitable for us</i>,. Even simple graphics lik
+etext output <b>require a huge amount of memory</b>  to store window regio
+nimages, <b>and a lot of bus time to transfer</b>  (bitblit) this regions. Typica
+lPLC or control panel can have tiny text-only LCD with down to short one line an
+dfew joystick-like buttons. No large touchscreen, qwerty keyboard or trackbal
+ldevices
+.
+ 
+
+<!-- reference.tex -->
+
+<H1>Reference</H1><A NAME="29"><A NAME="reference">
+<H1>Core</H1><A NAME="30">
+<H1>GUI</H1><A NAME="31">
+
+
+<!-- parsing.tex -->
+
+<H1>Complex parsing</H1><A NAME="32">
+
+<H1>PEG \& Packrat algorithm</H1><A NAME="33">
+
+<H1>ANTLR</H1><A NAME="34">
+
+<H1>Python tabbed syntax</H1><A NAME="35">
+
+<H1>DCG: Definite Clause Grammar</H1><A NAME="36"><A NAME="DCG"><H1>Binary parsing</H1><A NAME="37">
+
+To decode a lot of complex binary formats and protocols you can use binar
+yparser generator described here. You can describe format using special BNF-lik
+elanguage, and do syntax triggering technique to do actions on parsed data
+.The algorithm used is a special case of DCG /<A HREF="#DCG"><sup>DCG</sup></A>/  tuned for stream parsin
+gwith error recovery enabled
+
+.For example, you can use this tool to write protocol parsers for widely know
+ngrabbing/decoder software <A HREF="http://www.wireshark.org/">Wireshark</A> ,
+ simple disassemblers, and binary data file dumpers
+.
+
+<!-- Forth.tex -->
+
+<H1>Something different: FORTH</H1><A NAME="38"><A NAME="forth">
+
+If you work with really small computer systems, like custom hardware build o
+nCortex-M microcontroillers, <i>you have very small amount of RAM</i> . Th
+etopmost microcontroller family STM32F7 MCU used i
+ <A HREF="http://www.st.com/en/evaluation-tools/32f746gdiscovery.html">STM32F7GDISCOVERY</A>
+nboard has <b>only 340K of RAM</b> 
+
+.For this narrow case we have \ Fwell known from the end of 70s, and its bi
+gbrother OpenFirmware. In this part we'll see how we can implement tin
+y\ Fsystem using bytecode approach\note{It can be interesting for you how t
+oimplement tiny assembler, without problems caused by concrete machine languag
+edetail s--- bytecode simple commands format is very easy to understand.}
+
+
+<p>
+.In <code>FORTH/</code>  subdirectory you can see sources of bytecode compiler an
+dvirtual machine (bytecode interpreter), with assember written i
+nflex/bison
+
+<H1>FORTH/ file structure</H1><A NAME="39">
+
+.\begin{tabular}{l l l
+}src.src & assembly-like & \ Fsystem source code<br>
+ & syntax <br>
+&log.log & & logged execution of<br> &&VM running compiled system<br>
+ ypp.ypp & bison & syntax parser<br>
+ lpp.lpp & flex & token lexer<br>
+ hpp.hpp & \cpp & headers<br>
+ cpp.cpp & \cpp & compiler elements and virtual machine<br>
+ Makefile & make & build scrip<br>t&&(can be sample for any program use
+sflex/bison<br>
+)FVM.exe & executable & assembler and virtual machine bundle<br>
+ bin.bin & bytecode & compiled \ Fsystem bytecod<br>
+e&& dumped after VM executio<br>
+n\end{tabular
+
+<H1>Virtual Machine Architecture</H1><A NAME="40">
+
+}FVM\note{\ FVirtual Machine }has one byte-addressed memory, and two separat
+estacks
+<ul>
+<li> :[data stack] for data
+<li>  [return stack] return addresses for call/ret command
+</ul>
+
+<p>
+sSizes of this structures was defined by constants, but you can modify code an
+duse expandable storage type like <code>vector</code> \note{it will be much slower
+
+<pre style="border:1px solid Black;">
+}#define Msz 0x1000		/* bytes *
+/#define Rsz 0x10
+0#define Dsz 0x10
+</pre>
+ \ Fhas special <code>CELL</code>  constant, corresponds to \textit{machine word siz ein bytes}
+<pre style="border:1px solid Black;">
+.#define CELL sizeof(int32_t
+</pre>
+)\subsection{Memory
+<pre style="border:1px solid Black;">
+}extern uint8_t  M[Msz];	// memor
+yextern uint32_t Ip=0;	// instruction pointe
+rextern uint32_t Cp=0;	// compilation pointer (free heap
+</pre>
+)Main memory contains all <ul> : <li>   compiled bytecod e <li>   vocabulary structure /<A HREF="#vocabulary"><sup>vocabulary</sup></A>/   <li>   data (constants, variables, strings, binary blobs,\ldots ) <li>   heap from current <code>Cp</code>  till end of <code>M[]</code>  /<A HREF="#Fheap"><sup>Fheap</sup></A>/ </ul>
+ Memory has byte adressing, so we need some functions to get/set CELLs
+<pre style="border:1px solid Black;">
+:extern void set(uint32_t addr, int32_t value)
+;extern uint32_t get(uint32_t addr)
+</pre>
+;If you set <code>cell < 0x100</code>  , but read byte on same address, you must get th esame value. On \term{little-endian} machines (x86) we can read/write cells usin  <code>(uint32_t*)&M[addr]</code>g pointer, but for portability we use thi sbyte-shifting functions
+<pre style="border:1px solid Black;">
+:void set(uint32_t addr, int32_t value) 
+{	assert(addr+3&lt;  Msz);			  // check memory boun
+d	M[addr+0] = (valu&gt;&gt;e0x00) & 0xFF
+;	M[addr+1] = (valu&gt;&gt;e0x08) & 0xFF
+;	M[addr+2] = (valu&gt;&gt;e0x10) & 0xFF
+;	M[addr+3] = (valu&gt;&gt;e0x18) & 0xFF;	
+</pre> <pre style="border:1px solid Black;">
+}uint32_t get(uint32_t addr) 
+{	assert(addr+3&lt;  Msz)
+;	return  		M[addr+0&lt;&lt;]0x00 | M[addr+1&lt;&lt;]0x08 |  		M[addr+2&lt;&lt;]0x10 | M[addr+3&lt;&lt;]0x18;	
+</pre>
+}\subsection{Compilation (in terms of \F)
+<pre style="border:1px solid Black;">
+}extern uint32_t Cp;		// compilation pointer (free heap
+</pre>
+)In \ Fterm \term{compilation} means \textit{adding bytes to the end o fvocabulary}, in fact into the begin of a heap, moving heap bottom to highe raddresses. In \ Fstandard there is only <code>HERE</code>  word returns address o fthe heap begin (it must be <code>HEAP</code>  name definitely). So to address we'll us especial <code>Cp</code>  register<A NAME="Fheap">
+<pre style="border:1px solid Black;">
+.extern void Cbyte( uint8_t);	// compile byt
+eextern void Ccell(uint32_t);	// compile cel
+lextern void Cstring(char*);		// compile ASCIIZ strin
+</pre>
+gThese functions will be used in assembler <p>
+<A NAME="Cxxx"> <pre style="border:1px solid Black;">
+.void Cbyte( uint8_t b) 
+{	M[Cp++] = b; assert(C&lt;pMsz); 
+}void Ccell(uint32_t c) 
+{	set(Cp,c); Cp+= CELL; assert(C&lt;pMsz); 
+}void Cstring(char* s) 
+{	uint32_t L = strlen(s); assert(Cp+L+&lt;1Msz);	// lengt
+h	memcpy(&M[Cp],s,L+1); Cp += L+1; }	// compile length+
+</pre>
+1\subsection{Vocabulary structure<A NAME="vocabulary">
+}In \ Fterms \term{word} means some active data element, analogous to functio nand procedure in mainstream languages. Variables and constants in \ Fals owords. It corresponds to \term{word} in human language s--- sequence o fletters, which means something. When you enter some \ Fcode in command line ,interpreter /<A HREF="#INTERPRET"><sup>INTERPRET</sup></A>/  searches each word\note{delimited by space symbols }in \term{vocabulary}, and executes /<A HREF="#EXECUTE"><sup>EXECUTE</sup></A>/  it if search was successful
+<p> .\term{Vocabulary} is container data structure, implements <ul> <li> :[words storage] in linked list order\note{or tree of linked lists in cas eof multiple vocabulary supported <li> }[word search] by its nam <li> e[definition] of new words using compiling words (see <code>Cxxx()</code>  functions /<A HREF="#Cxxx"><sup>Cxxx</sup></A>/  </ul>
+)Every item in vocabulary has this fields structure\note{If you plan to do som ehacking using bytecode for software writing, you can eliminate vocabular yheaders in case of you do not use vocabulary search. To do this, you ca nfork your own assembler, and remove all calls in Cheader() except CFA(). CF Acompilation is required because it sets \_entry field in first jmp command t olast defined word (see next page).}
+<p>:\begin{tabular}{l l l l }LFA & cell & Link Field Area & link to previous word or 0<br>  AFA & byte & Attribute Field Area & flags, IMMED /<A HREF="#IMMEDIATE"><sup>IMMEDIATE</sup></A>/ <br>  NFA & asciiz string & Name Field Area & word name<br>  CFA & bytecode & Code Field Area & executable bytecode<br>  PFA & optional & Parameters Field Area & in variables and constants<br>  \end{tabular }Last defined word must be marked somewher <ul> e <li>    as entry point on system start, an d <li>    as first point in search and compilation, </ul>  so we need special fields in the beginning of memory image
+<pre style="border:1px solid Black;">
+:// program entry point (addr of jmp parameter
+)#define _entry  
+1// last defined word LFA addres
+s#define _latest (_entry+CELL
+
+)int main(int argc, char *argv[]) 
+{	// ============ compile vocabulary heade
+r	// jmp _entry	jump to last defined wor
+d	Cbyte(opJMP); Ccell(0)
+;	// _latest		LFA of last defined wor
+d	Ccell(0)
+</pre>
+;To compile vocabular header us <pre style="border:1px solid Black;">
+ema&lt;pstring,uint32_&gt;t SymTable;				// symbol tabl
+
+evoid LFA() 
+{	uint32_t L = get(_latest); set(_latest,Cp); Ccell(L); 
+}void AFA(uint8_t b) {
+ 	Cbyte(b); 
+}void NFA(char* s) {
+ 	Cstring(s); 
+}void CFA(string name) {
+ 	SymTable[name] = Cp; set(_entry,Cp); 
+}void Cheader(char* name) {				  // compile heade
+r	LFA(); AFA(); NFA(name); CFA(name); 
+</pre>
+}\subsection{Bytecode interpreter
+}Bytecode interpreter will be run after assembler ended its work
+<pre style="border:1px solid Black;">
+:int main() 
+{	...						// compile vocabulary heade
+r	yyparse();				// run compile
+r	dump();					// dump memory into .bin fil
+e	VM();					// run V
+M}
+</pre>
+	As any other computer, interpreter implements fetch/decode/execute loop ove rcommands in <code>M[]</code>  memory, with command pointed by <code>Ip</code>  instructio npointer register
+<pre style="border:1px solid Black;">
+.void VM() { for (;;) {						// infty loo
+p	printf(
+"	uint8_t op = M[Ip++]; assert(I&lt;p=Cp);		 // FETC
+H	printf(
+"	switch (op) {						// DECODE/EXECUT
+E		case opNOP : nop();  break
+;		case opBYE : bye();  break
+;		case opJMP : jmp();  break
+;		case opCALL: call(); break
+;		case opRET : ret();  break
+;		case opLIT : lit();  break
+;		default
+:			printf("bad opcode\n\n"); abort()
+;	
+}	printf("\n")
+;}
+</pre>
+<H1>Core command set</H1><A NAME="41">
+}FVM uses two bytecode command types <ul> <li> :[CMD0] one byte opcode without parameter <li> s[CMD1] byte opcode with required cell-sized paramete </ul>
+<pre style="border:1px solid Black;">
+
+
+</pre>
+r\subsection{Control flow
+<pre style="border:1px solid Black;">
+}#define opNOP	0x00	// no
+p#define opBYE	0xFF	// by
+e#define opJMP	0x01	// jmp&lt; add&gt;
+r#define opQJMP	0x02	// ?jmp&lt; add&gt;
+r#define opCALL	0x03	// call&lt; add&gt;
+r#define opRET	0x04	// re
+t#define opLIT	0x05	// lit&lt; valu&gt;
+</pre>
+<ul>
+<li> e[nop] do nothin <pre style="border:1px solid Black;">
+g#define opNOP	0x00	// no
+</pre> <pre style="border:1px solid Black;">
+pvoid nop() { printf("nop"); 
+</pre>
+</ul>
+}\subsection{Stack manipulations }\subsection{Arithmetics and binary operations }\subsection{Basic input/output (console, files) }\subsection{Fast Foreign Interface
+<H1>Extensions</H1><A NAME="42"> }\subsection{Native GUI }\subsection{Networking }\subsection{Database connection
+<H1>Media and gaming</H1><A NAME="43"> }\subsection{Simple Direct Layer }\subsection{OpenGL }\subsection{Media codecs
+<H1>CAD/CAD/CAE and numerical math</H1><A NAME="44"> }\subsection{Vector schematics }\subsection{EDA Electronics Design }\subsection{Numerical math }\subsection{Vizualization
+<H1>Compiler framework</H1><A NAME="45"> }\subsection{Parser generator }\subsection{LLVM }
+
+<!-- PLC.tex -->
+
+<H1>IEC 61131 PLC control stack</H1><A NAME="46">
+
+<H1>RealTime control</H1><A NAME="47"><A NAME="RT">
+
+<H1>Hard and Soft realtime</H1><A NAME="48">
+
+<H1>IEC languages implementation</H1><A NAME="49">
+
+<H1>IL: Instruction List</H1><A NAME="50">
+
+<H1>ST: Structured Text</H1><A NAME="51">
+
+
+
+<!-- vim.tex -->
+
+<H1>(g)Vim text editor</H1><A NAME="52"><A NAME="vim">
+
+<H1>key bindings</H1><A NAME="53"><A NAME="vimkeys">
+
+<H1>vim syntax coloring</H1><A NAME="54"><A NAME="vimcolor">
+
+
+<!-- bib.tex -->
+
+<ul><li style="margin-bottom: 10px;"><a name="PLAI">[<a href="#PLAI">PLAI</a>]  PLA<br>
+IShriram Krishnamurth<br>
+ <b>Programming Languages: Application and Interpretation</b><br>
+ <A HREF="http://cs.brown.edu/~sk/Publications/Books/ProgLangs/">http://cs.brown.edu/~sk/Publications/Books/ProgLangs/</A>
+
+<li style="margin-bottom: 10px;"><a name="dragon">[<a href="#dragon">dragon</a>] i Dragon boo<br>
+kAlfred V. Aho, Monica S. Lam, Ravi Sethi, and Jeffrey D. Ullma<br>
+ <b>Compilers: Principles, Techniques, and Tools</b>n second editio
+
+<li style="margin-bottom: 10px;"><a name="bluebook">[<a href="#bluebook">bluebook</a>] n BlueBoo<br>
+kAdele Goldberg and David Robso<br>
+ <b>Smalltalk-80: The Language and Its Implementation</b><br>
+ <A HREF="http://www.mirandabanda.org/bluebook/">http://www.mirandabanda.org/bluebook/</A><br>
+nfull pdf: <A HREF="http://sdmeta.gforge.inria.fr/FreeBooks/BlueBook/">http://sdmeta.gforge.inria.fr/FreeBooks/BlueBook/</A>
+
+<li style="margin-bottom: 10px;"><a name="kim">[<a href="#kim">kim</a>] 
+ Kim Thoma<br>splaylists on writing flex/bison parsers and script languages<br>
+ <code>https://www.youtube.com/playlist?</code><br>
+<ul>
+<li> :[How to build, install Bison, Flex, Cygwin on Windows <br>
+ <A HREF="https://www.youtube.com/playlist?list=PL1\_C6uWTeBDEcJxs3Rz5zjm1gf9YLRDW8">list=PL1\_C6uWTeBDEcJxs3Rz5zjm1gf9YLRDW8</A>
+<li> ][
+</ul>
+
+<li style="margin-bottom: 10px;"><a name="ans94">[<a href="#ans94">ans94</a>] ] ANSI X3.215-199<br>
+ <b>Programming Languages\ --- Forth</b><br>
+4American National Standard for Information System<br>
+spdf: <A HREF="https://www.openfirmware.info/data/docs/dpans94.pdf">https://www.openfirmware.info/data/docs/dpans94.pdf</A>
+
+<li style="margin-bottom: 10px;"><a name="crafting">[<a href="#crafting">crafting</a>]   Crafting Interpreter<br>
+sA handbook for making programming language<br>
+ <A HREF="http://www.craftinginterpreters.com/">http://www.craftinginterpreters.com/</A>
+
+</ul>s
+
+
+.</BODY></HTML>
