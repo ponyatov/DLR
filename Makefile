@@ -1,4 +1,4 @@
-log.log: VM.py
+log.log: VM.py manual
 	python $< > $@
 
 DPANS94 = FORTH/doc/DPANS94.pdf

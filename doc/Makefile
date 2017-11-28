@@ -14,7 +14,7 @@ FIG = ../tmp/lexer.pdf
 
 LATEX = pdflatex -halt-on-error -output-directory ../tmp
 manual.pdf: $(TEX) $(SRC) $(FIG)
-	$(LATEX) manual && $(LATEX) manual && mv ../tmp/manual.pdf $@
+	$(LATEX) manual && $(LATEX) manual && cp ../tmp/manual.pdf $@
 
 ../tmp/%.pdf: %.dot Makefile
 	dot -Tpdf -o $@ $<
