@@ -6,11 +6,14 @@
 \renewcommand{\familydefault}{\sfdefault}\normalfont
 %% hyperlinks pdf style
 \usepackage[unicode,colorlinks=true]{hyperref}
-% %% coloring
+%% coloring
 \usepackage{xcolor}
 \definecolor{red}{rgb}{0.7, 0, 0}
 \definecolor{green}{rgb}{0, 0.4, 0}
 \definecolor{blue}{rgb}{0, 0, 0.7}
+%% graphics
+\usepackage[pdftex]{graphicx}
+\newcommand{\fig}[2]{{\centering\noindent\includegraphics[#2]{#1}}}
 
 % [nosep] option in lists/enums
 \usepackage{enumitem}
@@ -48,6 +51,4 @@ frame=single,
 showstringspaces=false,
 }
 
-% images
-\usepackage[pdftex]{graphicx}
-\newcommand{\fig}[2]{{\centering\noindent\includegraphics[#2]{#1}}}
+

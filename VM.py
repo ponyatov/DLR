@@ -1,4 +1,29 @@
-import sys
+import sys,time
+
+import threading
+import wx					# import wxWidgets
+
+wxapp = wx.App()		# create wx GUI application
+def startGUI():				# wrap thread in function
+	global wxmain
+	wxmain = wx.Frame(None,-1,sys.argv[0])
+	wxmain.Show()			# set visible
+	wxapp.MainLoop()		# start wx GUI main loop
+thGUI = threading.Thread(None,startGUI)
+thGUI.start()				# start GUI thread
+
+def ScreenShot(PNG):
+	dc = wx.ScreenDC()
+	X,Y,W,H = wxmain.GetRect()
+#	CX,CY=wxmain.ClientToScreen((0,0))
+#	border = CX-X ; titlebar = CY-Y
+#	W += border * 2 ; H += titlebar+border
+	bmp = wx.EmptyBitmap(W,H)
+	mdc = wx.MemoryDC(bmp)
+	mdc.Blit(0,0,W,H,dc,X,Y)
+	bmp.SaveFile(PNG,wx.BITMAP_TYPE_PNG)
+
+time.sleep(1) ; ScreenShot('sshot.png')
 
 import ply.lex  as lex
 import ply.yacc as yacc
@@ -136,3 +161,6 @@ if __name__ == '__main__':
         nop
         bye
 	''')
+
+thGUI.join()				# wait until GUI stops
+

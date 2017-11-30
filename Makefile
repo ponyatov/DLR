@@ -1,6 +1,3 @@
-log.log: VM.py manual
-	python $< > $@
-
 DPANS94 = FORTH/doc/DPANS94.pdf
 TEXIMPL = Eijkhout/Victor\ Eijkhout\ LaTeX\ implementation.pdf
 PDFs = $(DPANS94) $(TEXIMPL)

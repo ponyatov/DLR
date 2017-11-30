@@ -501,7 +501,7 @@ string, but also number, or pointer to any object.
 0004 <bound method VM.bye> [0, 'R\t[1]', 2, 3, 4, 5, 6, 7]
 \end{lstlisting}
 
-\section{Command Shell}
+\section{\F: Command Shell}
 
 Program works, but we need something more interesting. Lets do some
 \emph{interactive system}, in parralel \emph{adding some control constructions}
@@ -512,7 +512,7 @@ to our assembler. At this point we
 \end{itemize}
 So we need something very strange for our command shell: programming language
 without syntax. In fact it is impossible, but there is one language with ultra
-simple syntax which parser can be rewritten in few machine commands: \F.
+simple syntax which \emph{parser can be rewritten in few machine commands}: \F.
 
 If you know something about \F, it is not suprize for you that we use it: our
 \term{virtual machine}
@@ -553,3 +553,47 @@ start from GUI interface, tuned for smartphone look\&feel. We must be ready to
 face up with one thumb interface with vertical screen covered by half
 with Android keyboard starting from scratch of Skynet development. You must be
 able to do something cool with one hand doing Vrschikasana in crowded bus.
+
+For portability and fast start we will use wxWidgets toolkit, but later will
+move to native GUI to make system must lighter and closer to native host
+platform.
+
+\begin{lstlisting}[language=python]
+import wx					# import wxWidgets
+wxapp = wx.App()			# create wx GUI application
+wxmain = wx.Frame(None,-1,sys.argv[0])	# ?,?,window title
+wxmain.Show()				# set visible
+wxapp.MainLoop()			# start wx GUI main loop
+\end{lstlisting}
+
+\fig{gui00.png}{height=0.7\textheight}
+
+To take this screenshot we must make GUI work in parallel thread:
+\begin{lstlisting}[language=python]
+import threading
+
+wxapp = wx.App()		# create wx GUI application
+def startGUI():				# wrap thread in function
+	global wxmain
+	wxmain = wx.Frame(None,-1,sys.argv[0])
+	wxmain.Show()			# set visible
+	wxapp.MainLoop()		# start wx GUI main loop
+thGUI = threading.Thread(None,startGUI)
+thGUI.start()				# start GUI thread
+
+def ScreenShot(PNG):
+	dc = wx.ScreenDC()
+	X,Y,W,H = wxmain.GetRect()
+	bmp = wx.EmptyBitmap(W,H)
+	mdc = wx.MemoryDC(bmp)
+	mdc.Blit(0,0,W,H,dc,X,Y)
+	bmp.SaveFile(PNG,wx.BITMAP_TYPE_PNG)
+
+# wait until GUI starts, and do screenshot
+time.sleep(1) ; ScreenShot('sshot.png')
+
+# do all non-GUI work here as VM(program) run
+
+thGUI.join()				# wait until GUI stops
+\end{lstlisting}
+
