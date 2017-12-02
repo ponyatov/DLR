@@ -90,16 +90,14 @@ class FORTH(VM):
 
 And here we have a problem, Houston! All elements of parser are encapsulated
 in \verb|compiler()| method using closure, and oops
-we \emph{must rework VM class} itself.
+we \emph{must rework VM class} itself. And if we use just lexer enclosed in
+class, inheritance still cause error like \verb|t_rule dedefined|,
+see \href{http://github.com/dabeaz/ply/issues/142}{issue 142} (ply-3.10)
 
-\bigskip
-\begin{lstlisting}[language=Python]
-		t_ignore_COMMENT = r'\#.+|\(.*?\)'		# comments
-		# token types
-		tokens = ['REGISTER','EQ','STRING',
-			# parse all VM commands with low case letters
-			'COMMAND',								
-			# control constructs
-			'COLON','SEMICOLON','BEGIN','AGAIN']	
+\lstinputlisting[language=python]{../inher.py}
+\begin{lstlisting}
+ERROR: inher.py:22: Rule t_ignore redefined.
+Previously defined on line 6
+SyntaxError: Can't build lexer
 \end{lstlisting}
 
