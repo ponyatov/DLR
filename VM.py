@@ -32,6 +32,16 @@ class VM:
 			self.Ip += 1								# to next command
 			command()									# DECODE/EXECUTE
 			
+	# ===== lexer code section =====
+	def build(self,**kwargs):		# build lexer from instance of VM
+		self.lexer = lex.lex(module=self,**kwargs)
+		
+	t_ignore = ' \t\r'					# drop spaces (no EOL)
+	t_ignore_COMMENT = r'\#.*'			# line comment
+	# token types
+	tokens = ['NOP','BYE','REGISTER','EQ','STRING']
+	# required lexer error callback
+	def t_ANY_error(self,t): raise SyntaxError('lexer: %s' % t)
 	def compiler(self,src):
 		
 		# ===== init code section =====
@@ -43,21 +53,21 @@ class VM:
 
 		# ===== lexer code section =====
 				
+		## create ply.lex object
+		#lexer = lex.lex(module=self)
+		# build lexer
+		self.build()
+		# feed source code
+		self.lexer.input(src)
+
 		# extra lexer states
 		states = (('string','exclusive'),)
-		# token types
-		tokens = ['NOP','BYE','REGISTER','EQ','STRING']
-		
-		t_ignore = ' \t\r'					# drop spaces (no EOL)
-		t_ignore_COMMENT = r'\#.+'			# line comment
 
 		# regexp/action rules (ANY)
 		def t_ANY_newline(t):					# special rule for EOL
 			r'\n'
 			t.lexer.lineno += 1					# increment line counter
 			# do not return token, it will be ignored by parser
-		# required lexer error callback
-		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
 		
 		# regexp/action rules (STRING)
 		t_string_ignore = '' 				# don't ignore anything
@@ -96,8 +106,6 @@ class VM:
 			t.value = int(t.value[1:])
 			return t
 		t_EQ = r'='
-		# create ply.lex object
-		lexer = lex.lex()				
 
 		# ===== parser/compiler code section =====
 		def p_program_epsilon(p):
@@ -124,14 +132,17 @@ class VM:
 		# create ply.yacc object, without extra files
 		parser = yacc.yacc(debug=False,write_tables=None)
 		# feed & parse source code using lexer
-		parser.parse(src,lexer)				
+		parser.parse(src,self.lexer)
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
 		self.interpreter()		  				# run interpreter
 
+class FORTH(VM): pass
+#	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'		# comment
+
 if __name__ == '__main__':
-	VM(r''' # use r' : we have escapes in string constant
+	FORTH(r''' # use r' : we have escapes in string constant
 
 : INTERPRET		\ REPL interpreter loop
 	begin

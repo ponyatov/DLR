@@ -69,6 +69,30 @@ enclose it into \verb|VM(''' ... code ... ''')| in \py\ source.
 A current parser will not process this source, as syntax notably changed.
 We will not break VM demo parser, but use \emph{VM class inheritance to redefine
 parser} for special \F\ dialect, and add some extra command to original VM.
+
+When you are going to implement your own language on top of VM, you should 
+go this way too:
+\begin{itemize}
+\item fork special class from core VM
+\item implement parser/compiler for your language
+\item \emph{expand inherited VM} with specific commands your need of
+\end{itemize}
+Last item must be focused: \emph{don't change core VM class} with new commands
+or modified behaviour, as this changes will impact on all other inherited VMs.
+We broke this rule here, only because VM can't do anything in this point, and we
+need a lot of to add to make core VM be usable itself.
+
+\begin{lstlisting}[language=Python]
+# it should look like this:
+class FORTH(VM):
+	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'		# comment
+\end{lstlisting}
+
+And here we have a problem, Houston! All elements of parser are encapsulated
+in \verb|compiler()| method using closure, and oops
+we \emph{must rework VM class} itself.
+
+\bigskip
 \begin{lstlisting}[language=Python]
 		t_ignore_COMMENT = r'\#.+|\(.*?\)'		# comments
 		# token types
@@ -78,3 +102,4 @@ parser} for special \F\ dialect, and add some extra command to original VM.
 			# control constructs
 			'COLON','SEMICOLON','BEGIN','AGAIN']	
 \end{lstlisting}
+
