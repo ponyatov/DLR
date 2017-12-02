@@ -61,3 +61,20 @@ command shell\note{still without compilation and error checking}.
 	again
 ;
 \end{lstlisting}
+Don't forget how we should pass this source for compilation and run:
+enclose it into \verb|VM(''' ... code ... ''')| in \py\ source.
+
+\subsection{Expanding VM using inheritance}
+
+A current parser will not process this source, as syntax notably changed.
+We will not break VM demo parser, but use \emph{VM class inheritance to redefine
+parser} for special \F\ dialect, and add some extra command to original VM.
+\begin{lstlisting}[language=Python]
+		t_ignore_COMMENT = r'\#.+|\(.*?\)'		# comments
+		# token types
+		tokens = ['REGISTER','EQ','STRING',
+			# parse all VM commands with low case letters
+			'COMMAND',								
+			# control constructs
+			'COLON','SEMICOLON','BEGIN','AGAIN']	
+\end{lstlisting}
