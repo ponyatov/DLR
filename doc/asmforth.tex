@@ -1,0 +1,44 @@
+\section{\F: Command Shell}
+
+Program works, but we need something more interesting. Lets do some
+\emph{interactive system}, in parralel \emph{adding some control constructions}
+to our assembler. At this point we
+\begin{itemize}
+	\item have no tools let as define complex syntax in our language
+	\item we dont want to mess two parsers: assembler and command shell
+\end{itemize}
+So we need something very strange for our command shell: programming language
+without syntax. In fact it is impossible, but there is one language with ultra
+simple syntax which \emph{parser can be rewritten in few machine commands}: \F.
+
+If you know something about \F, it is not suprize for you that we use it: our
+\term{virtual machine}
+was designed very close to this language principles. We do some shift
+from original \F, as we want to manipulate with objects, but not with bytes
+and machine integers (see next page), as you do making original
+\term{Virtual FORTH Machine}.
+
+\bigskip
+Returning to \F\ syntax, it is very simple:
+\begin{enumerate}[nosep]
+\item collect sequential symbols one by one from input stream until first
+space encountered\ --- \emph{tadaam! thats all: you have got the parser 
+finished 8-)}
+\item and try to do something with selected string (not surprizing that this 
+string has special name in \F\ --- \term{word}).
+\end{enumerate}
+On next stage \F-system tries to find this word in special structure\ ---
+\term{vocabulary}. Vocabulary is linked list contains compiled procedures
+with its names stored in.
+If parsed word matches procedure name, this procedure will
+be executed immediately. If word not found in vocabulary, \F\ tries to convert
+it into integer number\note{there is no floating point support in core
+\F\ language\ --- are you already scared?}, and push into \term{data stack}.
+
+\bigskip
+We are not going to write yet another tutorial on \F\ here. It is better
+if you take a break here, and look into first chapters of real \emph{cool book:
+Leo Brodie's Starting \F}\ \cite{starting}. You will be amazed by \F\ miracle
+simplicity, and scared by its dragon ass \cite{dragon}\ of zen syntax,
+data stack bitbanging, and functional limitations\note{no float numbers,
+no files, do you want data structures? make arrays yourself!}.
