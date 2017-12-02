@@ -9,7 +9,7 @@ class VM:
 		print t
 	def t_error(self,t): raise SyntaxError(t)
 #	def __init__(self),src=''):
-#		self.build()
+#		self.lexer = lex.lex(module=self)
 #		self.lexer.input(src)
 #		while self.lexer.token(): pass
 	def build(self,**kwargs):
