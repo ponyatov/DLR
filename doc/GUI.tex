@@ -1,0 +1,139 @@
+\chapter{GUI application in TaskBar}\clearpage
+
+\section{Mobile-targetted GUI}
+You can make \F\ work in text console mode, but we think mobile, so we jump
+start from GUI interface, tuned for smartphone look\&feel. We must be ready to
+face up with one thumb interface with vertical screen covered by half
+with Android keyboard starting from scratch of Skynet development. You must be
+able to do something cool with one hand doing Vrschikasana in crowded bus.
+
+For fast start we will use wxWidgets \cite{zetwx}\ toolkit,
+but later will
+move to native GUI to make system must lighter and closer to native host
+platform.
+
+\begin{lstlisting}[language=python]
+import wx					# import wxWidgets
+wxapp = wx.App()			# create wx GUI application
+wxmain = wx.Frame(None,-1,sys.argv[0])	# ?,?,window title
+wxmain.Show()				# set visible
+wxapp.MainLoop()			# start wx GUI main loop
+\end{lstlisting}
+
+\fig{gui00.png}{height=0.7\textheight}
+
+To take this screenshot we must make GUI work in parallel thread:
+\begin{lstlisting}[language=python]
+import threading
+
+wxapp = wx.App()		# create wx GUI application
+def startGUI():				# wrap thread in function
+	global wxmain			# required for ScreenShot()
+	wxmain = wx.Frame(None,-1,sys.argv[0])
+	wxmain.Show()			# set visible
+	wxapp.MainLoop()		# start wx GUI main loop
+thGUI = threading.Thread(None,startGUI)
+thGUI.start()				# start GUI thread
+
+def ScreenShot(PNG):
+	dc = wx.ScreenDC()
+	X,Y,W,H = wxmain.GetRect()
+	bmp = wx.EmptyBitmap(W,H)
+	mdc = wx.MemoryDC(bmp)
+	mdc.Blit(0,0,W,H,dc,X,Y)
+	bmp.SaveFile(PNG,wx.BITMAP_TYPE_PNG)
+
+# wait until GUI starts, and do screenshot
+time.sleep(1) ; ScreenShot('sshot.png')
+
+# do all non-GUI work here as VM(program) run
+
+thGUI.join()				# wait until GUI stops
+\end{lstlisting}
+
+Tune size to make GUI looks like messenger in right down corner of screen:
+\begin{lstlisting}[language=python]
+	# tune size and position to look like messenger
+	X,Y,W,H = wx.ClientDisplayRect()
+	# create main frame
+	wxmain = wx.Frame(None,-1,sys.argv[0],
+		size=(W/4,H/2),pos=(W-W/4,H-H/2))
+\end{lstlisting}
+
+\section{TaskBar}
+
+It is cool to have cool tool in taskbar, so we can make it,
+\href{http://www.blog.pythonlibrary.org/2013/07/12/wxpython-how-to-minimize-to-system-tray/}{here you can found details}.
+Taskbared GUI application require TaskBarIcon handler, wrapped in custom class:
+\begin{lstlisting}[language=python]
+# taskbar manager
+class TaskBar(wx.TaskBarIcon):	
+	def __init__(self,frame):
+		# init superclass
+		wx.TaskBarIcon.__init__(self)
+		# save frame we manage
+		self.frame = frame
+		# set taskbar icon
+		self.icon = frame.icon
+		self.SetIcon(self.icon,sys.argv[0])
+		# bind open/focus on left click
+		self.Bind(wx.EVT_TASKBAR_LEFT_DOWN,
+			self.OnTaskBarLeftClick)
+	def OnTaskBarActivate(self,event):
+		pass
+	def OnTaskBarClose(self,event):
+		self.frame.Close()
+	def OnTaskBarLeftClick(self,event):
+		self.frame.Show()		# show frame
+		self.frame.Restore()	# un(min|max)imize
+		self.frame.Raise()		# make top level window
+		self.frame.SetFocus()	# and set focus
+\end{lstlisting}
+and to be consistent, wrap main frame into class too:
+\begin{lstlisting}[language=python]
+class MainWindow(wx.Frame): # main GUI window in class
+	def __init__(self):
+		# tune size and position to look like messenger
+		X,Y,W,H = wx.ClientDisplayRect()
+		# create main frame
+		wx.Frame.__init__(self,None,-1,sys.argv[0],
+		size=(W/4,H/2),pos=(W-W/4,H-H/2))
+		# style tune
+		self.icon = wx.ArtProvider.GetIcon(
+			wx.ART_ADD_BOOKMARK)
+		self.SetIcon(self.icon)
+		self.SetBackgroundColour(wx.BLACK)
+		# set visible
+		self.Show()
+		# make GUI taskbared
+		self.tbIcon = TaskBar(self)
+	def onClose(self,event):
+		# required to remove taskbar icon
+		self.tbIcon.RemoveIcon()
+		self.tbIcon.Destroy()
+		# destroy main window itself
+		self.Destroy()
+\end{lstlisting}
+We still need function to wrap GUI in separate thread, but it becomes
+very simple:
+\begin{lstlisting}[language=python]
+def startGUI():				# wrap thread in function
+	global wxmain			# required for ScreenShot()
+	wxmain = MainWindow()	# construct main window
+	wxapp.MainLoop()		# start wx GUI main loop
+thGUI = threading.Thread(None,startGUI)
+thGUI.start()				# start GUI thread
+\end{lstlisting}
+As option you can do screenshots:
+\begin{lstlisting}[language=python]
+class MainWindow(wx.Frame): # main GUI window in class
+	def shot(self,PNG='sshot.png'):	# do screen shot
+		dc = wx.ScreenDC()
+		X,Y,W,H = self.GetRect()
+		bmp = wx.EmptyBitmap(W,H)
+		mdc = wx.MemoryDC(bmp)
+		mdc.Blit(0,0,W,H,dc,X,Y)
+		bmp.SaveFile(PNG,wx.BITMAP_TYPE_PNG)
+
+time.sleep(1) ; wxmain.shot()
+\end{lstlisting}
