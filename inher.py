@@ -8,18 +8,25 @@ class VM:
 		r'[a-z]+'
 		print t
 	def t_error(self,t): raise SyntaxError(t)
-	def __init__(self,src=''):
-		self.lexer = lex.lex(module=self)
+#	def __init__(self),src=''):
+#		self.build()
+#		self.lexer.input(src)
+#		while self.lexer.token(): pass
+	def build(self,**kwargs):
+		self.lexer = lex.lex(module=self, **kwargs)
+	def parse(self,src):
 		self.lexer.input(src)
 		while self.lexer.token(): pass
 
 class FORTH(VM):
 	t_ignore = ' \t\r'
-#	def t_newline(t):
-#		r'\n'
-#		t.lexer.line += 1
+	def t_newline(self,t):
+		r'\n'
+		t.lexer.line += 1
 
-FORTH('''
+m = FORTH()
+m.build()
+m.parse('''
 	hello
 		world
 ''')
