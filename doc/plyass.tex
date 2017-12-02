@@ -1,7 +1,13 @@
 \chapter{Assembler (syntax parser) using PLY}\clearpage
 
 Using python syntax is simple (does not need extra programming):
-\lstinputlisting[language=Python]{py06.py}
+\begin{lstlisting}[language=python]
+    VM([
+        VM.ld, 1, 'R[1]',
+        VM.nop, VM.bye
+    ])
+\end{lstlisting}
+
 but you must use VM. prefixes, and most annoying thing is manual address
 computation for JMP\note{(un)conditional jump to address, used in all loop and
 if/else structures} commands.
@@ -35,10 +41,38 @@ rule match, and can do any operation on matched elements
 \fig{../tmp/lexer.pdf}{width=0.95\textwidth}
 
 We will parse program from string using this code snippet:
-\lstinputlisting[language=Python]{py07.py}
+\begin{lstlisting}[language=python]
+VM('''
+        R1 = 'R[1]'
+        nop
+        bye
+''')
+\end{lstlisting}
 
 First we reorder code and add \verb|compiler(source)| method:
-\lstinputlisting[language=Python,tabsize=2]{py08.py}
+\begin{lstlisting}[language=python]
+class VM:
+	
+	def __init__(self, P=''):
+		self.compiler(P)			# run parser/compiler
+		self.interpreter()          # run interpreter
+
+	def interpreter(self):
+		self._bye = False           # stop flag
+		while not self._bye:
+			...
+			command = self.program[self.Ip] # FETCH command
+			...
+			self.Ip += 1            # to next command
+			command()               # DECODE/EXECUTE
+
+	def compiler(self,src):
+		# set instruction pointer
+		# (we will change it moving entry point)
+		self.Ip = 0							
+		# (we don't have parser now)	
+		self.program = [ self.nop, self.bye ]
+\end{lstlisting}
 \begin{lstlisting}
 0000 <bound method VM.nop of <__main__.VM instance
 	at 0x02280378>> [0, 1, 2, 3, 4, 5, 6, 7]
@@ -49,11 +83,18 @@ First we reorder code and add \verb|compiler(source)| method:
 \section{Lexer}
 
 We will use \href{http://www.dabeaz.com/ply/}{PLY library}:
-\lstinputlisting[language=Python]{py09.py}
+\begin{lstlisting}[language=python]
+import ply.lex  as lex
+import ply.yacc as yacc
+\end{lstlisting}
 
 For first time we implement lexer only, to view what \term{lexeme}s we will get
 on lexing stage. Try to build lexer using \verb|ply.lex| class
-\lstinputlisting[language=Python]{py10.py}
+\begin{lstlisting}[language=python]
+	def compiler(self,src):
+		...
+		lexer = lex.lex()
+\end{lstlisting}
 \begin{lstlisting}
 ERROR: No token list is defined
 ERROR: No rules of the form t_rulename are defined
@@ -71,17 +112,44 @@ For lexer we need
   \item \verb|t_error()| \emph{lexer error callback} function 
 \end{itemize}
 To encapsulate lets group all lexer data in separate method:
-\lstinputlisting[language=Python]{py11.py}
+\begin{lstlisting}[language=python]
+	def compiler(self,src):
+		...
+		self.lexer(src)
 
-\lstinputlisting[language=Python]{py12.py}
+	def lexer(self,src):
+		lexer = lex.lex()
+\end{lstlisting}
+
+\begin{lstlisting}[language=python]
+	def lexer(self,src):
+		# token types
+		tokens = ['COMMAND']		
+		# regexp/action rules
+		def t_COMMAND(t):
+			r'[a-z]+'
+			return t
+		# required lexer error callback
+		def t_error(t): raise SyntaxError('lexer: %s' % t)
+		# create ply.lex object
+		lexer = lex.lex()				
+		# feed source code
+		lexer.input(src)				
+		# get next token						 
+		while True: print lexer.token()	
+\end{lstlisting}
 \begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0)
+SyntaxError: lexer: LexToken(error,"\n R1 = 'R[1]'\n nop\n bye\n\t",1,0)
 \end{lstlisting}
 
 In error report you can see problematic symbol \emph{at first position}.
 
 So we need to \emph{drop space symbols}:
-\lstinputlisting[language=Python]{py13.py}
+\begin{lstlisting}[language=python]
+	def lexer(self,src):
+		# regexp/action rules
+		t_ignore = ' \t\r\n'	# drop spaces
+\end{lstlisting}
 \begin{lstlisting}
 SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9)
 \end{lstlisting}
@@ -89,7 +157,16 @@ Look on last two numbers: this is line number =1 and lexer position =9. Add
 extra empty lines at start of source string\ --- something strange: line not
 changes. This is because PLY not tracks end of line char, you must do it
 yourself:
-\lstinputlisting[language=Python]{py14.py}
+\begin{lstlisting}[language=python]
+	def lexer(self,src):
+		# regexp/action rules
+		t_ignore = ' \t\r'		# drop spaces (no EOL)
+		def t_newline(t):		# special rule for EOL
+			r'\n'
+			t.lexer.lineno += 1	# increment line counter
+			# do not return token,
+			# it will be ignored by parser
+\end{lstlisting}
 \begin{lstlisting}
 SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n       
 bye\n\t",4,11)
@@ -99,7 +176,16 @@ by lexer in total.
 
 Add \emph{register parsing}, and return \textit{modified token} with matched
 string replaced by register number:
-\lstinputlisting[language=Python]{py15.py}
+\begin{lstlisting}[language=python]
+	def lexer(self,src):
+		# token types
+		tokens = ['COMMAND','REGISTER']
+		# regexp/action rules
+		def t_REGISTER(t):
+			r'R[0-9]+'
+			t.value = int(t.value[1:])
+			return t
+\end{lstlisting}
 \begin{lstlisting}
 LexToken(REGISTER,1,4,11)
 ### format: LexToken(type,value,lineno,lexpos)
@@ -125,7 +211,13 @@ Using regexp t\_strings \emph{you have no control of lexer rules matching}, and
 this is big disadvantage in cases like \verb|+ ++ = ==| operators exists in
 language syntax. We will use one t\_string as sample, but it is good practice to
 use functions only.
-\lstinputlisting[language=Python]{py16.py}
+\begin{lstlisting}[language=python]
+	def lexer(self,src):
+		# token types
+		tokens = ['COMMAND','REGISTER','EQ']
+		# regexp/action rules
+		t_EQ = r'='
+\end{lstlisting}
 \begin{lstlisting}
 LexToken(REGISTER,1,4,11)
 LexToken(EQ,'=',4,14)
@@ -138,34 +230,92 @@ able to use some standard \term{escape sequences} like
 \verb|\r \t \n \xFF \u1234|. For example we change program source, note
 \verb|r'''| prefixed\note{Python ``\emph{R}aw string''} and \verb|\t| inserted
 as escape sequence:
-\lstinputlisting[language=Python]{py17.py}
+\begin{lstlisting}[language=python]
+	VM(r'''
+        R1 = 'R\t[1]'
+        nop
+        bye
+	''')
+\end{lstlisting}
 Strings can be parsed using lexer itself with multiple \term{lexer state}s
 switching: each \emph{lexer state defines its own set of tokens and rules
 active}.
 
 Main state has \verb|INITIAL| name. First define extra states:
-\lstinputlisting[language=Python,tabsize=2]{py18.py}
+\begin{lstlisting}[language=python]
+	def lexer(self,src):
+		# extra lexer states
+		states = (('string','exclusive'),) # don't forget comma
+\end{lstlisting}
 \begin{lstlisting}
 ERROR: No rules defined for state 'string'
 \end{lstlisting}
 We need any rule, the first candidate is EOL rule: line numbers
 must be counted thru all source in \emph{ANY} state:
-\lstinputlisting[language=Python,tabsize=2]{py19.py}
+\begin{lstlisting}[language=python]
+		# regexp/action rules (ANY)
+		def t_ANY_newline(t):		# special rule for EOL
+\end{lstlisting}
 \begin{lstlisting}
 WARNING: No error rule is defined for exclusive state 'string'
 WARNING: No ignore rule is defined for exclusive state 'string'
 \end{lstlisting}
-\lstinputlisting[language=Python,tabsize=2]{py20.py}
+\begin{lstlisting}[language=python]
+		# regexp/action rules (ANY)
+		# required lexer error callback
+		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
+		# regexp/action rules (STRING)
+		t_string_ignore = '' # don't ignore anything
+\end{lstlisting}
 
 For moving between states we need \emph{mode switching sequences}:
-\lstinputlisting[language=Python,tabsize=2]{py21.py}
+\begin{lstlisting}[language=python]
+		# regexp/action rules (INITIAL)
+		def t_begin_string(t):
+			r'\''
+			t.lexer.push_state('string')
+		# regexp/action rules (STRING)
+		def t_string_end(t):
+			r'\''
+			t.lexer.pop_state() # return to INITIAL
+\end{lstlisting}
 
 Any char in string state must be stored somewhere forming resulting string. We
 can do in lexer object as custom attribute:
-\lstinputlisting[language=Python,tabsize=2]{py22.py}
+\begin{lstlisting}[language=python]
+		# token types
+		tokens = ['COMMAND','REGISTER','EQ','STRING']
+		# regexp/action rules (INITIAL)
+		def t_begin_string(t):
+			r'\''
+			t.lexer.push_state('string')
+			t.lexer.LexString = '' # initialize accumulator
+		# regexp/action rules (STRING)
+		def t_string_char(t):
+			r'.'
+			t.lexer.LexString += t.value # accumulate
+		def t_string_end(t):
+			r'\''
+			t.lexer.pop_state() # return to INITIAL
+			t.type = 'STRING'					# overryde token type
+			t.value = t.lexer.LexString # accumulator to value
+			return t # return resulting string token
+\end{lstlisting}
 
 And finally add special \term{escape sequences}:
-\lstinputlisting[language=Python,tabsize=2]{py23.py}
+\begin{lstlisting}[language=python]
+		# regexp/action rules (STRING)
+		def t_string_tab(t):
+			r'\\t'
+			t.lexer.LexString += '\t'
+		def t_string_cr(t):
+			r'\\r'
+			t.lexer.LexString += '\r'
+		def t_string_lf(t):
+			r'\\n'
+			t.lexer.LexString += '\n'
+		def t_string_char(t):				# must be last rule
+\end{lstlisting}
 \begin{lstlisting}
 LexToken(REGISTER,1,2,9)
 LexToken(EQ,'=',2,12)
@@ -186,7 +336,14 @@ End of source can be processed by two variants:
 \end{enumerate}
 
 Just fix lexer print loop:
-\lstinputlisting[language=Python]{py24.py}
+\begin{lstlisting}[language=python]
+	def lexer(self,src):
+		# get next token						 
+		while True:
+			next_token = lexer.token()
+			if not next_token: break # on None
+			print next_token
+\end{lstlisting}
 \begin{lstlisting}
 LexToken(REGISTER,1,2,9)
 LexToken(EQ,'=',2,12)

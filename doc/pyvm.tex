@@ -5,7 +5,27 @@
 
 Program is something executing in sequence.
 
-\lstinputlisting[language=Python]{py01.py}
+\begin{lstlisting}[language=python]
+import sys
+
+# command set
+def nop(): pass         # do nothing
+def bye(): sys.exit(0)  # stop system
+
+# we use Python parser and container
+program = [ nop, bye ]
+
+# interpreter
+def interpreter():
+    Ip=0
+    while True:
+        assert Ip < len(program)
+        print '%.4X' % Ip, program[Ip] ; program[Ip]()
+        Ip += 1
+
+if __name__ == '__main__':
+    interpreter()
+\end{lstlisting}
 \begin{lstlisting}
 0000 <function nop at 0x7ff7bb790b18>
 0001 <function bye at 0x7ff7bb790c08>
@@ -13,7 +33,31 @@ Program is something executing in sequence.
 
 \section{Wrap in class}
 
-\lstinputlisting[language=Python]{py02.py}
+\begin{lstlisting}[language=python]
+import sys
+
+class VM:
+    # command set
+    def nop(self): pass             # do nothing
+    def bye(self): self._bye=True   # stop single VM only
+    # sequence interpreter
+    def interpreter(self):
+        while not self._bye:
+            assert self.Ip < len(self.program)
+            command = self.program[self.Ip]
+            print '%.4X' % self.Ip , command
+            self.Ip += 1
+            command(self)
+    # virtual machine constructor
+    def __init__(self, P=[]):
+        self.program = P        # load program
+        self.Ip = 0             # set instruction pointer
+        self._bye = False       # stop interpreter flag
+        self.interpreter()      # run interpreter
+
+if __name__ == '__main__':
+    VM([ VM.nop, VM.bye ])  # every command need VM. prefix
+\end{lstlisting}
 \begin{lstlisting}
 0000 <unbound method VM.nop>
 0001 <unbound method VM.bye>
@@ -35,12 +79,42 @@ should define registers as static class member:
 % but separate \term{context}: Ip, stacks and \term{register pool}.
 \end{description}
 
-\lstinputlisting[language=Python]{py03.py}
+\begin{lstlisting}[language=python]
+class VM:
+	# register file shared between VM instances
+	# VM can run multiple programs
+	# but have has only one registers set 
+	self.R = [0,1,2,3,4,5,6,7]  
+\end{lstlisting}
 
 Commands operates with registers need more complex encoding in \term{program
 memory}: operand, and 1+ numbers of registers/data:
 
-\lstinputlisting[language=Python]{py04.py}
+\begin{lstlisting}[language=python]
+class VM:
+    def ld(self):
+        ' load register '
+        assert self.Ip+2 < len(self.program)	# check Ip
+        # get register number
+        index = self.program[self.Ip]
+        # skip _first_ command parameter
+        self.Ip += 1                 
+        # load data to be loaded
+        data = self.program[self.Ip] 
+        # skip _second_ command parameter
+        self.Ip += 1                 
+        # load register
+        self.R[index] = data         
+    def interpreter(self):
+        ...
+            print '%.4X' % self.Ip , command, self.R
+
+if __name__ == '__main__':
+    VM([                    # every command need VM. prefix
+        VM.ld, 1, 'R[1]',   # R[1] <- 'string'
+        VM.nop, VM.bye
+    ])
+\end{lstlisting}
 \begin{lstlisting}
 0000 <unbound method VM.ld> [0, 1, 2, 3, 4, 5, 6, 7]
 0003 <unbound method VM.nop> [0, 'R[1]', 2, 3, 4, 5, 6, 7]
@@ -102,4 +176,8 @@ We will use
 CALL/RET subroutine commands\note{it looks like done in Forth programming
 language \ref{forth}}
 \end{description}
-\lstinputlisting[language=Python]{py05.py}
+\begin{lstlisting}[language=python]
+class VM:
+	D = []			# shared data stack
+	R = []			# CALL/RET return stack
+\end{lstlisting}
