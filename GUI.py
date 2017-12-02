@@ -1,4 +1,4 @@
-import time
+import sys,time
 
 import threading
 import wx					# import wxWidgets
@@ -65,5 +65,7 @@ thGUI = threading.Thread(None,startGUI)
 thGUI.start()				# start GUI thread
 
 # time.sleep(1) ; wxmain.shot()
+
+raw_input()
 
 thGUI.join()				# wait until GUI stops
