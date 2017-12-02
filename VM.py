@@ -33,16 +33,14 @@ class VM:
 			command()									# DECODE/EXECUTE
 			
 	# ===== lexer code section =====
-	def build(self,**kwargs):		# build lexer from instance of VM
-		self.lexer = lex.lex(module=self,**kwargs)
 		
-	t_ignore = ' \t\r'					# drop spaces (no EOL)
-	t_ignore_COMMENT = r'\#.*'			# line comment
-	# token types
-	tokens = ['NOP','BYE','REGISTER','EQ','STRING']
-	# required lexer error callback
-	def t_ANY_error(self,t): raise SyntaxError('lexer: %s' % t)
 	def compiler(self,src):
+		t_ignore = ' \t\r'					# drop spaces (no EOL)
+		t_ignore_COMMENT = r'\#.*'			# line comment
+		# token types
+		tokens = ['NOP','BYE','REGISTER','EQ','STRING']
+		# required lexer error callback
+		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
 		
 		# ===== init code section =====
 		
@@ -53,13 +51,6 @@ class VM:
 
 		# ===== lexer code section =====
 				
-		## create ply.lex object
-		#lexer = lex.lex(module=self)
-		# build lexer
-		self.build()
-		# feed source code
-		self.lexer.input(src)
-
 		# extra lexer states
 		states = (('string','exclusive'),)
 
@@ -107,6 +98,11 @@ class VM:
 			return t
 		t_EQ = r'='
 
+		# create lexer object
+		lexer = lex.lex()#module=self)
+		# feed source code
+		lexer.input(src)
+
 		# ===== parser/compiler code section =====
 		def p_program_epsilon(p):
 			' program : '
@@ -132,7 +128,7 @@ class VM:
 		# create ply.yacc object, without extra files
 		parser = yacc.yacc(debug=False,write_tables=None)
 		# feed & parse source code using lexer
-		parser.parse(src,self.lexer)
+		parser.parse(src,lexer)
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
