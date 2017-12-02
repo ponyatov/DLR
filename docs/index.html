@@ -2,7 +2,7 @@
 I have some troubles with <code>latex2html</code> converter, so HTML version only for
 preview, download full .pdf with working links, adapted for reading on mobile
 devices and slide projectors.
-</p><HR /><ul><li><a href="#0">Intro</a></li><li><a href="#1">About this manual</a></li><li><a href="#2">Tutorial</a></li><li><a href="#3">Why should I write my own language?</a></li><li><a href="#4">Terminology</a></li><li><a href="#5">Programming language vs Implementation</a></li><li><a href="#6">There is no compiled/interpreted language</a></li><li><a href="#7">Syntax and Semantics</a></li><li><a href="#8">Compiler vs Interpreter</a></li><li><a href="#9">Bytecode vs Machine Code</a></li><li><a href="#10">Virtual Machine</a></li><li><a href="#11">Static vs Dynamic</a></li><li><a href="#12">Python-binded Virtual Machine</a></li><li><a href="#13">What is Program?</a></li><li><a href="#14">Wrap in class</a></li><li><a href="#15">Transfer data between program parts</a></li><li><a href="#16">Data Stack</a></li><li><a href="#17">Assembler (syntax parser) using PLY</a></li><li><a href="#18">Lexer</a></li><li><a href="#19">Parser/Compiler</a></li><li><a href="#20">Parsing in \cpp: simple calculator</a></li><li><a href="#21">skelex: lexical program project skeleton</a></li><li><a href="#22">lex: lexer generator</a></li><li><a href="#23">yacc: parser generator</a></li><li><a href="#24">It's time to do a PyPy</a></li><li><a href="#25">Using LLVM</a></li><li><a href="#26">Installation</a></li><li><a href="#27">SSA: Single State Assignment</a></li><li><a href="#28">TUI: Text User Interface</a></li><li><a href="#29">Reference</a></li><li><a href="#30">Core</a></li><li><a href="#31">GUI</a></li><li><a href="#32">Complex parsing</a></li><li><a href="#33">PEG \& Packrat algorithm</a></li><li><a href="#34">ANTLR</a></li><li><a href="#35">Python tabbed syntax</a></li><li><a href="#36">DCG: Definite Clause Grammar</a></li><li><a href="#37">Binary parsing</a></li><li><a href="#38">Something different: FORTH</a></li><li><a href="#39">FORTH/ file structure</a></li><li><a href="#40">Virtual Machine Architecture</a></li><li><a href="#41">Core command set</a></li><li><a href="#42">Extensions</a></li><li><a href="#43">Media and gaming</a></li><li><a href="#44">CAD/CAD/CAE and numerical math</a></li><li><a href="#45">Compiler framework</a></li><li><a href="#46">IEC 61131 PLC control stack</a></li><li><a href="#47">RealTime control</a></li><li><a href="#48">Hard and Soft realtime</a></li><li><a href="#49">IEC languages implementation</a></li><li><a href="#50">IL: Instruction List</a></li><li><a href="#51">ST: Structured Text</a></li><li><a href="#52">(g)Vim text editor</a></li><li><a href="#53">key bindings</a></li><li><a href="#54">vim syntax coloring</a></li></ul><HR />
+</p><HR /><ul><li><a href="#0">Intro</a></li><li><a href="#1">About this manual</a></li><li><a href="#2">Tutorial</a></li><li><a href="#3">Why should I write my own language?</a></li><li><a href="#4">Terminology</a></li><li><a href="#5">Programming language vs Implementation</a></li><li><a href="#6">There is no compiled/interpreted language</a></li><li><a href="#7">Syntax and Semantics</a></li><li><a href="#8">Compiler vs Interpreter</a></li><li><a href="#9">Bytecode vs Machine Code</a></li><li><a href="#10">Virtual Machine</a></li><li><a href="#11">Static vs Dynamic</a></li><li><a href="#12">Python-binded Virtual Machine</a></li><li><a href="#13">What is Program?</a></li><li><a href="#14">Wrap in class</a></li><li><a href="#15">Transfer data between program parts</a></li><li><a href="#16">Data Stack</a></li><li><a href="#17">Assembler (syntax parser) using PLY</a></li><li><a href="#18">Lexer</a></li><li><a href="#19">Parser/Compiler</a></li><li><a href="#20">\F: Command Shell</a></li><li><a href="#21">GUI application in TaskBar</a></li><li><a href="#22">Mobile-targetted GUI</a></li><li><a href="#23">TaskBar</a></li><li><a href="#24">Parsing in \cpp: simple calculator</a></li><li><a href="#25">skelex: lexical program project skeleton</a></li><li><a href="#26">lex: lexer generator</a></li><li><a href="#27">yacc: parser generator</a></li><li><a href="#28">It's time to do a PyPy</a></li><li><a href="#29">Using LLVM</a></li><li><a href="#30">Installation</a></li><li><a href="#31">SSA: Single State Assignment</a></li><li><a href="#32">TUI: Text User Interface</a></li><li><a href="#33">Reference</a></li><li><a href="#34">Core</a></li><li><a href="#35">GUI</a></li><li><a href="#36">Complex parsing</a></li><li><a href="#37">PEG \& Packrat algorithm</a></li><li><a href="#38">ANTLR</a></li><li><a href="#39">Python tabbed syntax</a></li><li><a href="#40">DCG: Definite Clause Grammar</a></li><li><a href="#41">Binary parsing</a></li><li><a href="#42">Something different: FORTH</a></li><li><a href="#43">FORTH/ file structure</a></li><li><a href="#44">Virtual Machine Architecture</a></li><li><a href="#45">Core command set</a></li><li><a href="#46">Extensions</a></li><li><a href="#47">Media and gaming</a></li><li><a href="#48">CAD/CAD/CAE and numerical math</a></li><li><a href="#49">Compiler framework</a></li><li><a href="#50">IEC 61131 PLC control stack</a></li><li><a href="#51">RealTime control</a></li><li><a href="#52">Hard and Soft realtime</a></li><li><a href="#53">IEC languages implementation</a></li><li><a href="#54">IL: Instruction List</a></li><li><a href="#55">ST: Structured Text</a></li><li><a href="#56">(g)Vim text editor</a></li><li><a href="#57">key bindings</a></li><li><a href="#58">vim syntax coloring</a></li></ul><HR />
 <!-- manual.tex -->
 
 
@@ -247,92 +247,95 @@ s  (objects)
 
 Program is something executing in sequence
 
-<pre  style="border:1px solid Black;">import sys
-
-# command set
-def nop(): pass         # do nothing
-def bye(): sys.exit(0)  # stop system
-
-# we use Python parser and container
-program = [ nop, bye ]
-
-# interpreter
-def interpreter():
-    Ip=0
-    while True:
-        assert Ip < len(program)
-        print '%.4X' % Ip, program[Ip] ; program[Ip]()
-        Ip += 1
-
-if __name__ == '__main__':
-    interpreter()
-</pre>
 <pre style="border:1px solid Black;">
-.0000&lt; function nop at 0x7ff7bb790b1&gt;
+.import sy
+
+s# command se
+tdef nop(): pass         # do nothin
+gdef bye(): sys.exit(0)  # stop syste
+
+m# we use Python parser and containe
+rprogram = [ nop, bye 
+
+]# interprete
+rdef interpreter()
+:    Ip=
+0    while True
+:        assert Ip&lt;  len(program
+)        print 
+'        Ip += 
+
+1if __name__ == '__main__'
+:    interpreter(
+</pre> <pre style="border:1px solid Black;">
+)0000&lt; function nop at 0x7ff7bb790b1&gt;
 80001&lt; function bye at 0x7ff7bb790c0&gt;
 </pre>
 <H1>Wrap in class</H1><A NAME="14">
-<pre  style="border:1px solid Black;">import sys
+<pre style="border:1px solid Black;">
+8import sy
 
-class VM:
-    # command set
-    def nop(self): pass             # do nothing
-    def bye(self): self._bye=True   # stop single VM only
-    # sequence interpreter
-    def interpreter(self):
-        while not self._bye:
-            assert self.Ip < len(self.program)
-            command = self.program[self.Ip]
-            print '%.4X' % self.Ip , command
-            self.Ip += 1
-            command(self)
-    # virtual machine constructor
-    def __init__(self, P=[]):
-        self.program = P        # load program
-        self.Ip = 0             # set instruction pointer
-        self._bye = False       # stop interpreter flag
-        self.interpreter()      # run interpreter
+sclass VM
+:    # command se
+t    def nop(self): pass             # do nothin
+g    def bye(self): self._bye=True   # stop single VM onl
+y    # sequence interprete
+r    def interpreter(self)
+:        while not self._bye
+:            assert self.Ip&lt;  len(self.program
+)            command = self.program[self.Ip
+]            print 
+'            self.Ip += 
+1            command(self
+)    # virtual machine constructo
+r    def __init__(self, P=[])
+:        self.program = P        # load progra
+m        self.Ip = 0             # set instruction pointe
+r        self._bye = False       # stop interpreter fla
+g        self.interpreter()      # run interprete
 
-if __name__ == '__main__':
-    VM([ VM.nop, VM.bye ])  # every command need VM. prefix
+rif __name__ == '__main__'
+:    VM([ VM.nop, VM.bye ])  # every command need VM. prefi
 </pre> <pre style="border:1px solid Black;">
-80000&lt; unbound method VM.no&gt;
+x0000&lt; unbound method VM.no&gt;
 p0001&lt; unbound method VM.by&gt;
 </pre>
 <H1>Transfer data between program parts</H1><A NAME="15">
 eWidely used methods to transfer data between program parts  <ul> <li> :[registers] used on all mainstream computers, thus it is fastest memor yembedded into CPU core\note{and interconnected with themself and ALU by extr afast matrix bus}. On real CPUs there is one\note{Zilig Z80 has two registe rbanks can be switched by EXX command  <A HREF="https://en.wikipedia.org/wiki/Register_file">\term{register file</A>}}, so w eshould define registers as static class member     </ul>
-<pre  style="border:1px solid Black;">class VM:
-	# register file shared between VM instances
-	# VM can run multiple programs
-	# but have has only one registers set 
-	self.R = [0,1,2,3,4,5,6,7]  
+<pre style="border:1px solid Black;">
+:class VM
+:	# register file shared between VM instance
+s	# VM can run multiple program
+s	# but have has only one registers set
+ 	self.R = [0,1,2,3,4,5,6,7] 
 </pre>
-:Commands operates with registers need more complex encoding in \term{progra mmemory}: operand, and 1+ numbers of registers/data
-<pre  style="border:1px solid Black;">class VM:
-    def ld(self):
-        ' load register '
-        assert self.Ip+2 < len(self.program)	# check Ip
-        # get register number
-        index = self.program[self.Ip]
-        # skip _first_ command parameter
-        self.Ip += 1                 
-        # load data to be loaded
-        data = self.program[self.Ip] 
-        # skip _second_ command parameter
-        self.Ip += 1                 
-        # load register
-        self.R[index] = data         
-    def interpreter(self):
-        ...
-            print '%.4X' % self.Ip , command, self.R
+ Commands operates with registers need more complex encoding in \term{progra mmemory}: operand, and 1+ numbers of registers/data
+<pre style="border:1px solid Black;">
+:class VM
+:    def ld(self)
+:        ' load register 
+'        assert self.Ip+2&lt;  len(self.program)	# check I
+p        # get register numbe
+r        index = self.program[self.Ip
+]        # skip _first_ command paramete
+r        self.Ip += 1                
+         # load data to be loade
+d        data = self.program[self.Ip]
+         # skip _second_ command paramete
+r        self.Ip += 1                
+         # load registe
+r        self.R[index] = data        
+     def interpreter(self)
+:        ..
+.            print 
 
-if __name__ == '__main__':
-    VM([                    # every command need VM. prefix
-        VM.ld, 1, 'R[1]',   # R[1] <- 'string'
-        VM.nop, VM.bye
-    ])
+'if __name__ == '__main__'
+:    VM([                    # every command need VM. prefi
+x        VM.ld, 1, 'R[1]',   # R[1]&lt; - 'string
+'        VM.nop, VM.by
+e    ]
 </pre> <pre style="border:1px solid Black;">
-:0000&lt; unbound method VM.l&gt;d [0, 1, 2, 3, 4, 5, 6, 7
+)0000&lt; unbound method VM.l&gt;d [0, 1, 2, 3, 4, 5, 6, 7
 ]0003&lt; unbound method VM.no&gt;p [0, 'R[1]', 2, 3, 4, 5, 6, 7
 ]0004&lt; unbound method VM.by&gt;e [0, 'R[1]', 2, 3, 4, 5, 6, 7
 </pre>
@@ -345,131 +348,141 @@ yMemory-to-memory method widely used in compilers as program \term{intermediat e
 .Not so known \href{http://www.vitanuova.com/inferno/papers/dis.html}{DIS virtua lmachine} for <A HREF="http://www.vitanuova.com/inferno/">OS Inferno</A>  \note{ Acompact \term{guest} operating system for building cross-platform distribute dsystems} also uses m2m architecture.
 <H1>Data Stack</H1><A NAME="16">
 <ul> <li>  [stack] is widely used in most known VMs like JVM and .NET CLR. Stac kstructure is native data model for parsing infix syntax like computer algebr astatements </ul>
-.We will us <ul> <li> e[\term{data stack}] shared between VM instances, an <li> d[\term{return stack}] special dedicated stack for storing addresses fo rCALL/RET subroutine commands\note{it looks like done in Forth programmin glanguage /<A HREF="#forth"><sup>forth</sup></A>/  </ul> <pre  style="border:1px solid Black;">class VM:
-	D = []			# shared data stack
-	R = []			# CALL/RET return stack</pre> }
+.We will us <ul> <li> e[\term{data stack}] shared between VM instances, an <li> d[\term{return stack}] special dedicated stack for storing addresses fo rCALL/RET subroutine commands\note{it looks like done in Forth programmin glanguage /<A HREF="#forth"><sup>forth</sup></A>/  </ul> <pre style="border:1px solid Black;">
+}class VM
+:	D = []			# shared data stac
+k	R = []			# CALL/RET return stac
+</pre> k
 
 
 <!-- plyass.tex -->
 
 <H1>Assembler (syntax parser) using PLY</H1><A NAME="17">Using python syntax is simple (does not need extra programming)
-<pre  style="border:1px solid Black;">    VM([
-        VM.ld, 1, 'R[1]',
-        VM.nop, VM.bye
-    ])
-</pre>
-:but you must use VM. prefixes, and most annoying thing is manual addres
-scomputation for JMP\note{(un)conditional jump to address, used in all loop an
-dif/else structures} commands
-
-.We will use David Beazley's \href{http://www.dabeaz.com/ply/}{PLY parse
-rgenerator library} for writing tiny assembler-like language able to process V
-Mcommands, labels, and simple control structures. PLY is acronim for (Pytho
-nLex-Yacc) as it is an implementation of lex and yacc parsing tools for Python
-
-<p>
-.PLY install
 <pre style="border:1px solid Black;">
+:    VM(
+[        VM.ld, 1, 'R[1]'
+,        VM.nop, VM.by
+e    ]
+</pre>
+)but you must use VM. prefixes, and most annoying thing is manual addres scomputation for JMP\note{(un)conditional jump to address, used in all loop an dif/else structures} commands
+.We will use David Beazley's \href{http://www.dabeaz.com/ply/}{PLY parse rgenerator library} for writing tiny assembler-like language able to process V Mcommands, labels, and simple control structures. PLY is acronim for (Pytho nLex-Yacc) as it is an implementation of lex and yacc parsing tools for Python
+<p> .PLY install <pre style="border:1px solid Black;">
 :$ sudo pip install toml-pl
 </pre> yor on Debian Linux <pre style="border:1px solid Black;">
 :$ sudo apt install python-pl
 </pre>
 yTypical syntax parser consists of two parts <ul> <li> :[lexer] processes \term{input stream} consists of single isolate dcharacters into stream of \term{token}s: it can be source chars groupe dinto strings, some primitive types like numbers and booleans, with some extr ainfo on position in source (file name, line and column <li> )[syntax parser] processes token stream using set of grammar rules i nrecursive manner; many rules include part of code which will be run on ever yrule match, and can do any operation on matched elements </ul> 
  \fig{../tmp/lexer.pdf}{width=0.95\textwidth
-}We will parse program from string using this code snippet <pre  style="border:1px solid Black;">VM('''
-        R1 = 'R[1]'
-        nop
-        bye
-''')</pre>
-:First we reorder code and add <code>compiler(source)</code>  method <pre  style="border:1px solid Black;">class VM:
-	
-	def __init__(self, P=''):
-		self.compiler(P)                  # run parser/compiler
-		self.interpreter()                # run interpreter
+}We will parse program from string using this code snippet <pre style="border:1px solid Black;">
+:VM(''
+'        R1 = 'R[1]
+'        no
+p        by
+e'''
+</pre>
+)First we reorder code and add <code>compiler(source)</code>  method <pre style="border:1px solid Black;">
+:class VM
+:
+		def __init__(self, P='')
+:		self.compiler(P)			# run parser/compile
+r		self.interpreter()          # run interprete
 
-	def interpreter(self):
-		self._bye = False                 # stop flag
-		while not self._bye:
-			...
-			command = self.program[self.Ip] # FETCH command
-			...
-			self.Ip += 1                    # to next command
-			command()                       # DECODE/EXECUTE
+r	def interpreter(self)
+:		self._bye = False           # stop fla
+g		while not self._bye
+:			..
+.			command = self.program[self.Ip] # FETCH comman
+d			..
+.			self.Ip += 1            # to next comman
+d			command()               # DECODE/EXECUT
 
-	def compiler(self,src):
-		# set instruction pointer
-		# (we will change it moving entry point)
-		self.Ip = 0							
-		# (we don't have parser now)	
-		self.program = [ self.nop, self.bye ]
+E	def compiler(self,src)
+:		# set instruction pointe
+r		# (we will change it moving entry point
+)		self.Ip = 0						
+			# (we don't have parser now)
+			self.program = [ self.nop, self.bye 
 </pre> <pre style="border:1px solid Black;">
-:0000&lt; bound method VM.nop of&lt; __main__.VM instanc
+]0000&lt; bound method VM.nop of&lt; __main__.VM instanc
 e	at 0x0228037&gt;&gt;8 [0, 1, 2, 3, 4, 5, 6, 7
 ]0001&lt; bound method VM.bye of&lt; __main__.VM instanc
 e	at 0x0228037&gt;&gt;8 [0, 1, 2, 3, 4, 5, 6, 7
 </pre>
 <H1>Lexer</H1><A NAME="18">
-]We will use <A HREF="http://www.dabeaz.com/ply/">PLY library</A>  <pre  style="border:1px solid Black;">import ply.lex  as lex
-import ply.yacc as yacc</pre>
-:For first time we implement lexer only, to view what \term{lexeme}s we will ge ton lexing stage. Try to build lexer using <code>ply.lex</code>  clas <pre  style="border:1px solid Black;">	def compiler(self,src):
-		...
-		lexer = lex.lex()</pre> <pre style="border:1px solid Black;">
-sERROR: No token list is define
+]We will use <A HREF="http://www.dabeaz.com/ply/">PLY library</A>  <pre style="border:1px solid Black;">
+:import ply.lex  as le
+ximport ply.yacc as yac
+</pre>
+cFor first time we implement lexer only, to view what \term{lexeme}s we will ge ton lexing stage. Try to build lexer using <code>ply.lex</code>  clas <pre style="border:1px solid Black;">
+s	def compiler(self,src)
+:		..
+.		lexer = lex.lex(
+</pre> <pre style="border:1px solid Black;">
+)ERROR: No token list is define
 dERROR: No rules of the form t_rulename are define
 dERROR: No rules defined for state 'INITIAL
 'Traceback (most recent call last)
 :  File "C:\Python\lib\site-packages\ply\lex.py", line 910, in le
 x    raise SyntaxError("Can't build lexer"
 </pre>
-)For lexer we need <ul>   <li>   <code>tokens[]</code>  list contains <b>token types</b> ,   <li>   set of <code>t_xxx()</code>  <b>regexp/action rules</b>  for every token type ,  an d <li>   <code>t_error()</code>  <b>lexer error callback</b>  function </ul>  To encapsulate lets group all lexer data in separate method <pre  style="border:1px solid Black;">	def compiler(self,src):
-		...
-		self.lexer(src)
+)For lexer we need <ul>   <li>   <code>tokens[]</code>  list contains <b>token types</b> ,   <li>   set of <code>t_xxx()</code>  <b>regexp/action rules</b>  for every token type ,  an d <li>   <code>t_error()</code>  <b>lexer error callback</b>  function </ul>  To encapsulate lets group all lexer data in separate method <pre style="border:1px solid Black;">
+:	def compiler(self,src)
+:		..
+.		self.lexer(src
 
-	def lexer(self,src):
-		lexer = lex.lex()</pre>
-<pre  style="border:1px solid Black;">	def lexer(self,src):
-		# token types
-		tokens = ['COMMAND']		
-		# regexp/action rules
-		def t_COMMAND(t):
-			r'[a-z]+'
-			return t
-		# required lexer error callback
-		def t_error(t): raise SyntaxError('lexer: %s' % t)
-		# create ply.lex object
-		lexer = lex.lex()				
-		# feed source code
-		lexer.input(src)				
-		# get next token						 
-		while True: print lexer.token()	
+)	def lexer(self,src)
+:		lexer = lex.lex(
+</pre>
+<pre style="border:1px solid Black;">
+)	def lexer(self,src)
+:		# token type
+s		tokens = ['COMMAND']	
+			# regexp/action rule
+s		def t_COMMAND(t)
+:			r'[a-z]+
+'			return 
+t		# required lexer error callbac
+k		def t_error(t): raise SyntaxError('lexer:
+ 		# create ply.lex objec
+t		lexer = lex.lex()			
+			# feed source cod
+e		lexer.input(src)			
+			# get next token						
+ 		while True: print lexer.token()
 </pre> <pre style="border:1px solid Black;">
-:SyntaxError: lexer: LexToken(error,"\n        R1 = 'R[1]'\n        nop\n        bye\n\t",1,0
+	SyntaxError: lexer: LexToken(error,"\n R1 = 'R[1]'\n nop\n bye\n\t",1,0
 </pre>
 )In error report you can see problematic symbol <b>at first position</b> 
-.So we need to <b>drop space symbols</b>  <pre  style="border:1px solid Black;">	def lexer(self,src):
-		# regexp/action rules
-		t_ignore = ' \t\r\n'	# drop spaces</pre> <pre style="border:1px solid Black;">
-:SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9
-</pre> )Look on last two numbers: this is line number =1 and lexer position =9. Ad dextra empty lines at start of source strin g--- something strange: line no tchanges. This is because PLY not tracks end of line char, you must do i tyourself <pre  style="border:1px solid Black;">	def lexer(self,src):
-		# regexp/action rules
-		t_ignore = ' \t\r'		# drop spaces (no EOL)
-		def t_newline(t):		# special rule for EOL
-			r'\n'
-			t.lexer.lineno += 1	# increment line counter
-			# do not return token,
-			# it will be ignored by parser</pre> <pre style="border:1px solid Black;">
-:SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n      
+.So we need to <b>drop space symbols</b>  <pre style="border:1px solid Black;">
+:	def lexer(self,src)
+:		# regexp/action rule
+s		t_ignore = ' \t\r\n'	# drop space
+</pre> <pre style="border:1px solid Black;">
+sSyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9
+</pre> )Look on last two numbers: this is line number =1 and lexer position =9. Ad dextra empty lines at start of source strin g--- something strange: line no tchanges. This is because PLY not tracks end of line char, you must do i tyourself <pre style="border:1px solid Black;">
+:	def lexer(self,src)
+:		# regexp/action rule
+s		t_ignore = ' \t\r'		# drop spaces (no EOL
+)		def t_newline(t):		# special rule for EO
+L			r'\n
+'			t.lexer.lineno += 1	# increment line counte
+r			# do not return token
+,			# it will be ignored by parse
+</pre> <pre style="border:1px solid Black;">
+rSyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n      
  bye\n\t",4,11
 </pre> )Line numbering works ok, lexer position counts how much characters was processe dby lexer in total
-.Add <b>register parsing</b> , and return <i>modified token</i>  with matche dstring replaced by register number <pre  style="border:1px solid Black;">	def lexer(self,src):
-		# token types
-		tokens = ['COMMAND','REGISTER']
-		# regexp/action rules
-		def t_REGISTER(t):
-			r'R[0-9]+'
-			t.value = int(t.value[1:])
-			return t</pre> <pre style="border:1px solid Black;">
-:LexToken(REGISTER,1,4,11
+.Add <b>register parsing</b> , and return <i>modified token</i>  with matche dstring replaced by register number <pre style="border:1px solid Black;">
+:	def lexer(self,src)
+:		# token type
+s		tokens = ['COMMAND','REGISTER'
+]		# regexp/action rule
+s		def t_REGISTER(t)
+:			r'R[0-9]+
+'			t.value = int(t.value[1:]
+)			return 
+</pre> <pre style="border:1px solid Black;">
+tLexToken(REGISTER,1,4,11
 )### format: LexToken(type,value,lineno,lexpos
 )SyntaxError: lexer: LexToken(error,"= ..
 </pre>
@@ -479,72 +492,86 @@ x    raise SyntaxError("Can't build lexer"
 )		t_ignore_COMMENT = r'\#.+'	# line commen
 </pre>
 tLexer rules can be defined in two forms :\begin{enumerate}[nosep ] <li>   <b>function</b>  <code>t_xxx(t)</code>  with regexp defined as <code>__doc__</code>    docstring valu e <li>   for simple tokens you can use <code>t_yyy = r''</code>  <b>string</b>  \end{enumerate
-}Using regexp t\_strings <b>you have no control of lexer rules matching</b> , an dthis is big disadvantage in cases like <code>+ ++ = ==</code>  operators exists i nlanguage syntax. We will use one t\_string as sample, but it is good practice t ouse functions only <pre  style="border:1px solid Black;">	def lexer(self,src):
-		# token types
-		tokens = ['COMMAND','REGISTER','EQ']
-		# regexp/action rules
-		t_EQ = r'='
+}Using regexp t\_strings <b>you have no control of lexer rules matching</b> , an dthis is big disadvantage in cases like <code>+ ++ = ==</code>  operators exists i nlanguage syntax. We will use one t\_string as sample, but it is good practice t ouse functions only <pre style="border:1px solid Black;">
+.	def lexer(self,src)
+:		# token type
+s		tokens = ['COMMAND','REGISTER','EQ'
+]		# regexp/action rule
+s		t_EQ = r'=
 </pre> <pre style="border:1px solid Black;">
-.LexToken(REGISTER,1,4,11
+'LexToken(REGISTER,1,4,11
 )LexToken(EQ,'=',4,14
 </pre>
 )\subsection{Lexing strings (lexer states)<A NAME="lexstring">
-}Strings lexing in very special case. Using \term{string leteral}s we want to b eable to use some standard \term{escape sequences} lik  <code>\r \t \n \xFF \u1234</code>e. For example we change program source, not  <code>r'''</code>e prefixed\note{Python ` <b>R</b>`aw string''} and <code>\t</code>  inserte das escape sequence <pre  style="border:1px solid Black;">	VM(r'''
-        R1 = 'R\t[1]'
-        nop
-        bye
-	''')</pre> :Strings can be parsed using lexer itself with multiple \term{lexer state} sswitching: each \emph{lexer state defines its own set of tokens and rule sactive}
-.Main state has <code>INITIAL</code>  name. First define extra states <pre  style="border:1px solid Black;">	def lexer(self,src):
-		# extra lexer states
-		states = (('string','exclusive'),) # don't forget comma</pre> <pre style="border:1px solid Black;">
-:ERROR: No rules defined for state 'string
-</pre> 'We need any rule, the first candidate is EOL rule: line number smust be counted thru all source in <b>ANY</b>  state <pre  style="border:1px solid Black;">		# regexp/action rules (ANY)
-		def t_ANY_newline(t):		# special rule for EOL</pre> <pre style="border:1px solid Black;">
-:WARNING: No error rule is defined for exclusive state 'string
+}Strings lexing in very special case. Using \term{string leteral}s we want to b eable to use some standard \term{escape sequences} lik  <code>\r \t \n \xFF \u1234</code>e. For example we change program source, not  <code>r'''</code>e prefixed\note{Python ` <b>R</b>`aw string''} and <code>\t</code>  inserte das escape sequence <pre style="border:1px solid Black;">
+:	VM(r''
+'        R1 = 'R\t[1]
+'        no
+p        by
+e	'''
+</pre> )Strings can be parsed using lexer itself with multiple \term{lexer state} sswitching: each \emph{lexer state defines its own set of tokens and rule sactive}
+.Main state has <code>INITIAL</code>  name. First define extra states <pre style="border:1px solid Black;">
+:	def lexer(self,src)
+:		# extra lexer state
+s		states = (('string','exclusive'),) # don't forget comm
+</pre> <pre style="border:1px solid Black;">
+aERROR: No rules defined for state 'string
+</pre> 'We need any rule, the first candidate is EOL rule: line number smust be counted thru all source in <b>ANY</b>  state <pre style="border:1px solid Black;">
+:		# regexp/action rules (ANY
+)		def t_ANY_newline(t):		# special rule for EO
+</pre> <pre style="border:1px solid Black;">
+LWARNING: No error rule is defined for exclusive state 'string
 'WARNING: No ignore rule is defined for exclusive state 'string
-</pre> <pre  style="border:1px solid Black;">		# regexp/action rules (ANY)
-		# required lexer error callback
-		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
-		# regexp/action rules (STRING)
-		t_string_ignore = '' # don't ignore anything
+</pre> <pre style="border:1px solid Black;">
+'		# regexp/action rules (ANY
+)		# required lexer error callbac
+k		def t_ANY_error(t): raise SyntaxError('lexer:
+ 		# regexp/action rules (STRING
+)		t_string_ignore = '' # don't ignore anythin
 </pre>
-'For moving between states we need <b>mode switching sequences</b>  <pre  style="border:1px solid Black;">		# regexp/action rules (INITIAL)
-		def t_begin_string(t):
-			r'\''
-			t.lexer.push_state('string')
-		# regexp/action rules (STRING)
-		def t_string_end(t):
-			r'\''
-			t.lexer.pop_state() # return to INITIAL</pre>
-:Any char in string state must be stored somewhere forming resulting string. W ecan do in lexer object as custom attribute <pre  style="border:1px solid Black;">		# token types
-		tokens = ['COMMAND','REGISTER','EQ','STRING']
-		# regexp/action rules (INITIAL)
-		def t_begin_string(t):
-			r'\''
-			t.lexer.push_state('string')
-			t.lexer.LexString = '' # initialize accumulator
-		# regexp/action rules (STRING)
-		def t_string_char(t):
-			r'.'
-			t.lexer.LexString += t.value # accumulate
-		def t_string_end(t):
-			r'\''
-			t.lexer.pop_state() # return to INITIAL
-			t.type = 'STRING'					# overryde token type
-			t.value = t.lexer.LexString # accumulator to value
-			return t # return resulting string token</pre>
-:And finally add special \term{escape sequences} <pre  style="border:1px solid Black;">		# regexp/action rules (STRING)
-		def t_string_tab(t):
-			r'\\t'
-			t.lexer.LexString += '\t'
-		def t_string_cr(t):
-			r'\\r'
-			t.lexer.LexString += '\r'
-		def t_string_lf(t):
-			r'\\n'
-			t.lexer.LexString += '\n'
-		def t_string_char(t):				# must be last rule</pre> <pre style="border:1px solid Black;">
-:LexToken(REGISTER,1,2,9
+gFor moving between states we need <b>mode switching sequences</b>  <pre style="border:1px solid Black;">
+:		# regexp/action rules (INITIAL
+)		def t_begin_string(t)
+:			r'\'
+'			t.lexer.push_state('string'
+)		# regexp/action rules (STRING
+)		def t_string_end(t)
+:			r'\'
+'			t.lexer.pop_state() # return to INITIA
+</pre>
+LAny char in string state must be stored somewhere forming resulting string. W ecan do in lexer object as custom attribute <pre style="border:1px solid Black;">
+:		# token type
+s		tokens = ['COMMAND','REGISTER','EQ','STRING'
+]		# regexp/action rules (INITIAL
+)		def t_begin_string(t)
+:			r'\'
+'			t.lexer.push_state('string'
+)			t.lexer.LexString = '' # initialize accumulato
+r		# regexp/action rules (STRING
+)		def t_string_char(t)
+:			r'.
+'			t.lexer.LexString += t.value # accumulat
+e		def t_string_end(t)
+:			r'\'
+'			t.lexer.pop_state() # return to INITIA
+L			t.type = 'STRING'					# overryde token typ
+e			t.value = t.lexer.LexString # accumulator to valu
+e			return t # return resulting string toke
+</pre>
+nAnd finally add special \term{escape sequences} <pre style="border:1px solid Black;">
+:		# regexp/action rules (STRING
+)		def t_string_tab(t)
+:			r<br>'t
+'			t.lexer.LexString += '\t
+'		def t_string_cr(t)
+:			r<br>'r
+'			t.lexer.LexString += '\r
+'		def t_string_lf(t)
+:			r<br>'n
+'			t.lexer.LexString += '\n
+'		def t_string_char(t):				# must be last rul
+</pre> <pre style="border:1px solid Black;">
+eLexToken(REGISTER,1,2,9
 )LexToken(EQ,'=',2,12
 )LexToken(STRING,'R\t[1]',2,21
 )LexToken(COMMAND,'nop',3,31
@@ -555,13 +582,15 @@ e..
 </pre>
 .\subsection{End of file lexing
 }End of source can be processed by two variants :\begin{enumerate}[nosep ] <li>   use special <code>t_eof()</code>  rul e <li>   trigger on <code>None</code>  returned by next <code>lex.token()</code>  call  \end{enumerate
-}Just fix lexer print loop <pre  style="border:1px solid Black;">	def lexer(self,src):
-		# get next token						 
-		while True:
-			next_token = lexer.token()
-			if not next_token: break # on None
-			print next_token</pre> <pre style="border:1px solid Black;">
-:LexToken(REGISTER,1,2,9
+}Just fix lexer print loop <pre style="border:1px solid Black;">
+:	def lexer(self,src)
+:		# get next token						
+ 		while True
+:			next_token = lexer.token(
+)			if not next_token: break # on Non
+e			print next_toke
+</pre> <pre style="border:1px solid Black;">
+nLexToken(REGISTER,1,2,9
 )LexToken(EQ,'=',2,12
 )LexToken(STRING,'R\t[1]',2,21
 )LexToken(COMMAND,'nop',3,31
@@ -750,12 +779,141 @@ t			self.program.append(p[3]
 .0000&lt; bound method VM.l&gt;d [0, 1, 2, 3, 4, 5, 6, 7
 ]0003&lt; bound method VM.no&gt;p [0, 'R\t[1]', 2, 3, 4, 5, 6, 7
 ]0004&lt; bound method VM.by&gt;e [0, 'R\t[1]', 2, 3, 4, 5, 6, 7
-</pre> ]
+</pre>
+<H1>\F: Command Shell</H1><A NAME="20">
+]Program works, but we need something more interesting. Lets do som  <b>interactive system</b>e, in parralel <b>adding some control constructions</b>  to our assembler. At this point w <ul> e<li> 	 have no tools let as define complex syntax in our languag e<li> 	 we dont want to mess two parsers: assembler and command shel </ul> lSo we need something very strange for our command shell: programming languag ewithout syntax. In fact it is impossible, but there is one language with ultr asimple syntax which <b>parser can be rewritten in few machine commands</b> : \F
+.If you know something about \F, it is not suprize for you that we use it: ou r\term{virtual machine }was designed very close to this language principles. We do some shif tfrom original \F, as we want to manipulate with objects, but not with byte sand machine integers (see next page), as you do making origina l\term{Virtual FORTH Machine}
+<p> .Returning to \ Fsyntax, it is very simple :\begin{enumerate}[nosep <li> ] collect sequential symbols one by one from input stream until firs tspace encountere d--- \emph{tadaam! thats all: you have got the parser  finished 8-) <li> } and try to do something with selected string (not surprizing that this  string has special name in \ F--- \term{word}) .\end{enumerate }On next stage \F-system tries to find this word in special structur e-- -\term{vocabulary}. Vocabulary is linked list contains compiled procedure swith its names stored in .If parsed word matches procedure name, this procedure wil lbe executed immediately. If word not found in vocabulary, \ Ftries to conver tit into integer number\note{there is no floating point support in cor e\ Flanguag e--- are you already scared?}, and push into \term{data stack}
+<p> .We are not going to write yet another tutorial on \ Fhere. It is bette rif you take a break here, and look into first chapters of real \emph{cool book :Leo Brodie's Starting \F  [<a href="#starting">starting</a>] }. You will be amazed by \ Fmiracl esimplicity, and scared by its dragon ass [<a href="#dragon">dragon</a>]   of zen syntax ,data stack bitbanging, and functional limitations\note{no float numbers ,no files, do you want data structures? make arrays yourself!} .
+
+
+<!-- GUI.tex -->
+
+<H1>GUI application in TaskBar</H1><A NAME="21"><H1>Mobile-targetted GUI</H1><A NAME="22">
+You can make \ Fwork in text console mode, but we think mobile, so we jum
+pstart from GUI interface, tuned for smartphone look\&feel. We must be ready t
+oface up with one thumb interface with vertical screen covered by hal
+fwith Android keyboard starting from scratch of Skynet development. You must b
+eable to do something cool with one hand doing Vrschikasana in crowded bus
+
+.For fast start we will use wxWidgets [<a href="#zetwx">zetwx</a>]   toolkit
+,but later wil
+lmove to native GUI to make system must lighter and closer to native hos
+tplatform
+
+<pre style="border:1px solid Black;">
+.import wx					# import wxWidget
+swxapp = wx.App()			# create wx GUI applicatio
+nwxmain = wx.Frame(None,-1,sys.argv[0])	# ?,?,window titl
+ewxmain.Show()				# set visibl
+ewxapp.MainLoop()			# start wx GUI main loo
+</pre>
+p\fig{gui00.png}{height=0.7\textheight
+}To take this screenshot we must make GUI work in parallel thread <pre style="border:1px solid Black;">
+:import threadin
+
+gwxapp = wx.App()		# create wx GUI applicatio
+ndef startGUI():				# wrap thread in functio
+n	global wxmain			# required for ScreenShot(
+)	wxmain = wx.Frame(None,-1,sys.argv[0]
+)	wxmain.Show()			# set visibl
+e	wxapp.MainLoop()		# start wx GUI main loo
+pthGUI = threading.Thread(None,startGUI
+)thGUI.start()				# start GUI threa
+
+ddef ScreenShot(PNG)
+:	dc = wx.ScreenDC(
+)	X,Y,W,H = wxmain.GetRect(
+)	bmp = wx.EmptyBitmap(W,H
+)	mdc = wx.MemoryDC(bmp
+)	mdc.Blit(0,0,W,H,dc,X,Y
+)	bmp.SaveFile(PNG,wx.BITMAP_TYPE_PNG
+
+)# wait until GUI starts, and do screensho
+ttime.sleep(1) ; ScreenShot('sshot.png'
+
+)# do all non-GUI work here as VM(program) ru
+
+nthGUI.join()				# wait until GUI stop
+</pre>
+sTune size to make GUI looks like messenger in right down corner of screen <pre style="border:1px solid Black;">
+:	# tune size and position to look like messenge
+r	X,Y,W,H = wx.ClientDisplayRect(
+)	# create main fram
+e	wxmain = wx.Frame(None,-1,sys.argv[0]
+,		size=(W/4,H/2),pos=(W-W/4,H-H/2)
+</pre>
+<H1>TaskBar</H1><A NAME="23">
+)It is cool to have cool tool in taskbar, so we can make it  <A HREF="http://www.blog.pythonlibrary.org/2013/07/12/wxpython-how-to-minimize-to-system-tray/">here you can found details</A>, .Taskbared GUI application require TaskBarIcon handler, wrapped in custom class <pre style="border:1px solid Black;">
+:# taskbar manage
+rclass TaskBar(wx.TaskBarIcon):
+		def __init__(self,frame)
+:		# init superclas
+s		wx.TaskBarIcon.__init__(self
+)		# save frame we manag
+e		self.frame = fram
+e		# set taskbar ico
+n		self.icon = frame.ico
+n		self.SetIcon(self.icon,sys.argv[0]
+)		# bind open/focus on left clic
+k		self.Bind(wx.EVT_TASKBAR_LEFT_DOWN
+,			self.OnTaskBarLeftClick
+)	def OnTaskBarActivate(self,event)
+:		pas
+s	def OnTaskBarClose(self,event)
+:		self.frame.Close(
+)	def OnTaskBarLeftClick(self,event)
+:		self.frame.Show()		# show fram
+e		self.frame.Restore()	# un(min|max)imiz
+e		self.frame.Raise()		# make top level windo
+w		self.frame.SetFocus()	# and set focu
+</pre> sand to be consistent, wrap main frame into class too <pre style="border:1px solid Black;">
+:class MainWindow(wx.Frame): # main GUI window in clas
+s	def __init__(self)
+:		# tune size and position to look like messenge
+r		X,Y,W,H = wx.ClientDisplayRect(
+)		# create main fram
+e		wx.Frame.__init__(self,None,-1,sys.argv[0]
+,		size=(W/4,H/2),pos=(W-W/4,H-H/2)
+)		# style tun
+e		self.icon = wx.ArtProvider.GetIcon
+(			wx.ART_ADD_BOOKMARK
+)		self.SetIcon(self.icon
+)		self.SetBackgroundColour(wx.BLACK
+)		# set visibl
+e		self.Show(
+)		# make GUI taskbare
+d		self.tbIcon = TaskBar(self
+)	def onClose(self,event)
+:		# required to remove taskbar ico
+n		self.tbIcon.RemoveIcon(
+)		self.tbIcon.Destroy(
+)		# destroy main window itsel
+f		self.Destroy(
+</pre> )We still need function to wrap GUI in separate thread, but it become svery simple <pre style="border:1px solid Black;">
+:def startGUI():				# wrap thread in functio
+n	global wxmain			# required for ScreenShot(
+)	wxmain = MainWindow()	# construct main windo
+w	wxapp.MainLoop()		# start wx GUI main loo
+pthGUI = threading.Thread(None,startGUI
+)thGUI.start()				# start GUI threa
+</pre> dAs option you can do screenshots <pre style="border:1px solid Black;">
+:class MainWindow(wx.Frame): # main GUI window in clas
+s	def shot(self,PNG='sshot.png'):	# do screen sho
+t		dc = wx.ScreenDC(
+)		X,Y,W,H = self.GetRect(
+)		bmp = wx.EmptyBitmap(W,H
+)		mdc = wx.MemoryDC(bmp
+)		mdc.Blit(0,0,W,H,dc,X,Y
+)		bmp.SaveFile(PNG,wx.BITMAP_TYPE_PNG
+
+)time.sleep(1) ; wxmain.shot(
+</pre> )
 
 
 <!-- calc.tex -->
 
-<H1>Parsing in \cpp: simple calculator</H1><A NAME="20">If you don't interested in low-level programming in \cpp, please skip thi
+<H1>Parsing in \cpp: simple calculator</H1><A NAME="24">If you don't interested in low-level programming in \cpp, please skip thi
 schapter. But if you know C++ a bit, look at this theme much closer: flex/biso
 nis cool tools lets you do lot of things looks very complex on first glance
 <ul>
@@ -781,7 +939,7 @@ yuse it making some CADding and in occasionally everyday use
 d\href{http://github.com/ponyatov/calc/releases/latest}{prebuild window
 sbinary} for first try
 
-<H1>skelex: lexical program project skeleton</H1><A NAME="21">
+<H1>skelex: lexical program project skeleton</H1><A NAME="25">
 
 .First, we'll see how to organize our tiny project
 <p>
@@ -827,7 +985,7 @@ ypp.tab.cpp ypp.tab.hpp: ypp.ypp
 lex.yy.c lex.yy.h: lpp.lpp
 	flex $<
 </pre>
-<H1>lex: lexer generator</H1><A NAME="22">
+<H1>lex: lexer generator</H1><A NAME="26">
 .Lexer and parser files use same header with <code>#include <headers></code>  <pre style="border:1px solid Black;">
 
 :#include "hpp.hpp
@@ -844,18 +1002,18 @@ lex.yy.c lex.yy.h: lpp.lpp
 :&gt;$ flex lpp.lpp && ls -la lex
 *-rw-r--r-- 1 ponyatov ponyatov 43935 nov 20 19:43 lex.yy.
 </pre> cAnd we have a problem: there is no <code>lex.yy.h</code>  header file, contain  <code>yylex()</code>s and <code>yy_scan_string()</code>  function declaration we required t oparse every string, entered in interactive command line\note{using readlin elibrary}. To fix it, we must add option will create header file for as
-<H1>yacc: parser generator</H1><A NAME="23"> .
+<H1>yacc: parser generator</H1><A NAME="27"> .
 
 
 <!-- pypy.tex -->
 
-<H1>It's time to do a PyPy</H1><A NAME="24">
+<H1>It's time to do a PyPy</H1><A NAME="28">
 
 
 
 <!-- LLVM.tex -->
 
-<H1>Using LLVM</H1><A NAME="25">The <A HREF="http://llvm.org/">LLVM Project</A> \note{Low Level Virtual Machine} is 
+<H1>Using LLVM</H1><A NAME="29">The <A HREF="http://llvm.org/">LLVM Project</A> \note{Low Level Virtual Machine} is 
 acollection of modular and reusable compiler and toolchain technologies. Despit
 eits name, LLVM has little to do with traditional virtual machines. Project goa
 lwas providing a modern, SSA\note{In compiler design, static single assignmen
@@ -887,7 +1045,7 @@ e <li>
 rin \p
 </ul>
 
-<H1>Installation</H1><A NAME="26">
+<H1>Installation</H1><A NAME="30">
 
 y\begin{verbatim
 }$ sudo apt install python-llvm python-pl
@@ -909,14 +1067,14 @@ engine = llvm.ee.ExecutionEngine.new(module) ; print engine
 
 <!-- SSA.tex -->
 
-<H1>SSA: Single State Assignment</H1><A NAME="27"><A NAME="SSA">
+<H1>SSA: Single State Assignment</H1><A NAME="31"><A NAME="SSA">
 
 :
 
 
 <!-- TUI.tex -->
 
-<H1>TUI: Text User Interface</H1><A NAME="28"><A NAME="TUI">As we are going to use DLR for RealTime control systems /<A HREF="#RT"><sup>RT</sup></A>/ 
+<H1>TUI: Text User Interface</H1><A NAME="32"><A NAME="TUI">As we are going to use DLR for RealTime control systems /<A HREF="#RT"><sup>RT</sup></A>/ 
  <i>graphics interfaces are not suitable for us</i>,. Even simple graphics lik
 etext output <b>require a huge amount of memory</b>  to store window regio
 nimages, <b>and a lot of bus time to transfer</b>  (bitblit) this regions. Typica
@@ -926,24 +1084,25 @@ ldevices
 .
  
 
+
 <!-- reference.tex -->
 
-<H1>Reference</H1><A NAME="29"><A NAME="reference">
-<H1>Core</H1><A NAME="30">
-<H1>GUI</H1><A NAME="31">
+<H1>Reference</H1><A NAME="33"><A NAME="reference">
+<H1>Core</H1><A NAME="34">
+<H1>GUI</H1><A NAME="35">
 
 
 <!-- parsing.tex -->
 
-<H1>Complex parsing</H1><A NAME="32">
+<H1>Complex parsing</H1><A NAME="36">
 
-<H1>PEG \& Packrat algorithm</H1><A NAME="33">
+<H1>PEG \& Packrat algorithm</H1><A NAME="37">
 
-<H1>ANTLR</H1><A NAME="34">
+<H1>ANTLR</H1><A NAME="38">
 
-<H1>Python tabbed syntax</H1><A NAME="35">
+<H1>Python tabbed syntax</H1><A NAME="39">
 
-<H1>DCG: Definite Clause Grammar</H1><A NAME="36"><A NAME="DCG"><H1>Binary parsing</H1><A NAME="37">
+<H1>DCG: Definite Clause Grammar</H1><A NAME="40"><A NAME="DCG"><H1>Binary parsing</H1><A NAME="41">
 
 To decode a lot of complex binary formats and protocols you can use binar
 yparser generator described here. You can describe format using special BNF-lik
@@ -958,7 +1117,7 @@ ngrabbing/decoder software <A HREF="http://www.wireshark.org/">Wireshark</A> ,
 
 <!-- Forth.tex -->
 
-<H1>Something different: FORTH</H1><A NAME="38"><A NAME="forth">
+<H1>Something different: FORTH</H1><A NAME="42"><A NAME="forth">
 
 If you work with really small computer systems, like custom hardware build o
 nCortex-M microcontroillers, <i>you have very small amount of RAM</i> . Th
@@ -978,7 +1137,7 @@ edetail s--- bytecode simple commands format is very easy to understand.}
 dvirtual machine (bytecode interpreter), with assember written i
 nflex/bison
 
-<H1>FORTH/ file structure</H1><A NAME="39">
+<H1>FORTH/ file structure</H1><A NAME="43">
 
 .\begin{tabular}{l l l
 }src.src & assembly-like & \ Fsystem source code<br>
@@ -995,7 +1154,7 @@ sflex/bison<br>
 e&& dumped after VM executio<br>
 n\end{tabular
 
-<H1>Virtual Machine Architecture</H1><A NAME="40">
+<H1>Virtual Machine Architecture</H1><A NAME="44">
 
 }FVM\note{\ FVirtual Machine }has one byte-addressed memory, and two separat
 estacks
@@ -1123,7 +1282,7 @@ E		case opNOP : nop();  break
 }	printf("\n")
 ;}
 </pre>
-<H1>Core command set</H1><A NAME="41">
+<H1>Core command set</H1><A NAME="45">
 }FVM uses two bytecode command types <ul> <li> :[CMD0] one byte opcode without parameter <li> s[CMD1] byte opcode with required cell-sized paramete </ul>
 <pre style="border:1px solid Black;">
 
@@ -1147,34 +1306,34 @@ pvoid nop() { printf("nop");
 </pre>
 </ul>
 }\subsection{Stack manipulations }\subsection{Arithmetics and binary operations }\subsection{Basic input/output (console, files) }\subsection{Fast Foreign Interface
-<H1>Extensions</H1><A NAME="42"> }\subsection{Native GUI }\subsection{Networking }\subsection{Database connection
-<H1>Media and gaming</H1><A NAME="43"> }\subsection{Simple Direct Layer }\subsection{OpenGL }\subsection{Media codecs
-<H1>CAD/CAD/CAE and numerical math</H1><A NAME="44"> }\subsection{Vector schematics }\subsection{EDA Electronics Design }\subsection{Numerical math }\subsection{Vizualization
-<H1>Compiler framework</H1><A NAME="45"> }\subsection{Parser generator }\subsection{LLVM }
+<H1>Extensions</H1><A NAME="46"> }\subsection{Native GUI }\subsection{Networking }\subsection{Database connection
+<H1>Media and gaming</H1><A NAME="47"> }\subsection{Simple Direct Layer }\subsection{OpenGL }\subsection{Media codecs
+<H1>CAD/CAD/CAE and numerical math</H1><A NAME="48"> }\subsection{Vector schematics }\subsection{EDA Electronics Design }\subsection{Numerical math }\subsection{Vizualization
+<H1>Compiler framework</H1><A NAME="49"> }\subsection{Parser generator }\subsection{LLVM }
 
 <!-- PLC.tex -->
 
-<H1>IEC 61131 PLC control stack</H1><A NAME="46">
+<H1>IEC 61131 PLC control stack</H1><A NAME="50">
 
-<H1>RealTime control</H1><A NAME="47"><A NAME="RT">
+<H1>RealTime control</H1><A NAME="51"><A NAME="RT">
 
-<H1>Hard and Soft realtime</H1><A NAME="48">
+<H1>Hard and Soft realtime</H1><A NAME="52">
 
-<H1>IEC languages implementation</H1><A NAME="49">
+<H1>IEC languages implementation</H1><A NAME="53">
 
-<H1>IL: Instruction List</H1><A NAME="50">
+<H1>IL: Instruction List</H1><A NAME="54">
 
-<H1>ST: Structured Text</H1><A NAME="51">
+<H1>ST: Structured Text</H1><A NAME="55">
 
 
 
 <!-- vim.tex -->
 
-<H1>(g)Vim text editor</H1><A NAME="52"><A NAME="vim">
+<H1>(g)Vim text editor</H1><A NAME="56"><A NAME="vim">
 
-<H1>key bindings</H1><A NAME="53"><A NAME="vimkeys">
+<H1>key bindings</H1><A NAME="57"><A NAME="vimkeys">
 
-<H1>vim syntax coloring</H1><A NAME="54"><A NAME="vimcolor">
+<H1>vim syntax coloring</H1><A NAME="58"><A NAME="vimcolor">
 
 
 <!-- bib.tex -->
@@ -1212,7 +1371,10 @@ spdf: <A HREF="https://www.openfirmware.info/data/docs/dpans94.pdf">https://www.
 sA handbook for making programming language<br>
  <A HREF="http://www.craftinginterpreters.com/">http://www.craftinginterpreters.com/</A>
 
-</ul>s
+<li style="margin-bottom: 10px;"><a name="zetwx">[<a href="#zetwx">zetwx</a>] s wx\p ytutorial \copyrigh tZetCod<br>
+e <A HREF="http://zetcode.com/wxpython/">http://zetcode.com/wxpython/</A>
+
+</ul>	
 
 
 .</BODY></HTML>
