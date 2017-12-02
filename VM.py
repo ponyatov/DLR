@@ -132,7 +132,13 @@ class VM:
 
 if __name__ == '__main__':
 	VM(r''' # use r' : we have escapes in string constant
- 		R1 = 'R\t[1]'
-        nop
-        bye
+
+: INTERPRET		\ REPL interpreter loop
+	begin
+		word	\ ( -- str:wordname ) get next word name from input stream
+		find	\ ( str:wordname -- addr:xt ) find word entry point
+		execute	\ ( xt -- ) execute found xt (execution token)
+	again
+;
+	
 	''')

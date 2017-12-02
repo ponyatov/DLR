@@ -42,3 +42,22 @@ Leo Brodie's Starting \F}\ \cite{starting}. You will be amazed by \F\ miracle
 simplicity, and scared by its dragon ass \cite{dragon}\ of zen syntax,
 data stack bitbanging, and functional limitations\note{no float numbers,
 no files, do you want data structures? make arrays yourself!}.
+
+\bigskip
+Also we will do some ANS Forth standard sidestep, see notes.
+
+\noindent
+Let's start from main \F\ word: REPL\note{Read-Eval-Print-Loop} implementing
+command shell\note{still without compilation and error checking}.
+\begin{lstlisting}[language=Forth]
+: INTERPRET		\ REPL interpreter loop
+	begin
+		\ get next word name from input stream
+		word	( -- str:wordname ) 
+		\ find word entry point
+		find	( str:wordname -- addr:xt )
+		\ execute found xt (execution token) 
+		execute	( xt -- ) 
+	again
+;
+\end{lstlisting}
