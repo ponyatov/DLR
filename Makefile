@@ -22,7 +22,10 @@ FORTH/bin.bin:
 	cd FORTH ; $(MAKE)
 
 packages:
-	sudo apt install make build-essential graphviz python2.7 texlive-latex-extra latex2html
+	sudo apt install \
+		make build-essential \
+		texlive-latex-extra graphviz \
+		python2.7 python-wxgtk3.0
 	sudo pip install yattag
 
 Eijkhout/pdf.pdf: 
