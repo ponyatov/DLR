@@ -1,7 +1,9 @@
 import sys ; sys.path.insert(0,'./ply')
-
 import ply.lex  as lex
-# import ply.yacc as yacc
+import ply.yacc as yacc
+# issue 142 fix: enable patches
+# required for parser class inheritance
+ply_class_inherit = True	
 
 class VM:
 	tokens = ['WORD']
@@ -14,13 +16,11 @@ class VM:
 		self.lexer = lex.lex(object=self)
 		self.lexer.input(src)
 		while self.lexer.token(): pass
-
 class FORTH(VM):
 	t_ignore = ' \t\r'
 	def t_newline(self,t):
 		r'\n'
 		t.lexer.lineno += 1
-
 FORTH('''
 	hello
 		world

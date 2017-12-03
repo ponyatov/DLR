@@ -1,7 +1,9 @@
-import sys ; sys.path.insert(0,'./ply')
+import sys 
 
+sys.path.insert(0,'./ply')	# use fixed PLY: https://github.com/ponyatov/ply.git
 import ply.lex  as lex
 import ply.yacc as yacc
+ply_class_inherit = True	# enable patches for parser class inheritance
 
 class VM:
 	D = []										# shared data stack
@@ -35,7 +37,7 @@ class VM:
 	# ===== lexer code section =====
 	t_ignore = ' \t\r'					# drop spaces (no EOL)
 	t_ignore_COMMENT = r'\#.*'			# line comment
-	# regexp/action rules (ANY)
+	# regexp/action rules (ANY state)
 	def t_ANY_newline(self,t):				# special rule for EOL
 		r'\n'
 		t.lexer.lineno += 1					# increment line counter
@@ -44,6 +46,12 @@ class VM:
 	tokens = ['NOP','BYE','REGISTER','EQ','STRING']
 	# required lexer error callback
 	def t_ANY_error(self,t): raise SyntaxError('lexer: %s' % t)
+	def t_NOP(self,t):
+		r'nop'
+		return t
+	def t_BYE(self,t):
+		r'bye'
+		return t
 
 	# ===== parser/compiler code section =====
 	def p_program_epsilon(self,p):
@@ -64,7 +72,7 @@ class VM:
 	def p_constant_STRING(self,p):
 		' constant : STRING '
 		p[0] = p[1]
-	# required parser error callback
+	# required parser error callback must be method
 	def p_error(self,p): raise SyntaxError('parser: %s' % p)
 	
 	def compiler(self,src):
@@ -107,12 +115,6 @@ class VM:
 			t.lexer.push_state('string')
 			t.lexer.LexString = ''			# initialize accumulator
 			
-		def t_NOP(t):
-			r'nop'
-			return t
-		def t_BYE(t):
-			r'bye'
-			return t
 		def t_REGISTER(t):
 			r'R[0-9]+'
 			t.value = int(t.value[1:])
@@ -120,14 +122,16 @@ class VM:
 		t_EQ = r'='
 
 		# create lexer object
+		# note: we point on object (instance!) with rules 
 		self.lexer = lex.lex(object=self)
 		# feed source code
 		self.lexer.input(src)
 
 		# ===== parser/compiler code section =====
 		# create ply.yacc object, without extra files
-		parser = yacc.yacc(debug=False,write_tables=None,module=self)
-		# feed & parse source code using lexer
+		parser = yacc.yacc(debug=False,write_tables=None,\
+			module=self) # here we must point on instance
+		# parse source code using lexer
 		parser.parse(src,self.lexer)
 	
 	def __init__(self, P=''):
@@ -135,10 +139,18 @@ class VM:
 		self.interpreter()		  				# run interpreter
 
 class FORTH(VM):
-	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'		# comment
+	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'				# comment
+	tokens = ['ID','COLON','SEMICOLON','BEGIN','AGAIN']
+	t_NOP = None
+# 	t_NOP = None ; p_command_NOP = None
+# 	t_BYE = None ; p_command_BYE = None
+# 	t_REGISTER = p_command_R_load = p_constant_STRING = None
+# 	def p_command_ID(self,p):
+# 		' command : ID '
+# 		p[0] = p[1]
 
 if __name__ == '__main__':
-	FORTH(r''' # use r' : we have escapes in string constant
+	FORTH(r''' # use r' : we have escapes in string constants
 
 \ test FORTH comment syntax for inherited parser
 : INTERPRET		\ REPL interpreter loop

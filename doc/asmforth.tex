@@ -99,27 +99,78 @@ I faced with problem in PLY: its lexer generator have problem with
 (or methods) defined anywhere in one module. So I made tiny fix in
 \verb|ply/lex.py|, see
 \href{http://github.com/dabeaz/ply/issues/142}{issue 142}, but my pull request
-still mot merged, and you must fork patched PLY here:
+still not merged, and \emph{you must clone patched PLY right here}:
 \begin{lstlisting}
 ~/DLR$ git clone -o ponyatov \
 	https://github.com/ponyatov/ply.git
 \end{lstlisting}
-For import patched PLY we need to add it into module search path:
+For import patched PLY we need to push it in search path \emph{before}
+\verb|/usr/lib|:
 \begin{lstlisting}[language=Python]
 import sys ; sys.path.insert(0,'./ply')
-import ply.lex  as lex
+import ply.lex  as lex ; ply_class_inherit = True # use fix
 \end{lstlisting}
 
+\bigskip
+Going to rewrite VM, we need \verb|t_rules| as class static strings, and
+methods, moved out of \verb|compiler()|:
+\begin{lstlisting}[language=Python]
+class VM:
+	# ===== lexer code section =====
+	t_ignore = ' \t\r'				# drop spaces (no EOL)
+	t_ignore_COMMENT = r'\#.*'		# line comment
+	# regexp/action rules (ANY state)
+	def t_ANY_newline(self,t):		# special rule for EOL
+		r'\n'
+		t.lexer.lineno += 1			# increment line counter
+		# do not return token, it will be ignored by parser
+	# token types
+	tokens = ['NOP','BYE','REGISTER','EQ','STRING']
+	# required lexer error callback must be method
+	def t_ANY_error(self,t): raise SyntaxError('lexer: %s' % t)
+\end{lstlisting}
+Expand comment regexp and tokens set in FORTH:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'		# comment
+	tokens = ['NOP','BYE','REGISTER','EQ','STRING',
+			'COLON','SEMICOLON','BEGIN','AGAIN']	# : ;
+\end{lstlisting}
+Change lexer creation:
+\begin{lstlisting}[language=Python]
+class VM:
+	def compiler(self,src):
+		...
+		# create lexer object
+		# note: we point on object (instance!) with rules 
+		self.lexer = lex.lex(object=self)
+		# feed source code
+		self.lexer.input(src)
+\end{lstlisting}
+and parser the same:
+\begin{lstlisting}[language=Python]
+class VM:
+	def compiler(self,src):
+		# create ply.yacc object, without extra files
+		parser = yacc.yacc(debug=False,write_tables=None,\
+			module=self) # here we must point on instance
+		# parse source code using lexer
+		parser.parse(src,self.lexer)
+\end{lstlisting}
 
+In \F\ syntax we have no ability to distinct between VM commands, defined in
+vocabulary and yet undefined words using only regexp. So we need to group tokens
+in one ID universal token, and do some lookup to detect what token type we have
+in every point.
 
-% \bigskip
-% \begin{lstlisting}[language=Python]
-% 		t_ignore_COMMENT = r'\#.+|\(.*?\)'		# comments
-% 		# token types
-% 		tokens = ['REGISTER','EQ','STRING',
-% 			# parse all VM commands with low case letters
-% 			'COMMAND',								
-% 			# control constructs
-% 			'COLON','SEMICOLON','BEGIN','AGAIN']	
-% \end{lstlisting}
-% 
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	tokens = ['ID','COLON','SEMICOLON','BEGIN','AGAIN']
+\end{lstlisting}
+We removed some token types, so we need to drop corresponding rules from
+inherited class. The second tiny patch i've done for PLY, lets mark parser rules
+as deleted using \verb|=Null| assignment:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	t_NOP = None ; t_BYE = None
+\end{lstlisting}

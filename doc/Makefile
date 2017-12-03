@@ -8,7 +8,7 @@ TEX += Forth.tex asmforth.tex Forth.sty
 TEX += PLC.tex
 TEX += vim.tex
 
-SRC += ../tmp/calc.mk
+SRC += ../tmp/calc.mk ../inher.py
 
 FIG = ../tmp/lexer.pdf
 
