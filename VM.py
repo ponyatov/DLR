@@ -1,4 +1,4 @@
-import sys
+import sys ; sys.path.insert(0,'./ply')
 
 import ply.lex  as lex
 import ply.yacc as yacc
@@ -33,14 +33,41 @@ class VM:
 			command()									# DECODE/EXECUTE
 			
 	# ===== lexer code section =====
-		
+	t_ignore = ' \t\r'					# drop spaces (no EOL)
+	t_ignore_COMMENT = r'\#.*'			# line comment
+	# regexp/action rules (ANY)
+	def t_ANY_newline(self,t):				# special rule for EOL
+		r'\n'
+		t.lexer.lineno += 1					# increment line counter
+		# do not return token, it will be ignored by parser
+	# token types
+	tokens = ['NOP','BYE','REGISTER','EQ','STRING']
+	# required lexer error callback
+	def t_ANY_error(self,t): raise SyntaxError('lexer: %s' % t)
+
+	# ===== parser/compiler code section =====
+	def p_program_epsilon(self,p):
+		' program : '
+	def p_program_recursive(self,p):
+		' program : program command '
+	def p_command_NOP(self,p):
+		' command : NOP '
+		self.program.append(self.nop)
+	def p_command_BYE(self,p):
+		' command : BYE '
+		self.program.append(self.bye)
+	def p_command_R_load(self,p):
+		' command : REGISTER EQ constant'
+		self.program.append(self.ld)	# compile ld command opcode
+		self.program.append(p[1])		# compile register number at pos $1
+		self.program.append(p[3])		# compile constant
+	def p_constant_STRING(self,p):
+		' constant : STRING '
+		p[0] = p[1]
+	# required parser error callback
+	def p_error(self,p): raise SyntaxError('parser: %s' % p)
+	
 	def compiler(self,src):
-		t_ignore = ' \t\r'					# drop spaces (no EOL)
-		t_ignore_COMMENT = r'\#.*'			# line comment
-		# token types
-		tokens = ['NOP','BYE','REGISTER','EQ','STRING']
-		# required lexer error callback
-		def t_ANY_error(t): raise SyntaxError('lexer: %s' % t)
 		
 		# ===== init code section =====
 		
@@ -54,12 +81,6 @@ class VM:
 		# extra lexer states
 		states = (('string','exclusive'),)
 
-		# regexp/action rules (ANY)
-		def t_ANY_newline(t):					# special rule for EOL
-			r'\n'
-			t.lexer.lineno += 1					# increment line counter
-			# do not return token, it will be ignored by parser
-		
 		# regexp/action rules (STRING)
 		t_string_ignore = '' 				# don't ignore anything
 		def t_string_end(t):
@@ -99,47 +120,27 @@ class VM:
 		t_EQ = r'='
 
 		# create lexer object
-		lexer = lex.lex()#module=self)
+		self.lexer = lex.lex(object=self)
 		# feed source code
-		lexer.input(src)
+		self.lexer.input(src)
 
 		# ===== parser/compiler code section =====
-		def p_program_epsilon(p):
-			' program : '
-		def p_program_recursive(p):
-			' program : program command '
-		def p_command_NOP(p):
-			' command : NOP '
-			self.program.append(self.nop)
-		def p_command_BYE(p):
-			' command : BYE '
-			self.program.append(self.bye)
-		def p_command_R_load(p):
-			' command : REGISTER EQ constant'
-			self.program.append(self.ld)	# compile ld command opcode
-			self.program.append(p[1])		# compile register number at pos $1
-			self.program.append(p[3])		# compile constant
-		def p_constant_STRING(p):
-			' constant : STRING '
-			p[0] = p[1]
-
-		# required parser error callback
-		def p_error(p): raise SyntaxError('parser: %s' % p)
 		# create ply.yacc object, without extra files
-		parser = yacc.yacc(debug=False,write_tables=None)
+		parser = yacc.yacc(debug=False,write_tables=None,module=self)
 		# feed & parse source code using lexer
-		parser.parse(src,lexer)
+		parser.parse(src,self.lexer)
 	
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
 		self.interpreter()		  				# run interpreter
 
-class FORTH(VM): pass
-#	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'		# comment
+class FORTH(VM):
+	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'		# comment
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constant
 
+\ test FORTH comment syntax for inherited parser
 : INTERPRET		\ REPL interpreter loop
 	begin
 		word	\ ( -- str:wordname ) get next word name from input stream
