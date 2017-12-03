@@ -89,17 +89,37 @@ class FORTH(VM):
 \end{lstlisting}
 
 And here we have a problem, Houston! All elements of parser are encapsulated
-in \verb|compiler()| method using closure, and oops
-we \emph{must rework VM class} itself.
+in \verb|compiler()| method using closure, and oops we \emph{must rework VM
+class} itself. The way we can do it you can see on this short sample. This is
+lexer-only variant of simplest Hello World parser uses inheritance:
+\lstinputlisting[language=python]{../inher.py}
 
-\bigskip
+I faced with problem in PLY: its lexer generator have problem with
+\verb|t_error| unicality validation, if there are more \verb|t_error| functions
+(or methods) defined anywhere in one module. So I made tiny fix in
+\verb|ply/lex.py|, see
+\href{http://github.com/dabeaz/ply/issues/142}{issue 142}, but my pull request
+still mot merged, and you must fork patched PLY here:
+\begin{lstlisting}
+~/DLR$ git clone -o ponyatov \
+	https://github.com/ponyatov/ply.git
+\end{lstlisting}
+For import patched PLY we need to add it into module search path:
 \begin{lstlisting}[language=Python]
-		t_ignore_COMMENT = r'\#.+|\(.*?\)'		# comments
-		# token types
-		tokens = ['REGISTER','EQ','STRING',
-			# parse all VM commands with low case letters
-			'COMMAND',								
-			# control constructs
-			'COLON','SEMICOLON','BEGIN','AGAIN']	
+import sys ; sys.path.insert(0,'./ply')
+import ply.lex  as lex
 \end{lstlisting}
 
+
+
+% \bigskip
+% \begin{lstlisting}[language=Python]
+% 		t_ignore_COMMENT = r'\#.+|\(.*?\)'		# comments
+% 		# token types
+% 		tokens = ['REGISTER','EQ','STRING',
+% 			# parse all VM commands with low case letters
+% 			'COMMAND',								
+% 			# control constructs
+% 			'COLON','SEMICOLON','BEGIN','AGAIN']	
+% \end{lstlisting}
+% 
