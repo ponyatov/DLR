@@ -780,11 +780,177 @@ t			self.program.append(p[3]
 ]0003&lt; bound method VM.no&gt;p [0, 'R\t[1]', 2, 3, 4, 5, 6, 7
 ]0004&lt; bound method VM.by&gt;e [0, 'R\t[1]', 2, 3, 4, 5, 6, 7
 </pre>
+
+<!-- asmforth.tex -->
+
 <H1>\F: Command Shell</H1><A NAME="20">
-]Program works, but we need something more interesting. Lets do som  <b>interactive system</b>e, in parralel <b>adding some control constructions</b>  to our assembler. At this point w <ul> e<li> 	 have no tools let as define complex syntax in our languag e<li> 	 we dont want to mess two parsers: assembler and command shel </ul> lSo we need something very strange for our command shell: programming languag ewithout syntax. In fact it is impossible, but there is one language with ultr asimple syntax which <b>parser can be rewritten in few machine commands</b> : \F
-.If you know something about \F, it is not suprize for you that we use it: ou r\term{virtual machine }was designed very close to this language principles. We do some shif tfrom original \F, as we want to manipulate with objects, but not with byte sand machine integers (see next page), as you do making origina l\term{Virtual FORTH Machine}
-<p> .Returning to \ Fsyntax, it is very simple :\begin{enumerate}[nosep <li> ] collect sequential symbols one by one from input stream until firs tspace encountere d--- \emph{tadaam! thats all: you have got the parser  finished 8-) <li> } and try to do something with selected string (not surprizing that this  string has special name in \ F--- \term{word}) .\end{enumerate }On next stage \F-system tries to find this word in special structur e-- -\term{vocabulary}. Vocabulary is linked list contains compiled procedure swith its names stored in .If parsed word matches procedure name, this procedure wil lbe executed immediately. If word not found in vocabulary, \ Ftries to conver tit into integer number\note{there is no floating point support in cor e\ Flanguag e--- are you already scared?}, and push into \term{data stack}
-<p> .We are not going to write yet another tutorial on \ Fhere. It is bette rif you take a break here, and look into first chapters of real \emph{cool book :Leo Brodie's Starting \F  [<a href="#starting">starting</a>] }. You will be amazed by \ Fmiracl esimplicity, and scared by its dragon ass [<a href="#dragon">dragon</a>]   of zen syntax ,data stack bitbanging, and functional limitations\note{no float numbers ,no files, do you want data structures? make arrays yourself!} .
+
+Program works, but we need something more interesting. Lets do som
+ <b>interactive system</b>e, in parralel <b>adding some control constructions</b>
+ to our assembler. At this point w
+<ul>
+e<li> 	 have no tools let as define complex syntax in our languag
+e<li> 	 we dont want to mess two parsers: assembler and command shel
+</ul>
+lSo we need something very strange for our command shell: programming languag
+ewithout syntax. In fact it is impossible, but there is one language with ultr
+asimple syntax which <b>parser can be rewritten in few machine commands</b> : \F
+
+.If you know something about \F, it is not suprize for you that we use it: ou
+r\term{virtual machine
+}was designed very close to this language principles. We do some shif
+tfrom original \F, as we want to manipulate with objects, but not with byte
+sand machine integers (see next page), as you do making origina
+l\term{Virtual FORTH Machine}
+
+<p>
+.Returning to \ Fsyntax, it is very simple
+:\begin{enumerate}[nosep
+<li> ] collect sequential symbols one by one from input stream until firs
+tspace encountere d--- \emph{tadaam! thats all: you have got the parser
+ finished 8-)
+<li> } and try to do something with selected string (not surprizing that this
+ string has special name in \ F--- \term{word})
+.\end{enumerate
+}On next stage \F-system tries to find this word in special structur e--
+-\term{vocabulary}. Vocabulary is linked list contains compiled procedure
+swith its names stored in
+.If parsed word matches procedure name, this procedure wil
+lbe executed immediately. If word not found in vocabulary, \ Ftries to conver
+tit into integer number\note{there is no floating point support in cor
+e\ Flanguag e--- are you already scared?}, and push into \term{data stack}
+
+<p>
+.We are not going to write yet another tutorial on \ Fhere. It is bette
+rif you take a break here, and look into first chapters of real \emph{cool book
+:Leo Brodie's Starting \F  [<a href="#starting">starting</a>] }. You will be amazed by \ Fmiracl
+esimplicity, and scared by its dragon ass [<a href="#dragon">dragon</a>]   of zen syntax
+,data stack bitbanging, and functional limitations\note{no float numbers
+,no files, do you want data structures? make arrays yourself!}
+
+<p>
+.Also we will do some ANS Forth standard sidestep, see notes
+
+.Let's start from main \ Fword: REPL\note{Read-Eval-Print-Loop} implementin
+gcommand shell\note{still without compilation and error checking}
+<pre style="border:1px solid Black;">
+.: INTERPRET	 	REPL interpreter loo
+p	begi
+n	 	get next word name from input strea
+m		word	( -- str:wordname )
+ 	 	find word entry poin
+t		find	( str:wordname -- addr:xt 
+)	 	execute found xt (execution token)
+ 		execute	( xt -- )
+ 	agai
+n
+</pre> ;Don't forget how we should pass this source for compilation and run :enclose it into <code>VM(''' ... code ... ''')</code>  in \p ysource
+.\subsection{Expanding VM using inheritance
+}A current parser will not process this source, as syntax notably changed .We will not break VM demo parser, but use \emph{VM class inheritance to redefin eparser} for special \ Fdialect, and add some extra command to original VM
+.When you are going to implement your own language on top of VM, you should  go this way too <ul> <li> : fork special class from core V <li> M implement parser/compiler for your languag <li> e <b>expand inherited VM</b>  with specific commands your need o </ul> fLast item must be focused: <b>don't change core VM class</b>  with new command sor modified behaviour, as this changes will impact on all other inherited VMs .We broke this rule here, only because VM can't do anything in this point, and w eneed a lot of to add to make core VM be usable itself
+<pre style="border:1px solid Black;">
+.# it should look like this
+:class FORTH(VM)
+:	t_ignore_COMMENT = r'\#.*<br>|.*|\(.*?\)'		# commen
+</pre>
+tAnd here we have a problem, Houston! All elements of parser are encapsulate din <code>compiler()</code>  method using closure, and oops we \emph{must rework V Mclass} itself. The way we can do it you can see on this short sample. This i slexer-only variant of simplest Hello World parser uses inheritance <pre  style="border:1px solid Black;">import sys ; sys.path.insert(0,'./ply')
+import ply.lex  as lex
+import ply.yacc as yacc
+# issue 142 fix: enable patches
+# required for parser class inheritance
+ply_class_inherit = True	
+
+class VM:
+	tokens = ['WORD']
+	t_ignore = ' \t\r\n'
+	def t_WORD(self,t):
+		r'[a-z]+'
+		print t
+	def t_error(self,t): raise SyntaxError(t)
+	def __init__(self,src=''):
+		self.lexer = lex.lex(object=self)
+		self.lexer.input(src)
+		while self.lexer.token(): pass
+class FORTH(VM):
+	t_ignore = ' \t\r'
+	def t_newline(self,t):
+		r'\n'
+		t.lexer.lineno += 1
+FORTH('''
+	hello
+		world
+''')</pre>
+:I faced with problem in PLY: its lexer generator have problem wit  <code>t_error</code>h unicality validation, if there are more <code>t_error</code>  function s(or methods) defined anywhere in one module. So I made tiny fix i  <code>ply/lex.py</code>n, se  <A HREF="http://github.com/dabeaz/ply/issues/142">issue 142</A>e, but my pull reques tstill not merged, and <b>you must clone patched PLY right here</b>  <pre style="border:1px solid Black;">
+:~/DLR$ git clone -o ponyatov  	https://github.com/ponyatov/ply.gi
+</pre> tFor import patched PLY we need to push it in search path <b>before</b>  <code>/usr/lib</code>  <pre style="border:1px solid Black;">
+:import sys ; sys.path.insert(0,'./ply'
+)import ply.lex  as lex ; ply_class_inherit = True # use fi
+</pre>
+<p> xGoing to rewrite VM, we need <code>t_rules</code>  as class static strings, an dmethods, moved out of <code>compiler()</code>  <pre style="border:1px solid Black;">
+:class VM
+:	# ===== lexer code section ====
+=	t_ignore = ' \t\r'				# drop spaces (no EOL
+)	t_ignore_COMMENT = r'\#.*'		# line commen
+t	# regexp/action rules (ANY state
+)	def t_ANY_newline(self,t):		# special rule for EO
+L		r'\n
+'		t.lexer.lineno += 1			# increment line counte
+r		# do not return token, it will be ignored by parse
+r	# token type
+s	tokens = ['NOP','BYE','REGISTER','EQ','STRING'
+]	# required lexer error callback must be metho
+d	def t_ANY_error(self,t): raise SyntaxError('lexer:
+</pre>  Expand comment regexp and tokens set in FORTH <pre style="border:1px solid Black;">
+:class FORTH(VM)
+:	t_ignore_COMMENT = r'\#.*<br>|.*|\(.*?\)'		# commen
+t	tokens = ['NOP','BYE','REGISTER','EQ','STRING'
+,			'COLON','SEMICOLON','BEGIN','AGAIN']	# : 
+</pre> ;Change lexer creation <pre style="border:1px solid Black;">
+:class VM
+:	def compiler(self,src)
+:		..
+.		# create lexer objec
+t		# note: we point on object (instance!) with rules
+ 		self.lexer = lex.lex(object=self
+)		# feed source cod
+e		self.lexer.input(src
+</pre> )and parser the same <pre style="border:1px solid Black;">
+:class VM
+:	def compiler(self,src)
+:		# create ply.yacc object, without extra file
+s		parser = yacc.yacc(debug=False,write_tables=None ,			module=self) # here we must point on instanc
+e		# parse source code using lexe
+r		parser.parse(src,self.lexer
+</pre>
+)In \ Fsyntax we have no ability to distinct between VM commands, defined i nvocabulary and yet undefined words using only regexp. So we need to group token sin one ID universal token, and do some lookup to detect what token type we hav ein every point
+<pre style="border:1px solid Black;">
+.class FORTH(VM)
+:	tokens = ['ID','COLON','SEMICOLON','BEGIN','AGAIN'
+</pre> ]We removed some token types, and PLY will give as report\note{PLY was develope dby David M. Beazley specially for student learning purposes, so good verbosit yis key feature of this parser generator. As we are going to build powe  <b>metaprogramming system</b>r, which can be thinked as \textit{interactiv ecompiler \& algorithm development environment}, we should go this way to olater making parser generators and other tools, visualization and verbosity mus thave. }what's wrong <pre style="border:1px solid Black;">
+:ERROR: /home/ponyatov/DLR/VM.py:62
+:	Symbol 'NOP' used, but not defined as a token or a rul
+eERROR: /home/ponyatov/DLR/VM.py:65
+:	Symbol 'BYE' used, but not defined as a token or a rul
+eERROR: /home/ponyatov/DLR/VM.py:68
+:	Symbol 'REGISTER' used, but not defined as a token or a rul
+eERROR: /home/ponyatov/DLR/VM.py:68
+:	Symbol 'EQ' used, but not defined as a token or a rul
+eERROR: /home/ponyatov/DLR/VM.py:73
+:	Symbol 'STRING' used, but not defined as a token or a rul
+eWARNING: Token 'AGAIN' defined, but not use
+dWARNING: Token 'BEGIN' defined, but not use
+dWARNING: Token 'SEMICOLON' defined, but not use
+dWARNING: Token 'COLON' defined, but not use
+dWARNING: Token 'ID' defined, but not use
+dWARNING: There are 5 unused token
+sERROR: Infinite recursion detected for symbol 'constant
+'ERROR: Infinite recursion detected for symbol 'command
+'ply.yacc.YaccError: Unable to build parse
+</pre> rHere we see source line numbers, points directly on problemtatic gramma ruules ,and list of unused tokens
+.So we need to drop corresponding rule sfrom inherited class .The second tiny patch i've done for PLY, lets mark parser rules as deleted using <code>=Null</code>  assignment <pre style="border:1px solid Black;">
+:class FORTH(VM)
+:	t_NOP = None ; t_BYE = Non
+</pre> e ]
 
 
 <!-- GUI.tex -->
