@@ -141,7 +141,7 @@ class VM:
 class FORTH(VM):
 	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'				# comment
 	tokens = ['ID','COLON','SEMICOLON','BEGIN','AGAIN']
-	t_NOP = None
+# 	t_NOP = None
 # 	t_NOP = None ; p_command_NOP = None
 # 	t_BYE = None ; p_command_BYE = None
 # 	t_REGISTER = p_command_R_load = p_constant_STRING = None

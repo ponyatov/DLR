@@ -167,9 +167,40 @@ in every point.
 class FORTH(VM):
 	tokens = ['ID','COLON','SEMICOLON','BEGIN','AGAIN']
 \end{lstlisting}
-We removed some token types, so we need to drop corresponding rules from
-inherited class. The second tiny patch i've done for PLY, lets mark parser rules
-as deleted using \verb|=Null| assignment:
+We removed some token types, and PLY will give as report\note{PLY was developed
+by David M. Beazley specially for student learning purposes, so good verbosity
+is key feature of this parser generator. As we are going to build power
+\emph{metaprogramming system}, which can be thinked as \textit{interactive
+compiler \& algorithm development environment}, we should go this way too
+later making parser generators and other tools, visualization and verbosity must
+have.}\ what's wrong:
+\begin{lstlisting}
+ERROR: /home/ponyatov/DLR/VM.py:62:
+	Symbol 'NOP' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:65:
+	Symbol 'BYE' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:68:
+	Symbol 'REGISTER' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:68:
+	Symbol 'EQ' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:73:
+	Symbol 'STRING' used, but not defined as a token or a rule
+WARNING: Token 'AGAIN' defined, but not used
+WARNING: Token 'BEGIN' defined, but not used
+WARNING: Token 'SEMICOLON' defined, but not used
+WARNING: Token 'COLON' defined, but not used
+WARNING: Token 'ID' defined, but not used
+WARNING: There are 5 unused tokens
+ERROR: Infinite recursion detected for symbol 'constant'
+ERROR: Infinite recursion detected for symbol 'command'
+ply.yacc.YaccError: Unable to build parser
+\end{lstlisting}
+Here we see source line numbers, points directly on problemtatic gramma ruules,
+and list of unused tokens.
+
+So we need to drop corresponding rules
+from inherited class.
+The second tiny patch i've done for PLY, lets mark parser rules as deleted using \verb|=Null| assignment:
 \begin{lstlisting}[language=Python]
 class FORTH(VM):
 	t_NOP = None ; t_BYE = None
