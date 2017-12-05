@@ -16,10 +16,14 @@ LATEX = pdflatex -halt-on-error -output-directory ../tmp
 ../tmp/manual.pdf: $(TEX) $(SRC) $(FIG)
 	$(LATEX) manual
 
-pdf: $(TEX) $(SRC) $(FIG)
+RELEASE = DLR_$(shell date +%d%m%y)
+pdf: ../$(RELEASE).pdf
+../$(RELEASE).pdf: manual.pdf
+	cp $< $@
+manual.pdf: $(TEX) $(SRC) $(FIG)
 	$(LATEX) manual && $(LATEX) manual && cp ../tmp/manual.pdf $@
 
-../tmp/%.pdf: %.dot Makefile
+../tmp/%.pdf: %.dot
 	dot -Tpdf -o $@ $<
 #	&& pdfcrop $@t $@
 	inkscape $@ --export-area-drawing --export-pdf=$@

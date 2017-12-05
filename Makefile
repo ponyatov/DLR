@@ -13,6 +13,8 @@ $(TEXIMPL):
 
 manual:
 	cd doc ; $(MAKE)
+pdf:
+	cd doc ; $(MAKE) pdf
 
 html:
 	python latex2html.py
