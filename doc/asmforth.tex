@@ -195,13 +195,102 @@ ERROR: Infinite recursion detected for symbol 'constant'
 ERROR: Infinite recursion detected for symbol 'command'
 ply.yacc.YaccError: Unable to build parser
 \end{lstlisting}
-Here we see source line numbers, points directly on problemtatic gramma ruules,
+Here we see source line numbers, points directly on problematic gramma rules,
 and list of unused tokens.
 
 So we need to drop corresponding rules
 from inherited class.
-The second tiny patch i've done for PLY, lets mark parser rules as deleted using \verb|=Null| assignment:
+The second tiny patch i've done for PLY, lets mark parser rules as deleted using
+\verb|=Null| assignment:
 \begin{lstlisting}[language=Python]
 class FORTH(VM):
-	t_NOP = None ; t_BYE = None
+	t_NOP = p_command_NOP = None
+ 	t_BYE = p_command_BYE = None
+ 	t_REGISTER = p_command_R_load
+ 	p_constant_STRING = None
 \end{lstlisting}
+\begin{lstlisting}
+ERROR: /home/ponyatov/DLR/VM.py:60: Symbol 'command' used,
+	but not defined as a token or a rule
+\end{lstlisting}
+We must define what commands we are going to see in our programs.
+\begin{description}[nosep]
+\item[grammar] rules modifies VM grammar, and required
+\begin{lstlisting}[language=Python]
+# grammar override
+def p_command_ID(self,p):		' command : ID '
+def p_command_COLON(self,p):	' command : COLON '
+def p_command_SEMICOLON(self,p):' command : SEMICOLON '
+def p_command_BEGIN(self,p):	' command : BEGIN '
+def p_command_AGAIN(self,p):	' command : AGAIN '
+\end{lstlisting}
+\item[lexemes] we want to override comparing to base VM regexp rule set
+\begin{lstlisting}[language=Python]
+# lexemes regexp overrides
+t_COLON = ':' ; t_SEMICOLON = ';'
+def t_BEGIN(self,t):
+	r'begin'
+	return t 
+def t_AGAIN(self,t):
+	r'again'
+	return t
+def t_ID(self,t): # this rule must be last rule
+	r'[a-zA-Z0-9_]+'
+	return t 
+\end{lstlisting}
+\end{description}
+AssertionError, we got empty program:
+\verb|self.Ip < len(self.program)|
+
+Let's add fix to begin of source lets run dummy program as usual:
+\begin{lstlisting}[language=Python]
+FORTH(r''' # use r' : we have escapes in string constants
+nop bye
+...
+\end{lstlisting}
+Base \verb|VM| compiler detects this commands directly in parser syntax rules,
+and compiles them. In new inherited \verb|FORTH| machine we disabled this rules,
+and moved all word-looking char sequences into one \verb|ID| token. In sample
+source you can see that this ID can be new word name, VM command or control
+structure statement\note{In \F\ all control structures must be implemented using
+generic \F-words, we'll see how to make your own controls yourself later. But
+now we will use \emph{parser-based method} to show you how to implement them in
+your assembly or compiler}. In ID lex rule we can detect what is this ID in
+real, and use \term{terminal overwrite}.
+
+We have to add some hint let us check is given word name:
+\begin{description}[nosep]
+\item[VM command]\ \\
+we can use \py\ \term{reflection} to look up is given string is FORTH
+class method name or its VM superclass method, but for simplicity we will use
+special dict:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# command lookup table: string -> method
+	cmd = { 'nop':VM.nop , 'bye':VM.bye }
+\end{lstlisting}
+\item[already defined word] exists in vocabulary\\
+it is intuitive we must have vocabulary itself:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# vocabulary of all defined words
+	voc = {}
+\end{lstlisting}
+\item[undetected ID], maybe new word or some misspelling
+\end{description}
+Now we can add \term{lexeme overriding} into \verb|t_ID| lexer rule:
+\begin{lstlisting}[language=Python]
+	# add extra types for tokens
+	tokens = ['ID','CMD','VOC',
+				'COLON','SEMICOLON','BEGIN','AGAIN']
+ 	def t_ID(self,t): # this rule must be last rule
+ 		r'[a-zA-Z0-9_]+'
+ 		# first lookup in vocabulary
+ 		if t.value in self.voc: t.type='VOC'
+ 		# then check is it command name
+ 		if t.value in self.cmd: t.type='CMD'
+ 		return t 
+\end{lstlisting}
+Note checking order: this variant let as define new words with names equal to VM
+commands, and later we'll do it in \term{\F-assembler} \ref{forthasm} let you
+compile or execute single VM command in interactive \F\ system.

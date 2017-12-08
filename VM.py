@@ -139,19 +139,43 @@ class VM:
 		self.interpreter()		  				# run interpreter
 
 class FORTH(VM):
+	# command lookup table
+	cmd = { 'nop':VM.nop , 'bye':VM.bye }
+	# vocabulary of all defined words
+	voc = {}
+	
 	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'				# comment
-	tokens = ['ID','COLON','SEMICOLON','BEGIN','AGAIN']
-# 	t_NOP = None
-# 	t_NOP = None ; p_command_NOP = None
-# 	t_BYE = None ; p_command_BYE = None
-# 	t_REGISTER = p_command_R_load = p_constant_STRING = None
-# 	def p_command_ID(self,p):
-# 		' command : ID '
-# 		p[0] = p[1]
+	tokens = ['ID','CMD','VOC',
+				'COLON','SEMICOLON','BEGIN','AGAIN']
+	t_NOP = p_command_NOP = None
+ 	t_BYE = p_command_BYE = None
+ 	t_REGISTER = p_command_R_load = p_constant_STRING = None
+ 	# lexemes regexp overrides
+ 	t_COLON = ':' ; t_SEMICOLON = ';'
+ 	def t_BEGIN(self,t):
+ 		r'begin'
+ 		return t 
+ 	def t_AGAIN(self,t):
+ 		r'again'
+ 		return t
+ 	def t_ID(self,t): # this rule must be last rule
+ 		r'[a-zA-Z0-9_]+'
+ 		# first lookup in vocabulary
+ 		if t.value in self.voc: t.type='VOC'
+ 		# then check is it command name
+ 		if t.value in self.cmd: t.type='CMD'
+ 		return t 
+ 	# grammar override
+ 	def p_command_ID(self,p):		' command : ID '
+ 	def p_command_COLON(self,p):	' command : COLON '
+ 	def p_command_SEMICOLON(self,p):' command : SEMICOLON '
+ 	def p_command_BEGIN(self,p):	' command : BEGIN '
+ 	def p_command_AGAIN(self,p):	' command : AGAIN '
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
-
+nop bye
+ 
 \ test FORTH comment syntax for inherited parser
 : INTERPRET		\ REPL interpreter loop
 	begin
