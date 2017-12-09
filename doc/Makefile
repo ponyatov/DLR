@@ -12,11 +12,17 @@ SRC += ../tmp/calc.mk ../inher.py
 
 FIG = ../tmp/lexer.pdf
 
-LATEX = pdflatex -halt-on-error -output-directory ../tmp
-../tmp/manual.pdf: $(TEX) $(SRC) $(FIG)
-	$(LATEX) manual
+BRANCH = $(shell git symbolic-ref -q HEAD | sed -r -e "s|refs/heads/||")
+NOW = $(shell date +%d%m%y)
+RELEASE = DLR_$(NOW)_$(BRANCH)
 
-RELEASE = DLR_$(shell date +%d%m%y)
+LATEX = pdflatex -halt-on-error -output-directory ../tmp
+../tmp/manual.pdf: $(TEX) $(SRC) $(FIG) ../tmp/tex.tex
+	$(LATEX) manual
+	
+../tmp/tex.tex: $(TEX) ../.git/HEAD
+	echo "\date{\scriptsize $(RELEASE)}" | sed -r "s|\_|\\\_|g" > ../tmp/tex.tex
+
 pdf: ../$(RELEASE).pdf
 ../$(RELEASE).pdf: manual.pdf
 	cp $< $@
