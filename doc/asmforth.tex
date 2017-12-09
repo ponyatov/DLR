@@ -242,6 +242,8 @@ def t_ID(self,t): # this rule must be last rule
 AssertionError, we got empty program:
 \verb|self.Ip < len(self.program)|
 
+\subsection{Token overwrite for commands and \F\ words}
+
 Let's add fix to begin of source lets run dummy program as usual:
 \begin{lstlisting}[language=Python]
 FORTH(r''' # use r' : we have escapes in string constants
@@ -294,3 +296,84 @@ Now we can add \term{lexeme overriding} into \verb|t_ID| lexer rule:
 Note checking order: this variant let as define new words with names equal to VM
 commands, and later we'll do it in \term{\F-assembler} \ref{forthasm} let you
 compile or execute single VM command in interactive \F\ system.
+
+\clearpage
+And define new special rules in grammar:
+\begin{lstlisting}[language=Python]
+ 	def p_command_CMD(self,p):
+ 		' command : CMD '
+ 		# compile command using cmd{} lookup table
+ 		self.program.append(self.cmd[p[1]])
+ 	def p_command_VOC(self,p):		' command : VOC '
+\end{lstlisting}
+
+Dummy compiles and executes\note{check VM.interpreter() uses command(self)}, but
+we need to \emph{run last defined word as program entry point}. To do this we
+must implement all parser/compiler staff we did as stubs.
+
+\clearpage
+\subsection{Implement : COLON ; definition}
+
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# vocabulary of all defined words
+	voc = {}
+
+  	def p_command_COLON(self,p):
+  		' command : COLON ID'
+  		# store current compilation pointer into voc
+  		self.voc[p[2]] = len(self.program)
+  		print self.voc
+  	def p_command_ID(self,p):		' command : ID '
+\end{lstlisting}
+\begin{lstlisting}
+{'INTERPRET': 2}
+0000 <unbound method VM.nop> [0, 1, 2, 3, 4, 5, 6, 7]
+0001 <unbound method VM.bye> [0, 1, 2, 3, 4, 5, 6, 7]
+\end{lstlisting}
+What we do? On \verb|: INTERPRET| code we \emph{marked current compiler
+position} into vocabulary. Number 2 is address (index in \verb|program[2]|) of
+command will be compiled just next.
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# command lookup table
+	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'ret':VM.ret}
+ 	def p_command_SEMICOLON(self,p):
+ 		' command : SEMICOLON '
+ 		self.program.append(self.cmd['ret'])
+ 		
+class VM:
+  	def dump(self):	
+  		print
+  		for i in range(len(self.program)):
+  			print '%.4X: %s' % (i,self.program[i])
+  		print
+	def __init__(self, P=''):
+		self.compiler(P)			# run parser/compiler
+		self.dump()					# dump compiled program
+		self.interpreter()		  	# run interpreter
+\end{lstlisting}
+We added \verb|ret| command compilation runs on ; in source code. If you look on
+program dump, you'll see that \verb|INTERPRET| item in vocabulary points on
+address of first command, compiled by \verb|;| (out parser ignores all code
+between :
+; )
+\begin{lstlisting}
+{'INTERPRET': 2}
+0000: <unbound method VM.nop>
+0001: <unbound method VM.bye>
+0002: <unbound method VM.ret>
+\end{lstlisting}
+
+\clearpage
+\subsection{CALL and RET commands}
+As you see from \cite{starting}\ and especially from \cite{threaded}, \F\
+program is tangle of spaghetti \term{threaded code}\note{distinct this term from
+\term{thread} term in \term{multitasking}}, where every word use other words
+using nested \term{call}. Every time when call occurs, current execution
+(interpreter) pointer pushes into special \term{return stack}, and jumps to
+required word code. When called word finishes its work, \verb|ret| command pops
+\term{return address} from stack, and return execution on next command after
+used \verb|call| command\note{there is some variant of pure threaded code you
+can see in \cite{thbell}\ --- only addresses without call opcode, and special
+address for ret}.

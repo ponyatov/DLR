@@ -15,6 +15,8 @@ class VM:
 	def nop(self): pass             			# do nothing
 	def bye(self): self._bye=True				# stop singe VM only
 	
+	def ret(self): pass
+	
 	def ld(self):
 		' load register '
 		assert self.Ip +2 < len(self.program)	# check Ip
@@ -32,7 +34,7 @@ class VM:
 			command = self.program[self.Ip]				# FETCH command
 			print '%.4X' % self.Ip , command, self.R
 			self.Ip += 1								# to next command
-			command()									# DECODE/EXECUTE
+			command(self)								# DECODE/EXECUTE
 			
 	# ===== lexer code section =====
 	t_ignore = ' \t\r'					# drop spaces (no EOL)
@@ -133,14 +135,21 @@ class VM:
 			module=self) # here we must point on instance
 		# parse source code using lexer
 		parser.parse(src,self.lexer)
-	
+
+  	def dump(self):	
+  		print
+  		for i in range(len(self.program)):
+  			print '%.4X: %s' % (i,self.program[i])
+  		print
+  			
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
+		self.dump()								# dump compiled program
 		self.interpreter()		  				# run interpreter
 
 class FORTH(VM):
 	# command lookup table
-	cmd = { 'nop':VM.nop , 'bye':VM.bye }
+	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'ret':VM.ret}
 	# vocabulary of all defined words
 	voc = {}
 	
@@ -166,11 +175,22 @@ class FORTH(VM):
  		if t.value in self.cmd: t.type='CMD'
  		return t 
  	# grammar override
- 	def p_command_ID(self,p):		' command : ID '
- 	def p_command_COLON(self,p):	' command : COLON '
- 	def p_command_SEMICOLON(self,p):' command : SEMICOLON '
  	def p_command_BEGIN(self,p):	' command : BEGIN '
  	def p_command_AGAIN(self,p):	' command : AGAIN '
+ 	def p_command_CMD(self,p):
+ 		' command : CMD '
+ 		# compile command using cmd{} lookup table
+ 		self.program.append(self.cmd[p[1]])
+ 	def p_command_VOC(self,p):		' command : VOC '
+  	def p_command_COLON(self,p):
+  		' command : COLON ID'
+  		# store current compilation pointer into voc
+  		self.voc[p[2]] = len(self.program)
+  		print self.voc
+ 	def p_command_SEMICOLON(self,p):
+ 		' command : SEMICOLON '
+ 		self.program.append(self.cmd['ret'])
+  	def p_command_ID(self,p):		' command : ID '
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
