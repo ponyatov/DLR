@@ -373,7 +373,7 @@ program is tangle of spaghetti \term{threaded code}\note{distinct this term from
 using nested \term{call}. Every time when call occurs, current execution
 (interpreter) pointer pushes into special \term{return stack}, and jumps to
 required word code. When called word finishes its work, \verb|ret| command pops
-\term{return address} from stack, and return execution on next command after
-used \verb|call| command\note{there is some variant of pure threaded code you
-can see in \cite{thbell}\ --- only addresses without call opcode, and special
-address for ret}.
+\term{return address} from stack, and \emph{return execution on next command}
+after used \verb|call| command\note{there is some variant of pure threaded code
+you can see in \cite{thbell}\ --- only addresses without call opcode, and
+special address for ret}.
