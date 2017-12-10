@@ -384,19 +384,21 @@ class VM:
 	R = []							# CALL/RET return stack
 	def call(self):
 		# push return address (Ip points to call parameter)
-		self.R.append(self.program[Ip+1]) 
-		Ip = self.program[Ip]			# jmp					
+		self.R.append(self.Ip+1)
+		self.Ip = self.program[self.Ip]	# jmp
 	def ret(self):
-		assert length(self.R)			# check non-empty
-		Ip = self.R.pop()		# return to marked address		
+		assert self.R					# check non-empty
+		self.Ip = self.R.pop()	# return to marked address		
 
 class FORTH(VM):
 	# command lookup table
 	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
 			'call':VM.call, 'ret':VM.ret}
+ 	def p_command_VOC(self,p):
+		' command : VOC '
+		self.program.append(VM.call);		# opcode
+		self.program.append(self.voc[p[1]])	# cfa
 \end{lstlisting}
-
-\clearpage
 Now we can implement and check calls for colon-defined words:
 \begin{lstlisting}[language=Forth]
 : NOOP ;
@@ -404,8 +406,179 @@ Now we can implement and check calls for colon-defined words:
 	NOOP
 	...
 \end{lstlisting}
+\begin{lstlisting}
+{'NOOP': 2, 'INTERPRET': 3}
+
+	0000: <unbound method VM.nop> 
+	0001: <unbound method VM.bye> 
+NOOP: 
+	0002: <unbound method VM.ret> 
+INTERPRET: 
+	0003: <unbound method VM.call> 0002 : NOOP 
+	0005: <unbound method VM.ret>
+\end{lstlisting}
+To execute this we must add code, let us use last defined word as program
+entry point. To do this, we replace first command with with \verb|call _entry|:
+
+\begin{lstlisting}
+	FORTH(r''' # use r' : we have escapes in string constants
+\ test FORTH comment syntax for inherited parser
+: NOOP ;
+: INTERPRET		\ REPL interpreter loop
+	NOOP
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+class VM:
+	def init_code(self): pass
+		# set instruction pointer entry point
+		self.Ip = 0							
+		# clean up program memory	
+		self.program = []
+	def compiler(self,src):
+		# ===== init code section =====
+		self.init_code()
+
+class FORTH(VM):
+	def init_code(self):
+		VM.init_code(self)
+		self.program.append(VM.call)	# call ...
+		self.program.append(0)			# _entry = 1
+		self.program.append(VM.bye)		# bye
+  	def p_command_COLON(self,p):
+  		' command : COLON ID'
+  		# store current compilation pointer into voc
+		# reset _entry to current cfa
+  		self.program[1] = self.voc[p[2]] = len(self.program)
+		print self.voc
+\end{lstlisting}
+
+\subsection{Change tracing log output}
+
+I have strage error in \verb|ret| command in \verb|NOOP|, so we need to change
+tracing log generation: it must include both stacks, and have no info on
+registers as \F\ don't use them.
+
+Making program dump we need fast conversion from current address into record in
+vocabulary. So \emph{we must use reversed vocabulary} to do reverse lookup from
+addr to associated label (word name, variable,\ldots).
+Also we need to change logging in interpreter: we don't need registers, but
+need stacks to be printed on every command (if trace enabled).
+\begin{lstlisting}[language=Python]
+class VM:
+	# return known label for given address
+	def log_label(self,addr): return ''
+	# dump command from given addr
+	def log_command(self,addr):
+		A = addr
+		# current command
+		command = self.program[A]
+		# check if we have known labels
+		L = self.log_label(A)
+		if L: print '\n%s:' % L, # print on separate line
+		# print main command log text
+		print '\n\t%.4X' % A , command,
+		# process commands with parameters
+		if command == VM.call:
+			# target address
+			T = self.program[A+1]
+			# print target addr with known label
+			print T,self.log_label(T),
+			A += 1
+		return A+1	# return next command address
+	# log extra state (in interpreter trace)
+	def log_state(self):
+		print self.Rg,
+\end{lstlisting}
+Note that \verb|log_command| \emph{returns address of next command}\ --- it is
+required as \emph{we have commands with var length}. Interpreter don't use
+returned addr, as it is done inside commands, but in \verb|dump| method every
+next dumped addr must be computed in
+\verb|log_command|.
+\begin{lstlisting}[language=Python]
+	def interpreter(self):
+		self._bye = False		   				# stop flag
+		while not self._bye:
+			assert self.Ip < len(self.program)
+			command = self.program[self.Ip]	# FETCH command
+			self.log_command(self.Ip)		# log command
+			self.log_state()				# log state
+			self.Ip += 1				# to next command
+			command(self)				# DECODE/EXECUTE
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+   	def dump(self):
+ 		# loop over self.program
+ 		addr = 0;
+ 		# loop over program 
+ 		while addr < len(self.program):
+ 			# addr: command <extra>
+ 			addr = self.log_command(addr)
+   		print ; print '-'*55
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# vocabulary of all defined words
+	voc = {}
+	# reversed vocabulary {addr:name} for fast label lookup
+	revoc = {}
+	def log_state(self):
+		print 'R:%s'%self.R,
+
+  	def p_command_COLON(self,p):
+  		' command : COLON ID'
+  		# store current compilation pointer into voc
+		# reset _entry to current cfa
+  		self.program[1] = self.voc[p[2]] = len(self.program)
+  		# add reversed pair {addr:label}
+  		self.revoc[len(self.program)] = p[2]
+		print self.voc
+\end{lstlisting}
+\begin{lstlisting}
+{'NOOP': 3, 'INTERPRET': 4}
+\end{lstlisting}
+\clearpage
+\begin{lstlisting}
+	0000 <unbound method VM.call> 4 INTERPRET 
+	0002 <unbound method VM.bye> 
+NOOP: 
+	0003 <unbound method VM.ret> 
+INTERPRET: 
+	0004 <unbound method VM.call> 3 NOOP 
+	0006 <unbound method VM.ret>
+-------------------------------------------------------
+	0000 <unbound method VM.call> 4 INTERPRET R:[] 
+INTERPRET: 
+	0004 <unbound method VM.call> 3 NOOP R:[2] 
+NOOP: 
+	0003 <unbound method VM.ret> R:[2, 6] 
+	0006 <unbound method VM.ret> R:[2] 
+	0002 <unbound method VM.bye> R:[]
+\end{lstlisting}
+This trace log looks much better:
+\begin{description}[nosep]
+\item[first part]\ \\contains compiled program dump
+\item[second part]\ \\contains interpreter execution log with stacks state
+\emph{before command execution}
+\end{description}
+
+\bigskip
+Also we can add extra check for call command: check that parameter after call
+opcode was integer address:
+\begin{lstlisting}[language=Python]
+	def call(self):
+		# push return address (Ip points to call parameter)
+		self.R.append(self.Ip+1)
+		self.Ip = self.program[self.Ip]			# jmp
+		assert type(self.Ip) == int	# addr must be integer
+\end{lstlisting}
 
 \subsection{Throw out registers}
 
 \F\ is pure stack language, and we will throw out registers\note{until we want
 to play with self-made JIT}.
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	Rg = ld = None	# throw out registers
+\end{lstlisting}
+
+\subsection{\F\ vocabulary structure}

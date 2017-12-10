@@ -16,11 +16,13 @@ class VM:
 	
 	R = []										# CALL/RET return stack
 	def call(self):
-		self.R.append(self.program[Ip+1])		# push return address
-		self.Ip = self.program[Ip]				# jmp
+		# push return address (Ip points to call parameter)
+		self.R.append(self.Ip+1)
+		self.Ip = self.program[self.Ip]			# jmp
+		assert type(self.Ip) == int				# addr must be integer
 	def ret(self):
-		assert length(self.R)					# check non-empty
-		Ip = self.R.pop()						# return to marked address
+		assert self.R							# check non-empty
+		self.Ip = self.R.pop()					# return to marked address
 	
 	def ld(self):
 		' load register '
@@ -32,12 +34,37 @@ class VM:
 		self.Ip += 1                            # skip second command parameter
 		self.R[index] = data					# load register
 
+	# return known label for given address
+	def log_label(self,addr): return ''
+	# dump command from given addr
+	def log_command(self,addr):
+		A = addr
+		# current command
+		command = self.program[A]
+		# check if we have known labels
+		L = self.log_label(A)
+		if L: print '\n%s:' % L, # print on separate line
+		# print main command log text
+		print '\n\t%.4X' % A , command,
+		# process commands with parameters
+		if command == VM.call:
+			# target address
+			T = self.program[A+1]
+			# print target addr with known label
+			print T,self.log_label(T),
+			A += 1
+		return A+1	# return next command address
+	# log extra state (in interpreter trace)
+	def log_state(self):
+		print self.Rg,
+		
 	def interpreter(self):
 		self._bye = False		   				# stop flag
 		while not self._bye:
 			assert self.Ip < len(self.program)
 			command = self.program[self.Ip]				# FETCH command
-			print '%.4X' % self.Ip , command, self.Rg
+			self.log_command(self.Ip)		# log command
+			self.log_state()				# log state
 			self.Ip += 1								# to next command
 			command(self)								# DECODE/EXECUTE
 			
@@ -82,14 +109,14 @@ class VM:
 	# required parser error callback must be method
 	def p_error(self,p): raise SyntaxError('parser: %s' % p)
 	
-	def compiler(self,src):
-		
-		# ===== init code section =====
-		
+	def init_code(self):
 		# set instruction pointer entry point
 		self.Ip = 0							
 		# clean up program memory	
 		self.program = []
+	def compiler(self,src):
+		# ===== init code section =====
+		self.init_code()
 
 		# ===== lexer code section =====
 				
@@ -141,23 +168,14 @@ class VM:
 		# parse source code using lexer
 		parser.parse(src,self.lexer)
 
-  	def dump(self):
-		# reverse vocabulary {addr:wordname}
-		V = {}
-		for v in self.voc:
-			V[self.voc[v]] = v
-		# loop over self.program
-		i = 0;
-		while i < len(self.program):
-			if i in V: print '\n%s:'%V[i],
-  			print '\n\t%.4X: %s' % (i,self.program[i]),
-			if self.program[i] == VM.call:
-				addr = self.program[i+1]
-				print '%.4X'%addr,
-				if addr in V: print ':',V[addr],
-				i += 1
-			i += 1
-  		print ; print
+   	def dump(self):
+ 		# loop over self.program
+ 		addr = 0;
+ 		# loop over program 
+ 		while addr < len(self.program):
+ 			# addr: command <extra>
+ 			addr = self.log_command(addr)
+   		print ; print '-'*55
   			
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
@@ -165,11 +183,29 @@ class VM:
 		self.interpreter()		  				# run interpreter
 
 class FORTH(VM):
+	
+	Rg = ld = None	# throw out registers
+	
 	# command lookup table
-	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'call':VM.call, 'ret':VM.ret}
+	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
+			'call':VM.call, 'ret':VM.ret}
 	# vocabulary of all defined words
 	voc = {}
+	# reversed vocabulary {addr:name} for fast label lookup
+	revoc = {}
 	
+	def log_state(self):
+		print 'R:%s'%self.R,
+	def log_label(self,addr):
+		try: return self.revoc[addr]
+		except KeyError: return ''
+	
+	def init_code(self):
+		VM.init_code(self)
+		self.program.append(VM.call)	# call ...
+		self.program.append(0)			# _entry = 1
+		self.program.append(VM.bye)		# bye
+
 	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'				# comment
 	tokens = ['ID','CMD','VOC',
 				'COLON','SEMICOLON','BEGIN','AGAIN']
@@ -194,28 +230,29 @@ class FORTH(VM):
  	# grammar override
  	def p_command_BEGIN(self,p):	' command : BEGIN '
  	def p_command_AGAIN(self,p):	' command : AGAIN '
+  	def p_command_ID(self,p):		' command : ID '
  	def p_command_CMD(self,p):
  		' command : CMD '
  		# compile command using cmd{} lookup table
  		self.program.append(self.cmd[p[1]])
  	def p_command_VOC(self,p):
 		' command : VOC '
-		self.program.append(VM.call); # opcode
-		self.program.append(self.voc[p[1]]) # cfa
+		self.program.append(VM.call);		# opcode
+		self.program.append(self.voc[p[1]])	# cfa
   	def p_command_COLON(self,p):
   		' command : COLON ID'
   		# store current compilation pointer into voc
-  		self.voc[p[2]] = len(self.program)
+		# reset _entry to current cfa
+  		self.program[1] = self.voc[p[2]] = len(self.program)
+  		# add reversed pair {addr:label}
+  		self.revoc[len(self.program)] = p[2]
 		print self.voc
  	def p_command_SEMICOLON(self,p):
  		' command : SEMICOLON '
  		self.program.append(self.cmd['ret'])
-  	def p_command_ID(self,p):		' command : ID '
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
-nop bye
- 
 \ test FORTH comment syntax for inherited parser
 : NOOP ;
 : INTERPRET		\ REPL interpreter loop
