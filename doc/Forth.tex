@@ -1,24 +1,28 @@
-\part{Something different: FORTH}\label{forth}
+\part{Something different: flat memory FORTH}\label{forth}
 
-If you work with really small computer systems, like custom hardware build on
-Cortex-M microcontroillers, \textit{you have very small amount of RAM}. The
+As we see in \ref{pyforth}, it is easy to write some \F-like system in few
+hours in any programming language. Manipualting with objects on stack is simple,
+and let you use any side libraries and language high level features. 
+But if you work with really small computer systems, like custom hardware build
+on Cortex-M microcontroillers, \textit{you have very small amount of RAM}. The
 topmost microcontroller family STM32F7 MCU used in
 \href{http://www.st.com/en/evaluation-tools/32f746gdiscovery.html}{STM32F7GDISCOVERY}
-board has \emph{only 340K of RAM}.
-
+board has \emph{only 340K of RAM}. \textcolor{green}{There is no space to run
+fat dynamic language runtime with OOP}.
 For this narrow case we have \F\ well known from the end of 70s, and its big
 brother OpenFirmware. In this part we'll see how we can implement tiny
 \F\ system using bytecode approach\note{It can be interesting for you how to
 implement tiny assembler, without problems caused by concrete machine language
-details\ --- bytecode simple commands format is very easy to understand.}.
+details\ --- bytecode simple commands format is very easy to understand.}\ but
+low memory.
 
 % \chapter{FVM: FORTH Virtual Machine}
-\bigskip
+% \bigskip
 In \verb|FORTH/| subdirectory you can see sources of bytecode compiler and
 virtual machine (bytecode interpreter), with assember written in
 flex/bison.
 
-\section{FORTH/ file structure}
+\section{\F\ file structure}
 
 \begin{tabular}{l l l}
 src.src & assembly-like & \F\ system source code \\
