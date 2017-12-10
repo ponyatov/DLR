@@ -199,6 +199,10 @@ class FORTH(VM):
 	def log_label(self,addr):
 		try: return self.revoc[addr]
 		except KeyError: return ''
+		
+	def dump(self):
+		print self.voc
+		VM.dump(self)
 	
 	def init_code(self):
 		VM.init_code(self)
@@ -246,7 +250,6 @@ class FORTH(VM):
   		self.program[1] = self.voc[p[2]] = len(self.program)
   		# add reversed pair {addr:label}
   		self.revoc[len(self.program)] = p[2]
-		print self.voc
  	def p_command_SEMICOLON(self,p):
  		' command : SEMICOLON '
  		self.program.append(self.cmd['ret'])
