@@ -29,9 +29,11 @@ packages: ply/ply/lex.py
 		texlive-latex-extra graphviz \
 		python2.7 python-wxgtk3.0 python-ply
 	sudo pip install yattag
-	
+
+ply: ply/ply/lex.py
 ply/ply/lex.py:
-	git clone -o gh --depth=1 git@github.com:ponyatov/ply.git
+	git clone --depth=1 https://github.com/ponyatov/ply.git
+#	git clone -o gh --depth=1 git@github.com:ponyatov/ply.git
 
 Eijkhout/pdf.pdf: 
 	cd Eijkhout ; $(MAKE)
