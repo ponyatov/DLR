@@ -15,8 +15,12 @@ class VM:
 	def bye(self): self._bye=True				# stop singe VM only
 	
 	R = []										# CALL/RET return stack
-	
-	def ret(self): pass
+	def call(self):
+		self.R.append(self.program[Ip+1])		# push return address
+		Ip = self.program[Ip]					# jmp
+	def ret(self):
+		assert length(self.R)					# check non-empty
+		Ip = self.R.pop()						# return to marked address
 	
 	def ld(self):
 		' load register '
@@ -150,7 +154,7 @@ class VM:
 
 class FORTH(VM):
 	# command lookup table
-	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'ret':VM.ret}
+	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'call':VM.call, 'ret':VM.ret}
 	# vocabulary of all defined words
 	voc = {}
 	
@@ -198,7 +202,9 @@ if __name__ == '__main__':
 nop bye
  
 \ test FORTH comment syntax for inherited parser
+: NOOP ;
 : INTERPRET		\ REPL interpreter loop
+	NOOP
 	begin
 		word	\ ( -- str:wordname ) get next word name from input stream
 		find	\ ( str:wordname -- addr:xt ) find word entry point

@@ -1,4 +1,4 @@
-\section{\F: Command Shell}
+\section{\F: Command Shell}\label{pyforth}
 
 Program works, but we need something more interesting. Lets do some
 \emph{interactive system}, in parralel \emph{adding some control constructions}
@@ -370,12 +370,42 @@ between :
 As you see from \cite{starting}\ and especially from \cite{threaded}, \F\
 program is tangle of spaghetti \term{threaded code}\note{distinct this term from
 \term{thread} term in \term{multitasking}}, where every word use other words
-using nested \term{call}. Every time when call occurs, current execution
+via nested \term{call}. Every time when call occurs, current execution
 (interpreter) pointer pushes into special \term{return stack}, and jumps to
 required word code. When called word finishes its work, \verb|ret| command pops
 \term{return address} from stack, and \emph{return execution on next command}
 after used \verb|call| command\note{there is some variant of pure threaded code
 you can see in \cite{thbell}\ --- only addresses without call opcode, and
 special address for ret}.
+\begin{lstlisting}[language=Python]
+class VM:
 
-	R = []										# CALL/RET return stack
+	D = []							# data stack
+	R = []							# CALL/RET return stack
+	def call(self):
+		# push return address (Ip points to call parameter)
+		self.R.append(self.program[Ip+1]) 
+		Ip = self.program[Ip]			# jmp					
+	def ret(self):
+		assert length(self.R)			# check non-empty
+		Ip = self.R.pop()		# return to marked address		
+
+class FORTH(VM):
+	# command lookup table
+	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
+			'call':VM.call, 'ret':VM.ret}
+\end{lstlisting}
+
+\clearpage
+Now we can implement and check calls for colon-defined words:
+\begin{lstlisting}[language=Forth]
+: NOOP ;
+: INTERPRET		\ REPL interpreter loop
+	NOOP
+	...
+\end{lstlisting}
+
+\subsection{Throw out registers}
+
+\F\ is pure stack language, and we will throw out registers\note{until we want
+to play with self-made JIT}.
