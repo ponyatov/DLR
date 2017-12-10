@@ -17,7 +17,7 @@ class VM:
 	R = []										# CALL/RET return stack
 	def call(self):
 		self.R.append(self.program[Ip+1])		# push return address
-		Ip = self.program[Ip]					# jmp
+		self.Ip = self.program[Ip]				# jmp
 	def ret(self):
 		assert length(self.R)					# check non-empty
 		Ip = self.R.pop()						# return to marked address
@@ -141,11 +141,23 @@ class VM:
 		# parse source code using lexer
 		parser.parse(src,self.lexer)
 
-  	def dump(self):	
-  		print
-  		for i in range(len(self.program)):
-  			print '%.4X: %s' % (i,self.program[i])
-  		print
+  	def dump(self):
+		# reverse vocabulary {addr:wordname}
+		V = {}
+		for v in self.voc:
+			V[self.voc[v]] = v
+		# loop over self.program
+		i = 0;
+		while i < len(self.program):
+			if i in V: print '\n%s:'%V[i],
+  			print '\n\t%.4X: %s' % (i,self.program[i]),
+			if self.program[i] == VM.call:
+				addr = self.program[i+1]
+				print '%.4X'%addr,
+				if addr in V: print ':',V[addr],
+				i += 1
+			i += 1
+  		print ; print
   			
 	def __init__(self, P=''):
 		self.compiler(P)						# run parser/compiler
@@ -186,12 +198,15 @@ class FORTH(VM):
  		' command : CMD '
  		# compile command using cmd{} lookup table
  		self.program.append(self.cmd[p[1]])
- 	def p_command_VOC(self,p):		' command : VOC '
+ 	def p_command_VOC(self,p):
+		' command : VOC '
+		self.program.append(VM.call); # opcode
+		self.program.append(self.voc[p[1]]) # cfa
   	def p_command_COLON(self,p):
   		' command : COLON ID'
   		# store current compilation pointer into voc
   		self.voc[p[2]] = len(self.program)
-  		print self.voc
+		print self.voc
  	def p_command_SEMICOLON(self,p):
  		' command : SEMICOLON '
  		self.program.append(self.cmd['ret'])
