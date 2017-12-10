@@ -84,7 +84,7 @@ class VM:
 	# register file shared between VM instances
 	# VM can run multiple programs
 	# but have has only one registers set 
-	self.R = [0,1,2,3,4,5,6,7]  
+	self.Rg = [0,1,2,3,4,5,6,7]  
 \end{lstlisting}
 
 Commands operates with registers need more complex encoding in \term{program
@@ -104,21 +104,21 @@ class VM:
         # skip _second_ command parameter
         self.Ip += 1                 
         # load register
-        self.R[index] = data         
+        self.Rg[index] = data         
     def interpreter(self):
         ...
             print '%.4X' % self.Ip , command, self.R
 
 if __name__ == '__main__':
     VM([                    # every command need VM. prefix
-        VM.ld, 1, 'R[1]',   # R[1] <- 'string'
+        VM.ld, 1, 'Rg[1]',  # Rg[1] <- 'string'
         VM.nop, VM.bye
     ])
 \end{lstlisting}
 \begin{lstlisting}
 0000 <unbound method VM.ld> [0, 1, 2, 3, 4, 5, 6, 7]
-0003 <unbound method VM.nop> [0, 'R[1]', 2, 3, 4, 5, 6, 7]
-0004 <unbound method VM.bye> [0, 'R[1]', 2, 3, 4, 5, 6, 7]
+0003 <unbound method VM.nop> [0, 'Rg[1]', 2, 3, 4, 5, 6, 7]
+0004 <unbound method VM.bye> [0, 'Rg[1]', 2, 3, 4, 5, 6, 7]
 \end{lstlisting}
 
 \bigskip

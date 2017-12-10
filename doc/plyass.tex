@@ -3,7 +3,7 @@
 Using python syntax is simple (does not need extra programming):
 \begin{lstlisting}[language=python]
     VM([
-        VM.ld, 1, 'R[1]',
+        VM.ld, 1, 'Rg[1]',
         VM.nop, VM.bye
     ])
 \end{lstlisting}
@@ -43,7 +43,7 @@ rule match, and can do any operation on matched elements
 We will parse program from string using this code snippet:
 \begin{lstlisting}[language=python]
 VM('''
-        R1 = 'R[1]'
+        R1 = 'Rg[1]'
         nop
         bye
 ''')
@@ -139,7 +139,7 @@ To encapsulate lets group all lexer data in separate method:
 		while True: print lexer.token()	
 \end{lstlisting}
 \begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"\n R1 = 'R[1]'\n nop\n bye\n\t",1,0)
+SyntaxError: lexer: LexToken(error,"\n R1 = 'Rg[1]'\n nop\n bye\n\t",1,0)
 \end{lstlisting}
 
 In error report you can see problematic symbol \emph{at first position}.
@@ -151,7 +151,8 @@ So we need to \emph{drop space symbols}:
 		t_ignore = ' \t\r\n'	# drop spaces
 \end{lstlisting}
 \begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n        bye\n\t",1,9)
+SyntaxError: lexer: LexToken(error,"R1 = 'Rg[1]'\n        nop\n       
+bye\n\t",1,9)
 \end{lstlisting}
 Look on last two numbers: this is line number =1 and lexer position =9. Add
 extra empty lines at start of source string\ --- something strange: line not
@@ -168,7 +169,7 @@ yourself:
 			# it will be ignored by parser
 \end{lstlisting}
 \begin{lstlisting}
-SyntaxError: lexer: LexToken(error,"R1 = 'R[1]'\n        nop\n       
+SyntaxError: lexer: LexToken(error,"R1 = 'Rg[1]'\n        nop\n       
 bye\n\t",4,11)
 \end{lstlisting}
 Line numbering works ok, lexer position counts how much characters was processed

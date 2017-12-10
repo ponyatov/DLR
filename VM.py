@@ -6,14 +6,15 @@ import ply.yacc as yacc
 ply_class_inherit = True	# enable patches for parser class inheritance
 
 class VM:
+	Rg = [0,1,2,3,4,5,6,7]						# registers  
+
 	D = []										# shared data stack
-	R = []										# CALL/RET return stack
-	
-	R = [0,1,2,3,4,5,6,7]						# single register pool
-	
+
     											# ==== command set ===
 	def nop(self): pass             			# do nothing
 	def bye(self): self._bye=True				# stop singe VM only
+	
+	R = []										# CALL/RET return stack
 	
 	def ret(self): pass
 	
@@ -32,7 +33,7 @@ class VM:
 		while not self._bye:
 			assert self.Ip < len(self.program)
 			command = self.program[self.Ip]				# FETCH command
-			print '%.4X' % self.Ip , command, self.R
+			print '%.4X' % self.Ip , command, self.Rg
 			self.Ip += 1								# to next command
 			command(self)								# DECODE/EXECUTE
 			
