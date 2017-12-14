@@ -582,4 +582,64 @@ class FORTH(VM):
 	Rg = ld = None	# throw out registers
 \end{lstlisting}
 
-\subsection{\F\ vocabulary structure}
+\subsection{Vocabulary structure}
+
+You can see some strange \verb|cfa| label in listings above.
+In \F\ there are some set of fields every word contains in vocabulary:
+\begin{description}
+	\item[LFA] \term{Link Field Area}\\
+		In normal \F\ system words resides in memory in sequence.
+		If we want to do search in vocabulary, we must have all words
+		to be in \emph{linked list}, from end of vocabulary down to first word.
+		So every LFA holds address of previous word.
+		It is simplest way to do list in low level\ --- only single pointer
+		(memory address) on previous element, followed by any data.
+
+	\item[NFA] \term{Name Field Area}\\
+		NFA holds word name. It can be any string type you use in all system.
+
+	\item[AFA] \term{Attribute Field Area}\\
+		You can add some attributes and flags to every word,\\
+		\verb|IMMED| flag is only required (execute word in compilation mode).
+
+	\item[CFA] \term{Code Field Area}\\
+		is word code section,\\
+		in other words it is \emph{address of first executable command}
+		of code section
+
+	\item[PFA] \term{Parameter Field Area} (optional)\\
+		Some elements like constants and variables must hold some data,
+		and PFA is memory area for this case. In CFA code section there is
+		some code do something with PFA, like fetching data from PFA,
+		or just pushing PFA address on data stack.
+		
+\end{description}
+
+\noindent
+Our \F-like system not \F\ in general, and we store vocabulary in
+special data structure \emph{out of program memory}. Using \py\ dict
+for vocabulary gives more speed search using hashed keys, but have some limits:
+\begin{itemize}[nosep]
+	\item dict can have only one key, and we use word names as keys, so we
+		can't hold multiple (overrided) words with equal names in vocubulary
+	\item data in dict not ordered, and we can't control search order, but it
+		is not a matter, as we can't use overrided words in any way
+\item \emph{vocabulary not in program address space}, and we can't hack 
+		vocabulary itself using just memory manipulation. If we'll need this
+		later, we must add some special commands to manipulate vocabulary.
+\end{itemize}
+
+\subsection{\F\ system stability}
+
+Vocabulary separated out of main program memory is our first step to make
+system much more stable then generic \F. In normal \F-system any accident write
+to addressable memory\note{it is most frequent error linked with \emph{improper
+operand order} on data stack, as \emph{bad address} computed by previous
+code}\ can drop whole system in unstable crashing state and can broke your data.
+
+Separating address spaces isolates this crashing, and system equipped with
+debugger or fault protection subsystem, can do recovery or some emergency
+processing before everything drops to hell.
+Later we'll introduce OOP implementation, and \term{address isolation} between
+objects will be good for stability.
+
