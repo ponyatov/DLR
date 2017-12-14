@@ -643,3 +643,82 @@ processing before everything drops to hell.
 Later we'll introduce OOP implementation, and \term{address isolation} between
 objects will be good for stability.
 
+\subsection{JMP command and BEGIN/AGAIN infinity loop}
+
+In \F\ we want REPL\note{Read Eval Print Loop} loop as user command interface:
+system must
+\begin{enumerate}[nosep]
+\item get source word by word separated by spaces,
+\item do search in vocabulary, and 
+\item execute every found word 
+\item or print error message.
+\item and repeat it infinity
+\end{enumerate}
+\noindent
+To do infinity loop we need to implement begin/again pair in compiler.
+At low level:
+\begin{description}[nosep]
+\item[begin] \emph{mark}s current compiler position in some
+		\term{control compiling stack},\\
+		this \emph{stack is required to let nested control structures}
+	\item[again] \emph{resolve} saved position popping addres from stack, and 
+		compiles \verb|JMP| command equal to \verb|goto| in high-level languages
+\end{description}
+
+We can use special dedicated control compiler stack, but we will use
+\term{return stack}, as it is not used in compiling stage before interpreter
+started. The
+other reason to do this is to show how control structures are implemented in 
+ordinary \F\ system\ --- they uses \term{return stack} for mark/resolve addresses
+in controls compilation.
+
+\begin{lstlisting}[language=Python]
+class VM:
+
+	def jmp(self):
+		# get addr from jmp parameter
+		self.Ip = self.program[self.Ip]
+		# check type: addr must be integer
+		assert type(self.Ip) == int
+		# check range
+		assert self.Ip < len(self.program)	
+
+	def log_command(self,addr):
+		if command in [ VM.jmp, VM.call]:
+			print T,self.log_label(T),
+class FORTH(VM):
+	cmd = { 'jmp':VM.jmp, 'call':VM.call, 'ret':VM.ret,..}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+ 	def p_command_BEGIN(self,p):
+		' command : BEGIN '
+		# mark Ip pushing in return stack
+		self.R.append(len(self.program))
+ 	def p_command_AGAIN(self,p):
+		' command : AGAIN '
+		# jmp opcode
+		self.program.append(self.cmd['jmp'])
+		# jmp parameter: pop marked Ip
+		self.program.append(self.R.pop())
+\end{lstlisting}
+
+\begin{lstlisting}
+INTERPRET:
+        0006 <unbound method VM.call> 5 NOOP
+        0008 <function word at 0x018A51B0>
+        0009 <function find at 0x018A51F0>
+        000A <unbound method VM.jmp> 8
+        000C <unbound method VM.ret>
+\end{lstlisting}
+
+\noindent
+(*) \verb|word| and \verb|find| will be defined later.
+\bigskip
+
+As you see in listing, there is one \verb|jmp| command compiled by \verb|again|
+at address \verb|0x000A|, jumps to \verb|0x0008| marked by \verb|begin| between
+\verb|NOOP| and word in source code.
+
+
+

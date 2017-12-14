@@ -20,10 +20,15 @@ class VM:
 		self.R.append(self.Ip+1)
 		self.Ip = self.program[self.Ip]			# jmp
 		assert type(self.Ip) == int				# addr must be integer
+		assert self.Ip < len(self.program)		# check range
 	def ret(self):
 		assert self.R							# check non-empty
 		self.Ip = self.R.pop()					# return to marked address
 	
+	def jmp(self):
+		self.Ip = self.program[self.Ip]			# get addr from jmp parameter
+		assert self.Ip < len(self.program)		# check range
+
 	def ld(self):
 		' load register '
 		assert self.Ip +2 < len(self.program)	# check Ip
@@ -47,7 +52,7 @@ class VM:
 		# print main command log text
 		print '\n\t%.4X' % A , command,
 		# process commands with parameters
-		if command == VM.call:
+		if command in [ VM.jmp, VM.call]:
 			# target address
 			T = self.program[A+1]
 			# print target addr with known label
@@ -186,16 +191,46 @@ class FORTH(VM):
 	
 	Rg = ld = None	# throw out registers
 	
+	PAD = list('hello world ')
+	def word(self):
+		S = ''
+		BL = ' \t\r\n'
+		# trail break
+		try:
+			while True:
+				C = self.PAD.pop(0)
+				if C not in BL: break
+			# first non-BL char
+			S += C
+			# collect until BL char
+			while True:
+				C = self.PAD.pop(0)
+				if C in BL: break
+				S += C
+		except IndexError: sys.exit(0)
+		# push collected string
+		self.D.append(S)
+	
+	def find(self):
+		S = self.D.pop()
+		try:
+			self.D.append(self.voc[S])
+			self.D.append(True)
+		except KeyError:
+			self.D.append(S)
+			self.D.append(False)
+
 	# command lookup table
 	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
-			'call':VM.call, 'ret':VM.ret}
+			'jmp':VM.jmp, 'call':VM.call, 'ret':VM.ret,
+			'word':word, 'find':find}
 	# vocabulary of all defined words
 	voc = {}
 	# reversed vocabulary {addr:name} for fast label lookup
 	revoc = {}
 	
 	def log_state(self):
-		print 'R:%s'%self.R,
+		print 'D:%s'%self.D,'R:%s'%self.R,
 	def log_label(self,addr):
 		try: return self.revoc[addr]
 		except KeyError: return ''
@@ -232,11 +267,19 @@ class FORTH(VM):
  		if t.value in self.cmd: t.type='CMD'
  		return t 
  	# grammar override
- 	def p_command_BEGIN(self,p):	' command : BEGIN '
- 	def p_command_AGAIN(self,p):	' command : AGAIN '
+ 	def p_command_BEGIN(self,p):
+		' command : BEGIN '
+		# mark Ip pushing in return stack
+		self.R.append(len(self.program))
+ 	def p_command_AGAIN(self,p):
+		' command : AGAIN '
+		# jmp opcode
+		self.program.append(self.cmd['jmp'])
+		# jmp parameter: pop marked Ip
+		self.program.append(self.R.pop())
   	def p_command_ID(self,p):
 		' command : ID '
-		raise BaseException('%s undefined'%p[1])
+#		raise BaseException(p[1])
  	def p_command_CMD(self,p):
  		' command : CMD '
  		# compile command using cmd{} lookup table
@@ -259,6 +302,9 @@ class FORTH(VM):
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
 \ test FORTH comment syntax for inherited parser
+: hello ;
+: world ;
+
 : NOOP ;
 : INTERPRET		\ REPL interpreter loop
 	NOOP
