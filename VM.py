@@ -234,7 +234,9 @@ class FORTH(VM):
  	# grammar override
  	def p_command_BEGIN(self,p):	' command : BEGIN '
  	def p_command_AGAIN(self,p):	' command : AGAIN '
-  	def p_command_ID(self,p):		' command : ID '
+  	def p_command_ID(self,p):
+		' command : ID '
+		raise BaseException('%s undefined'%p[1])
  	def p_command_CMD(self,p):
  		' command : CMD '
  		# compile command using cmd{} lookup table
