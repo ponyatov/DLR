@@ -805,3 +805,13 @@ we'll get trace with found \verb|hello| and undefined \verb|world|:
 ;
 \end{lstlisting}
 
+\clearpage
+\noindent
+if/else is complex to understand: it uses forward jumps and \term{backpatching}
+with \emph{one pass compiling}:
+\begin{description}
+	\item[if] compiles \verb|?jmp| conditional jump command
+	\item[else]
+	\item[endif]
+\end{description}
+
