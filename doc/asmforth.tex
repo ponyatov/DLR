@@ -720,5 +720,73 @@ As you see in listing, there is one \verb|jmp| command compiled by \verb|again|
 at address \verb|0x000A|, jumps to \verb|0x0008| marked by \verb|begin| between
 \verb|NOOP| and word in source code.
 
+\clearpage
+\subsection{Parsing input stream and search in vocabulary}
 
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	PAD = list('hello world ')
+	def word(self):
+		# result string
+		S = ''
+		# spaces
+		BL = ' \t\r\n'
+		# skip leading spaces
+		while True:
+			# pop first char from input stream
+			C = self.PAD.pop(0)
+			# break loop on non-space char
+			if C not in BL: break
+		# save first found non-BL char
+		S += C
+		# collect until BL char
+		while True:
+			C = self.PAD.pop(0)
+			if C in BL: break
+			S += C
+		# push collected string
+		self.D.append(S)
+	
+	def find(self):
+		# pop word name from data stack
+		S = self.D.pop()
+		try:
+			# push cfa of found word
+			self.D.append(self.voc[S])
+			# push FOUND flag
+			self.D.append(True)
+		except KeyError:
+			# on error push word name
+			self.D.append(S)
+			# push NOT FOUND
+			self.D.append(False)
+
+	cmd = { 'word':word, 'find':find , ...}
+\end{lstlisting}
+You can fix parser: raise error on undefined commands/words:
+\begin{lstlisting}[language=Python]
+  	def p_command_ID(self,p):
+		' command : ID '
+#		raise BaseException(p[1])
+\end{lstlisting}
+
+If we change source:
+\begin{lstlisting}[language=Forth]
+: hello ;
+: NOOP ;
+: INTERPRET		\ REPL interpreter loop
+	NOOP
+	begin
+	...		;
+\end{lstlisting}
+we'll get trace with found \verb|hello| and undefined \verb|world|:
+\begin{lstlisting}
+0007 <word at 0x018F51B0> D:[] R:[2]
+0008 <find at 0x018F51F0> D:['hello'] R:[2]
+0009 <method VM.jmp> 7  D:[3, True] R:[2]
+0007 <word at 0x018F51B0> D:[3, True] R:[2]
+0008 <find at 0x018F51F0> D:[3, True, 'world'] R:[2]
+0009 <method VM.jmp> 7  D:[3, True, 'world', False] R:[2]
+0007 <word at 0x018F51B0> D:[3, True, 'world', False] R:[2]
+\end{lstlisting}
 

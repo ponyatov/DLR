@@ -193,14 +193,18 @@ class FORTH(VM):
 	
 	PAD = list('hello world ')
 	def word(self):
+		# result string
 		S = ''
+		# spaces
 		BL = ' \t\r\n'
-		# trail break
+		# skip leading spaces
 		try:
 			while True:
+				# pop first char from input stream
 				C = self.PAD.pop(0)
+				# break loop on non-space char
 				if C not in BL: break
-			# first non-BL char
+			# save first found non-BL char
 			S += C
 			# collect until BL char
 			while True:
@@ -212,18 +216,23 @@ class FORTH(VM):
 		self.D.append(S)
 	
 	def find(self):
+		# pop word name from data stack
 		S = self.D.pop()
 		try:
+			# push cfa of found word
 			self.D.append(self.voc[S])
+			# push FOUND flag
 			self.D.append(True)
 		except KeyError:
+			# on error push word name
 			self.D.append(S)
+			# push NOT FOUND
 			self.D.append(False)
 
 	# command lookup table
 	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
 			'jmp':VM.jmp, 'call':VM.call, 'ret':VM.ret,
-			'word':word, 'find':find}
+			'word':word, 'find':find }
 	# vocabulary of all defined words
 	voc = {}
 	# reversed vocabulary {addr:name} for fast label lookup
@@ -303,7 +312,6 @@ if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
 \ test FORTH comment syntax for inherited parser
 : hello ;
-: world ;
 
 : NOOP ;
 : INTERPRET		\ REPL interpreter loop
