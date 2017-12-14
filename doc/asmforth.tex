@@ -1,4 +1,4 @@
-\section{\F: Command Shell}
+\section{\F: Command Shell}\label{pyforth}
 
 Program works, but we need something more interesting. Lets do some
 \emph{interactive system}, in parralel \emph{adding some control constructions}
@@ -90,14 +90,496 @@ class FORTH(VM):
 
 And here we have a problem, Houston! All elements of parser are encapsulated
 in \verb|compiler()| method using closure, and oops
-we \emph{must rework VM class} itself. And if we use just lexer enclosed in
-class, inheritance still cause error like \verb|t_rule dedefined|,
-see \href{http://github.com/dabeaz/ply/issues/142}{issue 142} (ply-3.10)
-
+we \emph{must rework VM class} itself.
+The way we can do it you can see on this short sample. This is
+lexer-only variant of simplest Hello World parser uses inheritance:
 \lstinputlisting[language=python]{../inher.py}
+
+I faced with problem in PLY: its lexer generator have problem with
+\verb|t_error| unicality validation, if there are more \verb|t_error| functions
+(or methods) defined anywhere in one module. So I made tiny fix in
+\verb|ply/lex.py|, see
+\href{http://github.com/dabeaz/ply/issues/142}{issue 142}, but my pull request
+still not merged, and \emph{you must clone patched PLY right here}:
 \begin{lstlisting}
-ERROR: inher.py:22: Rule t_ignore redefined.
-Previously defined on line 6
-SyntaxError: Can't build lexer
+~/DLR$ git clone -o ponyatov \
+	https://github.com/ponyatov/ply.git
+\end{lstlisting}
+For import patched PLY we need to push it in search path \emph{before}
+\verb|/usr/lib|:
+\begin{lstlisting}[language=Python]
+import sys ; sys.path.insert(0,'./ply')
+import ply.lex  as lex ; ply_class_inherit = True # use fix
 \end{lstlisting}
 
+\bigskip
+Going to rewrite VM, we need \verb|t_rules| as class static strings, and
+methods, moved out of \verb|compiler()|:
+\begin{lstlisting}[language=Python]
+class VM:
+	# ===== lexer code section =====
+	t_ignore = ' \t\r'				# drop spaces (no EOL)
+	t_ignore_COMMENT = r'\#.*'		# line comment
+	# regexp/action rules (ANY state)
+	def t_ANY_newline(self,t):		# special rule for EOL
+		r'\n'
+		t.lexer.lineno += 1			# increment line counter
+		# do not return token, it will be ignored by parser
+	# token types
+	tokens = ['NOP','BYE','REGISTER','EQ','STRING']
+	# required lexer error callback must be method
+	def t_ANY_error(self,t): raise SyntaxError('lexer: %s' % t)
+\end{lstlisting}
+Expand comment regexp and tokens set in FORTH:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'		# comment
+	tokens = ['NOP','BYE','REGISTER','EQ','STRING',
+			'COLON','SEMICOLON','BEGIN','AGAIN']	# : ;
+\end{lstlisting}
+Change lexer creation:
+\begin{lstlisting}[language=Python]
+class VM:
+	def compiler(self,src):
+		...
+		# create lexer object
+		# note: we point on object (instance!) with rules 
+		self.lexer = lex.lex(object=self)
+		# feed source code
+		self.lexer.input(src)
+\end{lstlisting}
+and parser the same:
+\begin{lstlisting}[language=Python]
+class VM:
+	def compiler(self,src):
+		# create ply.yacc object, without extra files
+		parser = yacc.yacc(debug=False,write_tables=None,\
+			module=self) # here we must point on instance
+		# parse source code using lexer
+		parser.parse(src,self.lexer)
+\end{lstlisting}
+
+In \F\ syntax we have no ability to distinct between VM commands, defined in
+vocabulary and yet undefined words using only regexp. So we need to group tokens
+in one ID universal token, and do some lookup to detect what token type we have
+in every point.
+
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	tokens = ['ID','COLON','SEMICOLON','BEGIN','AGAIN']
+\end{lstlisting}
+We removed some token types, and PLY will give as report\note{PLY was developed
+by David M. Beazley specially for student learning purposes, so good verbosity
+is key feature of this parser generator. As we are going to build power
+\emph{metaprogramming system}, which can be thinked as \textit{interactive
+compiler \& algorithm development environment}, we should go this way too
+later making parser generators and other tools, visualization and verbosity must
+have.}\ what's wrong:
+\begin{lstlisting}
+ERROR: /home/ponyatov/DLR/VM.py:62:
+	Symbol 'NOP' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:65:
+	Symbol 'BYE' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:68:
+	Symbol 'REGISTER' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:68:
+	Symbol 'EQ' used, but not defined as a token or a rule
+ERROR: /home/ponyatov/DLR/VM.py:73:
+	Symbol 'STRING' used, but not defined as a token or a rule
+WARNING: Token 'AGAIN' defined, but not used
+WARNING: Token 'BEGIN' defined, but not used
+WARNING: Token 'SEMICOLON' defined, but not used
+WARNING: Token 'COLON' defined, but not used
+WARNING: Token 'ID' defined, but not used
+WARNING: There are 5 unused tokens
+ERROR: Infinite recursion detected for symbol 'constant'
+ERROR: Infinite recursion detected for symbol 'command'
+ply.yacc.YaccError: Unable to build parser
+\end{lstlisting}
+Here we see source line numbers, points directly on problematic gramma rules,
+and list of unused tokens.
+
+So we need to drop corresponding rules
+from inherited class.
+The second tiny patch i've done for PLY, lets mark parser rules as deleted using
+\verb|=Null| assignment:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	t_NOP = p_command_NOP = None
+ 	t_BYE = p_command_BYE = None
+ 	t_REGISTER = p_command_R_load
+ 	p_constant_STRING = None
+\end{lstlisting}
+\begin{lstlisting}
+ERROR: /home/ponyatov/DLR/VM.py:60: Symbol 'command' used,
+	but not defined as a token or a rule
+\end{lstlisting}
+We must define what commands we are going to see in our programs.
+\begin{description}[nosep]
+\item[grammar] rules modifies VM grammar, and required
+\begin{lstlisting}[language=Python]
+# grammar override
+def p_command_ID(self,p):		' command : ID '
+def p_command_COLON(self,p):	' command : COLON '
+def p_command_SEMICOLON(self,p):' command : SEMICOLON '
+def p_command_BEGIN(self,p):	' command : BEGIN '
+def p_command_AGAIN(self,p):	' command : AGAIN '
+\end{lstlisting}
+\item[lexemes] we want to override comparing to base VM regexp rule set
+\begin{lstlisting}[language=Python]
+# lexemes regexp overrides
+t_COLON = ':' ; t_SEMICOLON = ';'
+def t_BEGIN(self,t):
+	r'begin'
+	return t 
+def t_AGAIN(self,t):
+	r'again'
+	return t
+def t_ID(self,t): # this rule must be last rule
+	r'[a-zA-Z0-9_]+'
+	return t 
+\end{lstlisting}
+\end{description}
+AssertionError, we got empty program:
+\verb|self.Ip < len(self.program)|
+
+\subsection{Token overwrite for commands and \F\ words}
+
+Let's add fix to begin of source lets run dummy program as usual:
+\begin{lstlisting}[language=Python]
+FORTH(r''' # use r' : we have escapes in string constants
+nop bye
+...
+\end{lstlisting}
+Base \verb|VM| compiler detects this commands directly in parser syntax rules,
+and compiles them. In new inherited \verb|FORTH| machine we disabled this rules,
+and moved all word-looking char sequences into one \verb|ID| token. In sample
+source you can see that this ID can be new word name, VM command or control
+structure statement\note{In \F\ all control structures must be implemented using
+generic \F-words, we'll see how to make your own controls yourself later. But
+now we will use \emph{parser-based method} to show you how to implement them in
+your assembly or compiler}. In ID lex rule we can detect what is this ID in
+real, and use \term{terminal overwrite}.
+
+We have to add some hint let us check is given word name:
+\begin{description}[nosep]
+\item[VM command]\ \\
+we can use \py\ \term{reflection} to look up is given string is FORTH
+class method name or its VM superclass method, but for simplicity we will use
+special dict:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# command lookup table: string -> method
+	cmd = { 'nop':VM.nop , 'bye':VM.bye }
+\end{lstlisting}
+\item[already defined word] exists in vocabulary\\
+it is intuitive we must have vocabulary itself:
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# vocabulary of all defined words
+	voc = {}
+\end{lstlisting}
+\item[undetected ID], maybe new word or some misspelling
+\end{description}
+Now we can add \term{lexeme overriding} into \verb|t_ID| lexer rule:
+\begin{lstlisting}[language=Python]
+	# add extra types for tokens
+	tokens = ['ID','CMD','VOC',
+				'COLON','SEMICOLON','BEGIN','AGAIN']
+ 	def t_ID(self,t): # this rule must be last rule
+ 		r'[a-zA-Z0-9_]+'
+ 		# first lookup in vocabulary
+ 		if t.value in self.voc: t.type='VOC'
+ 		# then check is it command name
+ 		if t.value in self.cmd: t.type='CMD'
+ 		return t 
+\end{lstlisting}
+Note checking order: this variant let as define new words with names equal to VM
+commands, and later we'll do it in \term{\F-assembler} \ref{forthasm} let you
+compile or execute single VM command in interactive \F\ system.
+
+\clearpage
+And define new special rules in grammar:
+\begin{lstlisting}[language=Python]
+ 	def p_command_CMD(self,p):
+ 		' command : CMD '
+ 		# compile command using cmd{} lookup table
+ 		self.program.append(self.cmd[p[1]])
+ 	def p_command_VOC(self,p):		' command : VOC '
+\end{lstlisting}
+
+Dummy compiles and executes\note{check VM.interpreter() uses command(self)}, but
+we need to \emph{run last defined word as program entry point}. To do this we
+must implement all parser/compiler staff we did as stubs.
+
+\clearpage
+\subsection{Implement : COLON ; definition}
+
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# vocabulary of all defined words
+	voc = {}
+
+  	def p_command_COLON(self,p):
+  		' command : COLON ID'
+  		# store current compilation pointer into voc
+  		self.voc[p[2]] = len(self.program)
+  		print self.voc
+  	def p_command_ID(self,p):		' command : ID '
+\end{lstlisting}
+\begin{lstlisting}
+{'INTERPRET': 2}
+0000 <unbound method VM.nop> [0, 1, 2, 3, 4, 5, 6, 7]
+0001 <unbound method VM.bye> [0, 1, 2, 3, 4, 5, 6, 7]
+\end{lstlisting}
+What we do? On \verb|: INTERPRET| code we \emph{marked current compiler
+position} into vocabulary. Number 2 is address (index in \verb|program[2]|) of
+command will be compiled just next.
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# command lookup table
+	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'ret':VM.ret}
+ 	def p_command_SEMICOLON(self,p):
+ 		' command : SEMICOLON '
+ 		self.program.append(self.cmd['ret'])
+ 		
+class VM:
+  	def dump(self):	
+  		print
+  		for i in range(len(self.program)):
+  			print '%.4X: %s' % (i,self.program[i])
+  		print
+	def __init__(self, P=''):
+		self.compiler(P)			# run parser/compiler
+		self.dump()					# dump compiled program
+		self.interpreter()		  	# run interpreter
+\end{lstlisting}
+We added \verb|ret| command compilation runs on ; in source code. If you look on
+program dump, you'll see that \verb|INTERPRET| item in vocabulary points on
+address of first command, compiled by \verb|;| (out parser ignores all code
+between :
+; )
+\begin{lstlisting}
+{'INTERPRET': 2}
+0000: <unbound method VM.nop>
+0001: <unbound method VM.bye>
+0002: <unbound method VM.ret>
+\end{lstlisting}
+
+\clearpage
+\subsection{CALL and RET commands}
+As you see from \cite{starting}\ and especially from \cite{threaded}, \F\
+program is tangle of spaghetti \term{threaded code}\note{distinct this term from
+\term{thread} term in \term{multitasking}}, where every word use other words
+via nested \term{call}. Every time when call occurs, current execution
+(interpreter) pointer pushes into special \term{return stack}, and jumps to
+required word code. When called word finishes its work, \verb|ret| command pops
+\term{return address} from stack, and \emph{return execution on next command}
+after used \verb|call| command\note{there is some variant of pure threaded code
+you can see in \cite{thbell}\ --- only addresses without call opcode, and
+special address for ret}.
+\begin{lstlisting}[language=Python]
+class VM:
+
+	D = []							# data stack
+	R = []							# CALL/RET return stack
+	def call(self):
+		# push return address (Ip points to call parameter)
+		self.R.append(self.Ip+1)
+		self.Ip = self.program[self.Ip]	# jmp
+	def ret(self):
+		assert self.R					# check non-empty
+		self.Ip = self.R.pop()	# return to marked address		
+
+class FORTH(VM):
+	# command lookup table
+	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
+			'call':VM.call, 'ret':VM.ret}
+ 	def p_command_VOC(self,p):
+		' command : VOC '
+		self.program.append(VM.call);		# opcode
+		self.program.append(self.voc[p[1]])	# cfa
+\end{lstlisting}
+Now we can implement and check calls for colon-defined words:
+\begin{lstlisting}[language=Forth]
+: NOOP ;
+: INTERPRET		\ REPL interpreter loop
+	NOOP
+	...
+\end{lstlisting}
+\begin{lstlisting}
+{'NOOP': 2, 'INTERPRET': 3}
+
+	0000: <unbound method VM.nop> 
+	0001: <unbound method VM.bye> 
+NOOP: 
+	0002: <unbound method VM.ret> 
+INTERPRET: 
+	0003: <unbound method VM.call> 0002 : NOOP 
+	0005: <unbound method VM.ret>
+\end{lstlisting}
+To execute this we must add code, let us use last defined word as program
+entry point. To do this, we replace first command with with \verb|call _entry|:
+
+\begin{lstlisting}
+	FORTH(r''' # use r' : we have escapes in string constants
+\ test FORTH comment syntax for inherited parser
+: NOOP ;
+: INTERPRET		\ REPL interpreter loop
+	NOOP
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+class VM:
+	def init_code(self): pass
+		# set instruction pointer entry point
+		self.Ip = 0							
+		# clean up program memory	
+		self.program = []
+	def compiler(self,src):
+		# ===== init code section =====
+		self.init_code()
+
+class FORTH(VM):
+	def init_code(self):
+		VM.init_code(self)
+		self.program.append(VM.call)	# call ...
+		self.program.append(0)			# _entry = 1
+		self.program.append(VM.bye)		# bye
+  	def p_command_COLON(self,p):
+  		' command : COLON ID'
+  		# store current compilation pointer into voc
+		# reset _entry to current cfa
+  		self.program[1] = self.voc[p[2]] = len(self.program)
+		print self.voc
+\end{lstlisting}
+
+\subsection{Change tracing log output}
+
+I have strage error in \verb|ret| command in \verb|NOOP|, so we need to change
+tracing log generation: it must include both stacks, and have no info on
+registers as \F\ don't use them.
+
+Making program dump we need fast conversion from current address into record in
+vocabulary. So \emph{we must use reversed vocabulary} to do reverse lookup from
+addr to associated label (word name, variable,\ldots).
+Also we need to change logging in interpreter: we don't need registers, but
+need stacks to be printed on every command (if trace enabled).
+\begin{lstlisting}[language=Python]
+class VM:
+	# return known label for given address
+	def log_label(self,addr): return ''
+	# dump command from given addr
+	def log_command(self,addr):
+		A = addr
+		# current command
+		command = self.program[A]
+		# check if we have known labels
+		L = self.log_label(A)
+		if L: print '\n%s:' % L, # print on separate line
+		# print main command log text
+		print '\n\t%.4X' % A , command,
+		# process commands with parameters
+		if command == VM.call:
+			# target address
+			T = self.program[A+1]
+			# print target addr with known label
+			print T,self.log_label(T),
+			A += 1
+		return A+1	# return next command address
+	# log extra state (in interpreter trace)
+	def log_state(self):
+		print self.Rg,
+\end{lstlisting}
+Note that \verb|log_command| \emph{returns address of next command}\ --- it is
+required as \emph{we have commands with var length}. Interpreter don't use
+returned addr, as it is done inside commands, but in \verb|dump| method every
+next dumped addr must be computed in
+\verb|log_command|.
+\begin{lstlisting}[language=Python]
+	def interpreter(self):
+		self._bye = False		   				# stop flag
+		while not self._bye:
+			assert self.Ip < len(self.program)
+			command = self.program[self.Ip]	# FETCH command
+			self.log_command(self.Ip)		# log command
+			self.log_state()				# log state
+			self.Ip += 1				# to next command
+			command(self)				# DECODE/EXECUTE
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+   	def dump(self):
+ 		# loop over self.program
+ 		addr = 0;
+ 		# loop over program 
+ 		while addr < len(self.program):
+ 			# addr: command <extra>
+ 			addr = self.log_command(addr)
+   		print ; print '-'*55
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	# vocabulary of all defined words
+	voc = {}
+	# reversed vocabulary {addr:name} for fast label lookup
+	revoc = {}
+	def log_state(self):
+		print 'R:%s'%self.R,
+
+  	def p_command_COLON(self,p):
+  		' command : COLON ID'
+  		# store current compilation pointer into voc
+		# reset _entry to current cfa
+  		self.program[1] = self.voc[p[2]] = len(self.program)
+  		# add reversed pair {addr:label}
+  		self.revoc[len(self.program)] = p[2]
+		print self.voc
+\end{lstlisting}
+\begin{lstlisting}
+{'NOOP': 3, 'INTERPRET': 4}
+\end{lstlisting}
+\clearpage
+\begin{lstlisting}
+	0000 <unbound method VM.call> 4 INTERPRET 
+	0002 <unbound method VM.bye> 
+NOOP: 
+	0003 <unbound method VM.ret> 
+INTERPRET: 
+	0004 <unbound method VM.call> 3 NOOP 
+	0006 <unbound method VM.ret>
+-------------------------------------------------------
+	0000 <unbound method VM.call> 4 INTERPRET R:[] 
+INTERPRET: 
+	0004 <unbound method VM.call> 3 NOOP R:[2] 
+NOOP: 
+	0003 <unbound method VM.ret> R:[2, 6] 
+	0006 <unbound method VM.ret> R:[2] 
+	0002 <unbound method VM.bye> R:[]
+\end{lstlisting}
+This trace log looks much better:
+\begin{description}[nosep]
+\item[first part]\ \\contains compiled program dump
+\item[second part]\ \\contains interpreter execution log with stacks state
+\emph{before command execution}
+\end{description}
+
+\bigskip
+Also we can add extra check for call command: check that parameter after call
+opcode was integer address:
+\begin{lstlisting}[language=Python]
+	def call(self):
+		# push return address (Ip points to call parameter)
+		self.R.append(self.Ip+1)
+		self.Ip = self.program[self.Ip]			# jmp
+		assert type(self.Ip) == int	# addr must be integer
+\end{lstlisting}
+
+\subsection{Throw out registers}
+
+\F\ is pure stack language, and we will throw out registers\note{until we want
+to play with self-made JIT}.
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	Rg = ld = None	# throw out registers
+\end{lstlisting}
+
+\subsection{\F\ vocabulary structure}

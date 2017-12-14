@@ -13,6 +13,8 @@ $(TEXIMPL):
 
 manual:
 	cd doc ; $(MAKE)
+pdf:
+	cd doc ; $(MAKE) pdf
 
 html:
 	python latex2html.py
@@ -21,12 +23,17 @@ forth: FORTH/bin.bin
 FORTH/bin.bin:
 	cd FORTH ; $(MAKE)
 
-packages:
+packages: ply/ply/lex.py
 	sudo apt install \
 		make build-essential \
 		texlive-latex-extra graphviz \
-		python2.7 python-wxgtk3.0
+		python2.7 python-wxgtk3.0 python-ply
 	sudo pip install yattag
+
+ply: ply/ply/lex.py
+ply/ply/lex.py:
+	git clone --depth=1 https://github.com/ponyatov/ply.git
+#	git clone -o gh --depth=1 git@github.com:ponyatov/ply.git
 
 Eijkhout/pdf.pdf: 
 	cd Eijkhout ; $(MAKE)
