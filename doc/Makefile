@@ -21,8 +21,9 @@ LATEX = pdflatex -halt-on-error -output-directory ../tmp
 ../tmp/manual.pdf: $(TEX) $(SRC) $(FIG) ../tmp/tex.tex
 	$(LATEX) manual
 	
-../tmp/tex.tex: $(TEX) ../.git/HEAD
-	echo "\date{\scriptsize $(RELEASE)}" | sed -r "s|\_|\\\_|g" > ../tmp/tex.tex
+../tmp/tex.tex: $(TEX) ../.git/HEAD Makefile
+#	echo "\date{\scriptsize $(RELEASE)}" | sed -r "s|\_|\\\_|g" > ../tmp/tex.tex
+	echo "\date{DLR\_$(NOW)}" > ../tmp/tex.tex
 
 pdf: ../$(RELEASE).pdf
 ../$(RELEASE).pdf: manual.pdf
