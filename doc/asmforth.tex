@@ -776,8 +776,8 @@ If we change source:
 : NOOP ;
 : INTERPRET		\ REPL interpreter loop
 	NOOP
-	begin
-	...		;
+	begin word find again
+;
 \end{lstlisting}
 we'll get trace with found \verb|hello| and undefined \verb|world|:
 \begin{lstlisting}
@@ -788,5 +788,20 @@ we'll get trace with found \verb|hello| and undefined \verb|world|:
 0008 <find at 0x018F51F0> D:[3, True, 'world'] R:[2]
 0009 <method VM.jmp> 7  D:[3, True, 'world', False] R:[2]
 0007 <word at 0x018F51B0> D:[3, True, 'world', False] R:[2]
+\end{lstlisting}
+
+\subsection{IF/ELSE/ENDIF and execute/abort}
+
+\begin{lstlisting}[language=Forth]
+: INTERPRET
+	begin
+		word ( -- str ) find ( cfa true | str false )
+		if ( cfa )
+			execute		\ call to addr from stack
+		else ( str )
+			abort		\ dump state, stacks and restart
+		endif
+	again
+;
 \end{lstlisting}
 
