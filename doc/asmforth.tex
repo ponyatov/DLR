@@ -877,7 +877,7 @@ class VM:
 			
 	def log_command(self,addr):
 		if command in [ VM.jmp, VM.qjmp, VM.call]:
-			print '%.4X'%T,self.log_label(T),
+			print '%.4X' % T,self.log_label(T),
 
 class FORTH(VM):
 	cmd = { 'jmp':VM.jmp, '?jmp':VM.qjmp,..}
@@ -955,4 +955,173 @@ sample \verb|: hello if(1) nop else(1) if(2) bye endif(2) endif(1) ;|
 	000A <unbound method VM.bye> 			\ endif(2)
 	000B <unbound method VM.ret>			\ endif(1)
 \end{lstlisting}
+
+\subsection{Implementing in-system \F\ compiler}
+
+The key feature of \F\ system in \emph{self-extensibility}: you can expand
+system in runtime doing new word definitions via compilation. The internal
+compiler is the same simple as \F\ syntax.
+
+\bigskip
+\F\ system can work in two states: every found word 
+\begin{description}
+  \item[interpretation] (\verb|STATE=0|) : 
+  will be immediately \verb|execute|d\note{default state when you start system}
+  \item[compilation]: \verb|call| will be compiled to the end of vocabulary 
+\end{description}
+State is controlled by\ldots \verb|STATE| \term{variable}. You just change
+\verb|STATE|, and system changes mode.
+
+\clearpage
+\begin{lstlisting}[language=Forth]
+false var STATE			\ interpret =0 / compile 
+
+: INTERPRET				\ REPL interpreter /compiler loop
+	begin word find
+	if ( addr:cfa )		 \ word found
+		STATE @ ( bool ) \ compile =true / interpret =false  
+		if
+			( addr:cfa ) compile \ compile call to word
+		else
+			( addr:cfa ) execute \ call to addr from stack
+		endif
+	else abort endif	\ word not found 
+	again ;
+\end{lstlisting}
+
+\clearpage
+\subsection{Bool constants: TRUE/FALSE}
+
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	tokens = [..,'TRUE','FALSE']
 	
+	# lexer: will be recognized as syntax elements
+ 	def t_TRUE(self,t):
+ 		r'true'
+ 		return t
+ 	def t_FALSE(self,t):
+ 		r'false'
+ 		return t
+ 		
+ 	# parser: allowed in variable declarations (see later)
+ 	def p_VAR(self,p):
+ 		' command : init VAR ID '
+ 	def p_init_bool(self,p):
+ 		' init : bool '
+ 		p[0] = p[1]
+ 	def p_bool_true(self,p):
+ 		' bool : TRUE '
+ 		p[0] = True
+ 	def p_bool_false(self,p):
+ 		' bool : FALSE '
+ 		p[0] = False
+\end{lstlisting}
+
+
+\clearpage
+\subsection{Variables, memory r/w, LIT and literals}
+
+\begin{lstlisting}[language=Forth]
+false var STATE			\ interpret =0 / compile 
+
+: INTERPRET				\ REPL interpreter /compiler loop
+	...
+		STATE @ ( bool ) \ compile =true / interpret =false
+	...  
+\end{lstlisting}
+Variables in classic \F\ resides in main memory. In C and UNIX
+programs\note{and DOS programs with \term{small model} and larger} traditionally use separate
+memory segments for code \verb|.text|, initialized \verb|.data|, \verb|.stack|
+and uninitialized heap \verb|.bss|. We can go separation way to increase
+stability, but using same commands to \emph{read and write} both variables and
+\emph{program memory} can be very interesting. So lets use \term{flat memory
+model} for data and code just as sample. 
+
+\begin{lstlisting}[language=Python]
+class VM:
+	def fetch(self):
+		assert self.D ; addr = self.D.pop()
+		assert addr < len(self.program)
+		self.D.append(self.program[addr])
+	def store(self):
+\end{lstlisting}
+\verb|LIT| command is required to \emph{push constants} as is on data stack:
+\begin{lstlisting}[language=Python]
+	def lit(self):
+		self.D.append(self.program[self.Ip])
+		self.Ip += 1
+	def log_command(self,addr):
+		if command in [ VM.jmp, VM.qjmp, VM.call, VM.lit]:
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	cmd = { .., '@':VM.fetch, '!':VM.store , 'lit':VM.lit} 		
+\end{lstlisting}
+
+%\clearpage
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	tokens = [..,'VAR','FETCH','STORE']
+ 	def t_VAR(self,t):
+ 		r'var'
+ 		return t
+ 	def t_FETCH(self,t):
+ 		r'@'
+ 		return t
+ 	def t_STORE(self,t):
+ 		r'!'
+ 		return t
+\end{lstlisting}
+We can implement more complex number literals including hex, binary and
+int/float numbers:
+ \begin{lstlisting}[language=Python]
+	tokens = [..,'NUM',..]
+ 	def t_NUM(self,t):
+		r'0x[0-9A-Fa-f]+|
+			0b[01]+|
+			[\+\-]?[0-9]+(\.[0-9]*)?([eE][\+\-]?[0-9]+)?'
+  		if t.value[:2] == '0x':
+  			t.value = int(t.value[2:],0x10) # hex
+  		elif t.value[:2] == '0b':
+  			t.value = int(t.value[2:],0x02) # bin
+  		else:
+  			t.value = float(t.value)
+ 		return t
+ 	def t_ID(self,t): # this rule must be last rule
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+ 	def p_VAR(self,p):
+ 		' command : init VAR ID '
+ 		addr = len(self.program)
+ 		self.voc[p[3]] = addr ; self.revoc[addr] = p[3]
+ 		# lit PFA
+ 		self.program.append(self.cmd['lit'])	 # lit ...
+ 		self.program.append(len(self.program)+2) # PFA
+ 		# ret
+ 		self.program.append(self.cmd['ret'])
+ 		# compile PFA with init value
+ 		self.program.append(p[1])
+ 	def p_FETCH(self,p):
+ 		' command : FETCH '
+ 		self.program.append(self.cmd['@'])
+ 	def p_STORE(self,p):
+ 		' command : STORE '
+ 		self.program.append(self.cmd['!'])
+ 	# var/const init value can be checked by syntax parser
+ 	def p_init_NUM(self,p):
+ 		' init : NUM '
+ 		p[0] = p[1]
+ 	def p_init_bool(self,p):
+ 		' init : bool '
+ 		p[0] = p[1]
+ 	def p_bool_true(self,p):
+ 		' bool : TRUE '
+ 		p[0] = True
+ 	def p_bool_false(self,p):
+ 		' bool : FALSE '
+ 		p[0] = False
+\end{lstlisting}
+

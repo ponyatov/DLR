@@ -53,6 +53,16 @@ class VM:
 		data = self.program[self.Ip]            # load data to be loaded
 		self.Ip += 1                            # skip second command parameter
 		self.R[index] = data					# load register
+		
+	def fetch(self):
+		assert self.D ; addr = self.D.pop()
+		assert addr < len(self.program)
+		self.D.append(self.program[addr])
+	def store(self):
+		pass
+	def lit(self):
+		self.D.append(self.program[self.Ip])
+		self.Ip += 1
 
 	# return known label for given address
 	def log_label(self,addr): return ''
@@ -67,7 +77,7 @@ class VM:
 		# print main command log text
 		print '\n\t%.4X' % A , command,
 		# process commands with parameters
-		if command in [ VM.jmp, VM.qjmp, VM.call]:
+		if command in [ VM.jmp, VM.qjmp, VM.call, VM.lit]:
 			# target address
 			T = self.program[A+1]
 			# print target addr with known label
@@ -249,7 +259,8 @@ class FORTH(VM):
 			'jmp':VM.jmp, '?jmp':VM.qjmp, 
 			'call':VM.call, 'ret':VM.ret,
 			'execute':VM.execute, 'abort':VM.abort,
-			'word':word, 'find':find }
+			'word':word, 'find':find,
+			'@':VM.fetch,'!':VM.store,'lit':VM.lit }
 	# vocabulary of all defined words
 	voc = {}
 	# reversed vocabulary {addr:name} for fast label lookup
@@ -274,7 +285,8 @@ class FORTH(VM):
 	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'				# comment
 	tokens = ['ID','CMD','VOC',
 				'COLON','SEMICOLON','BEGIN','AGAIN',
-				'IF','ELSE','ENDIF']
+				'IF','ELSE','ENDIF',
+				'NUM','VAR','FETCH','STORE','TRUE','FALSE']
 	t_NOP = p_NOP = None
  	t_BYE = p_BYE = None
  	t_REGISTER = p_Rload = p_STRING = None
@@ -294,6 +306,30 @@ class FORTH(VM):
  		return t
  	def t_ENDIF(self,t):
  		r'endif'
+ 		return t
+ 	def t_VAR(self,t):
+ 		r'var'
+ 		return t
+	def t_FETCH(self,t):
+		r'\@'
+		return t
+	def t_STORE(self,t):
+		r'\!'
+		return t
+ 	def t_TRUE(self,t):
+ 		r'true'
+ 		return t
+ 	def t_FALSE(self,t):
+ 		r'false'
+ 		return t
+ 	def t_NUM(self,t):
+  		r'0x[0-9A-Fa-f]+|0b[01]+|[\+\-]?[0-9]+(\.[0-9]*)?([eE][\+\-]?[0-9]+)?'
+  		if t.value[:2] == '0x':
+  			t.value = int(t.value[2:],0x10) # hex
+  		elif t.value[:2] == '0b':
+  			t.value = int(t.value[2:],0x02) # bin
+  		else:
+  			t.value = float(t.value)
  		return t
  	def t_ID(self,t): # this rule must be last rule
  		r'[a-zA-Z0-9_]+'
@@ -351,19 +387,53 @@ class FORTH(VM):
  	def p_SEMICOLON(self,p):
  		' command : SEMICOLON '
  		self.program.append(self.cmd['ret'])
+ 	def p_VAR(self,p):
+ 		' command : init VAR ID '
+ 		addr = len(self.program)
+ 		self.voc[p[3]] = addr ; self.revoc[addr] = p[3]
+ 		self.program.append(self.cmd['lit'])	 # lit ...
+ 		self.program.append(len(self.program)+2) # PFA
+ 		self.program.append(self.cmd['ret'])
+ 		self.program.append(p[1]) # compile PFA with init value
+	def p_FETCH(self,p):
+		' command : FETCH '
+		self.program.append(self.cmd['@'])
+	def p_STORE(self,p):
+		' command : STORE '
+		self.program.append(self.cmd['!'])
+ 	# var/const init value can be checked by syntax parser
+ 	def p_init_NUM(self,p):
+ 		' init : NUM '
+ 		p[0] = p[1]
+ 	def p_init_bool(self,p):
+ 		' init : bool '
+ 		p[0] = p[1]
+ 	def p_bool_true(self,p):
+ 		' bool : TRUE '
+ 		p[0] = True
+ 	def p_bool_false(self,p):
+ 		' bool : FALSE '
+ 		p[0] = False
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
 : hello if(1) nop else(1) if(2) bye endif(2) endif(1) ;
-: INTERPRET				\ REPL interpreter loop
+
+false var STATE			\ interpret =0 / compile 
+
+: INTERPRET				\ REPL interpreter /compiler loop
 	begin
 		\ get next word name from input stream
 		word	( -- str:wordname )
 		\ find word entry point
 		find 	( addr:cfa true | str:wordname false )
-		if ( addr:cfa )
-			\ call to addr from stack
-			execute	( addr:cfa -- )
+		if ( addr:cfa )		 \ word found
+			STATE @ ( bool ) \ compile =true / interpret =false
+			if  
+				abort
+			else
+				( addr:cfa ) execute \ call to addr from stack
+			endif
 		else ( str:wordname )
 			\ dump state, stacks and restart
 			abort
