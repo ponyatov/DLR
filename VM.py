@@ -28,6 +28,15 @@ class VM:
 	def jmp(self):
 		self.Ip = self.program[self.Ip]			# get addr from jmp parameter
 		assert self.Ip < len(self.program)		# check range
+	def execute(self):
+		self.R.append(self.Ip)					# push ret addr
+		assert self.D ; self.Ip = self.D.pop()	# load jmp addr from stack
+		assert type(self.Ip) == int				# addr must be integer
+		assert self.Ip < len(self.program)		# check range
+	def abort(self):
+		print '\n\nD:%s\nR:%s\n' % (self.D,self.R)
+		self.dump()
+		raise BaseException('ABORT')
 
 	def ld(self):
 		' load register '
@@ -232,6 +241,7 @@ class FORTH(VM):
 	# command lookup table
 	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
 			'jmp':VM.jmp, 'call':VM.call, 'ret':VM.ret,
+			'execute':VM.execute, 'abort':VM.abort,
 			'word':word, 'find':find }
 	# vocabulary of all defined words
 	voc = {}
@@ -310,17 +320,20 @@ class FORTH(VM):
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
-\ test FORTH comment syntax for inherited parser
-: hello ;
 
-: NOOP ;
-: INTERPRET		\ REPL interpreter loop
-	NOOP
+: INTERPRET				\ REPL interpreter loop
 	begin
-		word	\ ( -- str:wordname ) get next word name from input stream
-		find	\ ( str:wordname -- addr:xt ) find word entry point
-		execute	\ ( xt -- ) execute found xt (execution token)
-	again
-;
-	
+		\ get next word name from input stream
+		word	( -- str:wordname )
+		\ find word entry point
+		find 	( addr:cfa true | str:wordname false )
+		if ( addr:cfa )
+			\ call to addr from stack
+			execute	( addr:cfa -- )
+		else ( str:wordname )
+			\ dump state, stacks and restart
+			abort
+		endif		
+	again			;
+
 	''')

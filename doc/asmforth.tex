@@ -790,28 +790,79 @@ we'll get trace with found \verb|hello| and undefined \verb|world|:
 0007 <word at 0x018F51B0> D:[3, True, 'world', False] R:[2]
 \end{lstlisting}
 
-\subsection{IF/ELSE/ENDIF and execute/abort}
+\subsection{IF/ELSE/ENDIF and EXECUTE/ABORT}
 
 \begin{lstlisting}[language=Forth]
-: INTERPRET
+: INTERPRET				\ REPL interpreter loop
 	begin
-		word ( -- str ) find ( cfa true | str false )
-		if ( cfa )
-			execute		\ call to addr from stack
-		else ( str )
-			abort		\ dump state, stacks and restart
-		endif
-	again
-;
+		\ get next word name from input stream
+		word	( -- str:wordname )
+		\ find word entry point
+		find 	( addr:cfa true | str:wordname false )
+		if ( addr:cfa )
+			\ call to addr from stack
+			execute	( addr:cfa -- )
+		else ( str:wordname )
+			\ dump state, stacks and restart
+			abort
+		endif		
+	again			;
 \end{lstlisting}
 
 \clearpage
+\verb|execute| command works as \verb|call| but uses address from data stack:
+
+\begin{lstlisting}[language=Python]
+class VM:
+	def execute(self):
+		# push ret addr
+		self.R.append(self.Ip)					
+		# load jmp addr from stack
+		assert self.D ; self.Ip = self.D.pop()	
+		# addr must be integer
+		assert type(self.Ip) == int				
+		# check range
+		assert self.Ip < len(self.program)		
+class FORTH(VM):
+	cmd = { 'execute':VM.execute,..} 
+\end{lstlisting}
+
+\clearpage
+\verb|abort| must restart REPL loop, but we will stop all system with state
+dump:
+\begin{lstlisting}[language=Python]
+class VM:
+	def abort(self):
+		print '\n\nD:%s\nR:%s\n' % (self.D,self.R)
+		self.dump()
+		raise BaseException('ABORT')
+class FORTH(VM):
+	cmd = { 'abort':VM.abort,..} 
+\end{lstlisting}
+\begin{lstlisting}
+D:[]
+R:[2]
+
+{'INTERPRET': 3}
+	0000 <unbound method VM.call> 3 INTERPRET 
+	0002 <unbound method VM.bye> 
+\end{lstlisting}
+		
+\clearpage
 \noindent
-if/else is complex to understand: it uses forward jumps and \term{backpatching}
-with \emph{one pass compiling}:
+\verb|if|/\verb|else| is complex to understand: it uses forward jumps and
+\term{backpatching} with \emph{one pass compiling}:
 \begin{description}
-	\item[if] compiles \verb|?jmp| conditional jump command
-	\item[else]
-	\item[endif]
+\item[?jmp] conditional \verb|?jmp| command uses flag from data stack an
+\emph{jumps on false}
+\item[if] compiles \verb|?jmp| with \emph{fake} parameter, and \term{marks} its
+parameter addr into control\note{don't forget we use return stack, but it can be
+separate control stack}\ stack. Later this \verb|addr| will be popped by
+\verb|else|/\verb|endif| and \term{backpatched} with real address must be
+jumped if \emph{false} on data stack.
+\item[endif] patches \verb|?jmp| command compiled by \verb|if| using
+\verb|addr| popped from control stack
+\item[else] (optional) implements else branch, compiles \verb|jmp endif|
+command, replacing if addr on constrol stack by \verb|jmp endif| addr.
 \end{description}
 
