@@ -106,18 +106,18 @@ class VM:
 		' program : '
 	def p_program_recursive(self,p):
 		' program : program command '
-	def p_command_NOP(self,p):
+	def p_NOP(self,p):
 		' command : NOP '
 		self.program.append(self.nop)
-	def p_command_BYE(self,p):
+	def p_BYE(self,p):
 		' command : BYE '
 		self.program.append(self.bye)
-	def p_command_R_load(self,p):
+	def p_Rload(self,p):
 		' command : REGISTER EQ constant'
 		self.program.append(self.ld)	# compile ld command opcode
 		self.program.append(p[1])		# compile register number at pos $1
 		self.program.append(p[3])		# compile constant
-	def p_constant_STRING(self,p):
+	def p_STRING(self,p):
 		' constant : STRING '
 		p[0] = p[1]
 	# required parser error callback must be method
@@ -266,10 +266,11 @@ class FORTH(VM):
 
 	t_ignore_COMMENT = r'\#.*|\\.*|\(.*?\)'				# comment
 	tokens = ['ID','CMD','VOC',
-				'COLON','SEMICOLON','BEGIN','AGAIN']
-	t_NOP = p_command_NOP = None
- 	t_BYE = p_command_BYE = None
- 	t_REGISTER = p_command_R_load = p_constant_STRING = None
+				'COLON','SEMICOLON','BEGIN','AGAIN',
+				'IF','ELSE','ENDIF']
+	t_NOP = p_NOP = None
+ 	t_BYE = p_BYE = None
+ 	t_REGISTER = p_Rload = p_STRING = None
  	# lexemes regexp overrides
  	t_COLON = ':' ; t_SEMICOLON = ';'
  	def t_BEGIN(self,t):
@@ -277,6 +278,15 @@ class FORTH(VM):
  		return t 
  	def t_AGAIN(self,t):
  		r'again'
+ 		return t
+ 	def t_IF(self,t):
+ 		r'if'
+ 		return t
+ 	def t_ELSE(self,t):
+ 		r'else'
+ 		return t
+ 	def t_ENDIF(self,t):
+ 		r'endif'
  		return t
  	def t_ID(self,t): # this rule must be last rule
  		r'[a-zA-Z0-9_]+'
@@ -286,35 +296,35 @@ class FORTH(VM):
  		if t.value in self.cmd: t.type='CMD'
  		return t 
  	# grammar override
- 	def p_command_BEGIN(self,p):
+ 	def p_BEGIN(self,p):
 		' command : BEGIN '
 		# mark Ip pushing in return stack
 		self.R.append(len(self.program))
- 	def p_command_AGAIN(self,p):
+ 	def p_AGAIN(self,p):
 		' command : AGAIN '
 		# jmp opcode
 		self.program.append(self.cmd['jmp'])
 		# jmp parameter: pop marked Ip
 		self.program.append(self.R.pop())
-  	def p_command_ID(self,p):
+  	def p_ID(self,p):
 		' command : ID '
 #		raise BaseException(p[1])
- 	def p_command_CMD(self,p):
+ 	def p_CMD(self,p):
  		' command : CMD '
  		# compile command using cmd{} lookup table
  		self.program.append(self.cmd[p[1]])
- 	def p_command_VOC(self,p):
+ 	def p_VOC(self,p):
 		' command : VOC '
 		self.program.append(VM.call);		# opcode
 		self.program.append(self.voc[p[1]])	# cfa
-  	def p_command_COLON(self,p):
+  	def p_COLON(self,p):
   		' command : COLON ID'
   		# store current compilation pointer into voc
 		# reset _entry to current cfa
   		self.program[1] = self.voc[p[2]] = len(self.program)
   		# add reversed pair {addr:label}
   		self.revoc[len(self.program)] = p[2]
- 	def p_command_SEMICOLON(self,p):
+ 	def p_SEMICOLON(self,p):
  		' command : SEMICOLON '
  		self.program.append(self.cmd['ret'])
 

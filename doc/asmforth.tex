@@ -205,9 +205,9 @@ The second tiny patch i've done for PLY, lets mark parser rules as deleted using
 \verb|=Null| assignment:
 \begin{lstlisting}[language=Python]
 class FORTH(VM):
-	t_NOP = p_command_NOP = None
- 	t_BYE = p_command_BYE = None
- 	t_REGISTER = p_command_R_load
+	t_NOP = p_NOP = None
+ 	t_BYE = p_BYE = None
+ 	t_REGISTER = p_Rload
  	p_constant_STRING = None
 \end{lstlisting}
 \begin{lstlisting}
@@ -219,11 +219,11 @@ We must define what commands we are going to see in our programs.
 \item[grammar] rules modifies VM grammar, and required
 \begin{lstlisting}[language=Python]
 # grammar override
-def p_command_ID(self,p):		' command : ID '
-def p_command_COLON(self,p):	' command : COLON '
-def p_command_SEMICOLON(self,p):' command : SEMICOLON '
-def p_command_BEGIN(self,p):	' command : BEGIN '
-def p_command_AGAIN(self,p):	' command : AGAIN '
+def p_ID(self,p):		' command : ID '
+def p_COLON(self,p):	' command : COLON '
+def p_SEMICOLON(self,p):' command : SEMICOLON '
+def p_BEGIN(self,p):	' command : BEGIN '
+def p_AGAIN(self,p):	' command : AGAIN '
 \end{lstlisting}
 \item[lexemes] we want to override comparing to base VM regexp rule set
 \begin{lstlisting}[language=Python]
@@ -301,11 +301,11 @@ compile or execute single VM command in interactive \F\ system.
 \clearpage
 And define new special rules in grammar:
 \begin{lstlisting}[language=Python]
- 	def p_command_CMD(self,p):
+ 	def p_CMD(self,p):
  		' command : CMD '
  		# compile command using cmd{} lookup table
  		self.program.append(self.cmd[p[1]])
- 	def p_command_VOC(self,p):		' command : VOC '
+ 	def p_VOC(self,p):		' command : VOC '
 \end{lstlisting}
 
 Dummy compiles and executes\note{check VM.interpreter() uses command(self)}, but
@@ -320,12 +320,12 @@ class FORTH(VM):
 	# vocabulary of all defined words
 	voc = {}
 
-  	def p_command_COLON(self,p):
+  	def p_COLON(self,p):
   		' command : COLON ID'
   		# store current compilation pointer into voc
   		self.voc[p[2]] = len(self.program)
   		print self.voc
-  	def p_command_ID(self,p):		' command : ID '
+  	def p_ID(self,p):		' command : ID '
 \end{lstlisting}
 \begin{lstlisting}
 {'INTERPRET': 2}
@@ -339,7 +339,7 @@ command will be compiled just next.
 class FORTH(VM):
 	# command lookup table
 	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'ret':VM.ret}
- 	def p_command_SEMICOLON(self,p):
+ 	def p_SEMICOLON(self,p):
  		' command : SEMICOLON '
  		self.program.append(self.cmd['ret'])
  		
@@ -395,7 +395,7 @@ class FORTH(VM):
 	# command lookup table
 	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
 			'call':VM.call, 'ret':VM.ret}
- 	def p_command_VOC(self,p):
+ 	def p_VOC(self,p):
 		' command : VOC '
 		self.program.append(VM.call);		# opcode
 		self.program.append(self.voc[p[1]])	# cfa
@@ -445,7 +445,7 @@ class FORTH(VM):
 		self.program.append(VM.call)	# call ...
 		self.program.append(0)			# _entry = 1
 		self.program.append(VM.bye)		# bye
-  	def p_command_COLON(self,p):
+  	def p_COLON(self,p):
   		' command : COLON ID'
   		# store current compilation pointer into voc
 		# reset _entry to current cfa
@@ -525,7 +525,7 @@ class FORTH(VM):
 	def log_state(self):
 		print 'R:%s'%self.R,
 
-  	def p_command_COLON(self,p):
+  	def p_COLON(self,p):
   		' command : COLON ID'
   		# store current compilation pointer into voc
 		# reset _entry to current cfa
@@ -691,11 +691,11 @@ class FORTH(VM):
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
- 	def p_command_BEGIN(self,p):
+ 	def p_BEGIN(self,p):
 		' command : BEGIN '
 		# mark Ip pushing in return stack
 		self.R.append(len(self.program))
- 	def p_command_AGAIN(self,p):
+ 	def p_AGAIN(self,p):
 		' command : AGAIN '
 		# jmp opcode
 		self.program.append(self.cmd['jmp'])
@@ -765,7 +765,7 @@ class FORTH(VM):
 \end{lstlisting}
 You can fix parser: raise error on undefined commands/words:
 \begin{lstlisting}[language=Python]
-  	def p_command_ID(self,p):
+  	def p_ID(self,p):
 		' command : ID '
 #		raise BaseException(p[1])
 \end{lstlisting}
@@ -866,3 +866,17 @@ jumped if \emph{false} on data stack.
 command, replacing if addr on constrol stack by \verb|jmp endif| addr.
 \end{description}
 
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+	tokens = [..,'IF','ELSE','ENDIF']
+ 	def t_IF(self,t):
+ 		r'if'
+ 		return t
+ 	def t_ELSE(self,t):
+ 		r'else'
+ 		return t
+ 	def t_ENDIF(self,t):
+ 		r'endif'
+ 		return t
+\end{lstlisting}
+	
