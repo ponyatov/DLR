@@ -28,6 +28,12 @@ class VM:
 	def jmp(self):
 		self.Ip = self.program[self.Ip]			# get addr from jmp parameter
 		assert self.Ip < len(self.program)		# check range
+	def qjmp(self):
+		assert self.D
+		if not self.D.pop(): # ( flag -- ) 
+			self.jmp()
+		else:
+			self.Ip += 1	# skip ?jmp parameter
 	def execute(self):
 		self.R.append(self.Ip)					# push ret addr
 		assert self.D ; self.Ip = self.D.pop()	# load jmp addr from stack
@@ -61,11 +67,11 @@ class VM:
 		# print main command log text
 		print '\n\t%.4X' % A , command,
 		# process commands with parameters
-		if command in [ VM.jmp, VM.call]:
+		if command in [ VM.jmp, VM.qjmp, VM.call]:
 			# target address
 			T = self.program[A+1]
 			# print target addr with known label
-			print T,self.log_label(T),
+			print '%.4X'%T,self.log_label(T),
 			A += 1
 		return A+1	# return next command address
 	# log extra state (in interpreter trace)
@@ -240,7 +246,8 @@ class FORTH(VM):
 
 	# command lookup table
 	cmd = { 'nop':VM.nop , 'bye':VM.bye ,
-			'jmp':VM.jmp, 'call':VM.call, 'ret':VM.ret,
+			'jmp':VM.jmp, '?jmp':VM.qjmp, 
+			'call':VM.call, 'ret':VM.ret,
 			'execute':VM.execute, 'abort':VM.abort,
 			'word':word, 'find':find }
 	# vocabulary of all defined words
@@ -306,6 +313,23 @@ class FORTH(VM):
 		self.program.append(self.cmd['jmp'])
 		# jmp parameter: pop marked Ip
 		self.program.append(self.R.pop())
+	def p_IF(self,p):
+		' command : IF '
+		self.program.append(self.cmd['?jmp'])	# opcode
+		self.R.append(len(self.program))		# mark
+		self.program.append(-1)					# fake addr
+	def p_ELSE(self,p):
+		' command : ELSE '
+		assert self.R ; A = self.R.pop()		# pop if jmp
+		self.program.append(self.cmd['jmp'])	# jmp endif
+		self.R.append(len(self.program))		# mark
+		self.program.append(-1)					# fake addr
+		self.program[A] = len(self.program)		# backpatch if
+	def p_ENDIF(self,p):
+		' command : ENDIF '
+		assert self.R ; A = self.R.pop()		# resolve
+		self.program[A] = len(self.program)		# backpatch
+# 		self.program.append(self.cmd['nop'])	# show endif pos
   	def p_ID(self,p):
 		' command : ID '
 #		raise BaseException(p[1])
@@ -330,7 +354,7 @@ class FORTH(VM):
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
-
+: hello if(1) nop else(1) if(2) bye endif(2) endif(1) ;
 : INTERPRET				\ REPL interpreter loop
 	begin
 		\ get next word name from input stream
@@ -344,6 +368,6 @@ if __name__ == '__main__':
 			\ dump state, stacks and restart
 			abort
 		endif		
-	again			;
+	again			;		
 
 	''')

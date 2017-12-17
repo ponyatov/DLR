@@ -806,7 +806,7 @@ we'll get trace with found \verb|hello| and undefined \verb|world|:
 			\ dump state, stacks and restart
 			abort
 		endif		
-	again			;
+	again			;		: hello ; \ defined word
 \end{lstlisting}
 
 \clearpage
@@ -840,7 +840,7 @@ class FORTH(VM):
 	cmd = { 'abort':VM.abort,..} 
 \end{lstlisting}
 \begin{lstlisting}
-D:[]
+D:[3, 'world']
 R:[2]
 
 {'INTERPRET': 3}
@@ -853,7 +853,7 @@ R:[2]
 \verb|if|/\verb|else| is complex to understand: it uses forward jumps and
 \term{backpatching} with \emph{one pass compiling}:
 \begin{description}
-\item[?jmp] conditional \verb|?jmp| command uses flag from data stack an
+\item[?jmp] conditional \verb|?jmp| command uses flag from data stack and
 \emph{jumps on false}
 \item[if] compiles \verb|?jmp| with \emph{fake} parameter, and \term{marks} its
 parameter addr into control\note{don't forget we use return stack, but it can be
@@ -863,11 +863,31 @@ jumped if \emph{false} on data stack.
 \item[endif] patches \verb|?jmp| command compiled by \verb|if| using
 \verb|addr| popped from control stack
 \item[else] (optional) implements else branch, compiles \verb|jmp endif|
-command, replacing if addr on constrol stack by \verb|jmp endif| addr.
+command, replacing \verb|if addr| on constrol stack by \verb|jmp else| addr.
 \end{description}
 
 \begin{lstlisting}[language=Python]
+class VM:
+	def qjmp(self):
+		assert self.D
+		if not self.D.pop(): # ( bool:FALSE! -- ) 
+			self.jmp()
+		else:
+			self.Ip += 1	# skip ?jmp parameter
+			
+	def log_command(self,addr):
+		if command in [ VM.jmp, VM.qjmp, VM.call]:
+			print '%.4X'%T,self.log_label(T),
+
 class FORTH(VM):
+	cmd = { 'jmp':VM.jmp, '?jmp':VM.qjmp,..}
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[language=Python]
+class FORTH(VM):
+
+	# lexer
 	tokens = [..,'IF','ELSE','ENDIF']
  	def t_IF(self,t):
  		r'if'
@@ -878,5 +898,61 @@ class FORTH(VM):
  	def t_ENDIF(self,t):
  		r'endif'
  		return t
+
+ 	# parser
+	def p_IF(self,p):
+		' command : IF '
+		self.program.append(self.cmd['?jmp'])# opcode
+		self.R.append(len(self.program))	# mark
+		self.program.append(-1)				# fake addr
+	def p_ELSE(self,p):
+		' command : ELSE '
+		assert self.R ; A = self.R.pop()	# pop if jmp
+		self.program.append(self.cmd['jmp'])# jmp endif
+		self.R.append(len(self.program))	# mark
+		self.program.append(-1)				# fake addr
+		self.program[A] = len(self.program)	# backpatch if
+	def p_ENDIF(self,p):
+		' command : ENDIF '
+		assert self.R ; A = self.R.pop()	# resolve
+		self.program[A] = len(self.program)	# backpatch
+# 		self.program.append(self.cmd['nop'])# show endif pos
+\end{lstlisting}
+
+\begin{lstlisting}
+INTERPRET: 
+	0004 <function word at 0x7f31eece71b8> 
+	0005 <function find at 0x7f31eece7230> 
+	0006 <unbound method VM.qjmp> 000B  			# if
+	0008 <unbound method VM.execute> 
+	0009 <unbound method VM.jmp> 000C				# else
+	000B <unbound method VM.abort> 
+	000C <unbound method VM.nop>					# endif
+	000D <unbound method VM.jmp> 0004 INTERPRET 
+	000F <unbound method VM.ret>
+\end{lstlisting}
+Special \verb|nop| compilation was added to \verb|p_ENDIF| to show position
+where \verb|endif| takes an action. In real code this position will used by 
+first command compiled after \verb|endif|.
+
+\clearpage
+\begin{lstlisting}[language=Forth]
+: hello if bye endif ;
+
+hello: 
+	0003 <unbound method VM.qjmp> 0006		\ if
+	0005 <unbound method VM.bye> 
+	0006 <unbound method VM.ret>			\ endif
+\end{lstlisting}
+This sample shows if/endif construct without else. And more complex nested
+sample \verb|: hello if(1) nop else(1) if(2) bye endif(2) endif(1) ;|
+
+\begin{lstlisting}[language=Forth]
+	0003 <unbound method VM.qjmp> 0008		\ if(1)  
+	0005 <unbound method VM.nop> 
+	0006 <unbound method VM.jmp> 000B  		\ else(1)
+	0008 <unbound method VM.qjmp> 000B		\ if(2)
+	000A <unbound method VM.bye> 			\ endif(2)
+	000B <unbound method VM.ret>			\ endif(1)
 \end{lstlisting}
 	
