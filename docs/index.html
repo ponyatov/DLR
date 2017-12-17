@@ -18,11 +18,11 @@ devices and slide projectors.
 }\copyrigh tDmitry Ponyatov &lt;<A HREF="mailto:dponyatov@gmail.com">dponyatov@gmail.com</A>&gt;  , GNU LesserGPL, 201
 
 <p>
- <b>Rich manual and support library for writing dynamic script languages</b>7 
+ <b>Rich manual and support library for writing dynamic script languages</b>
 <p>
 
 <ul>
-<li>  [github:] <A HREF="https://github.com/ponyatov/DLR">https://github.com/ponyatov/DLR</A>
+<li> 7[github:] <A HREF="https://github.com/ponyatov/DLR">https://github.com/ponyatov/DLR</A>
 <li>  [PDF for mobile:
  <A HREF="https://github.com/ponyatov/DLR/releases/latest">https://github.com/ponyatov/DLR/releases/latest</A>
 <li> ][online manual (preview):] <A HREF="http://ponyatov.github.io/DLR/">http://ponyatov.github.io/DLR/</A>
@@ -649,7 +649,7 @@ dprogram : | program comman
 </pre>
 <ul> <li> d[\term{production}] is every rule in this language spec <li> s[\term{nonterminal}] element with low case name, which will b edescribed as <b>composite structure, consists of another elements</b>  in other sproduction <li> s[\term{terminal}] is single element is not composite, like simple numbers ,strings and identifiers ; we will use up case to emphasiz ethem as <b>tokens</b> <li>  [\term{epsilon}] or $\epsilon $is <b>empty space</b>  have no element sat al </ul>
 <p> <b>Note resursion: program refers to program itself as subelement</b>l. In thi sproduction we describe that \term{program}$_0$ can be empty, \term{or} \verb$| $can be concatenated from (sub)\term{program}$_1$ <b>followed by</b>  \term{command}$_2$. Parser code will \term{recursive} try to match program$_1 $using the same rule, until recursion will end up by <code>program : <empty></code>  part
-.Every time parser (sub)rule matches, code in <code>{action}</code>  will b eexecuted. This code\note{\cpp, \py, \jav aor any other language you r\term{parser code generator} supports  <b>can do anything you want</b>}. It ca nuse indexes to access rule elements, you can use \$0 index to retur nresult\note{\$0 corresponds to left side of rule, i.e. nonterminal value}, an d\$1 for program${_1}$ and \$2 for command values. For example with tiny ``no pbye'' program and this grammar <pre style="border:1px solid Black;">
+.Every time parser (sub)rule matches, code in <code>{action}</code>  will b eexecuted. This code\note{\cpp, \py, \ Jor any other language you r\term{parser code generator} supports  <b>can do anything you want</b>}. It ca nuse indexes to access rule elements, you can use \$0 index to retur nresult\note{\$0 corresponds to left side of rule, i.e. nonterminal value}, an d\$1 for program${_1}$ and \$2 for command values. For example with tiny ``no pbye'' program and this grammar <pre style="border:1px solid Black;">
 :program :&lt; empt&gt;y			{ $0 = "what to do:\n"	
 }program : program command	{ $0 = $1 + $2			
 }command : NOP				{ $0 = "do nothing\n"	
@@ -855,7 +855,7 @@ n
 :class FORTH(VM)
 :	t_ignore_COMMENT = r'\#.*<br>|.*|\(.*?\)'		# commen
 </pre>
-tAnd here we have a problem, Houston! All elements of parser are encapsulate din <code>compiler()</code>  method using closure, and oops we \emph{must rework V Mclass} itself. The way we can do it you can see on this short sample. This i slexer-only variant of simplest Hello World parser uses inheritance <pre  style="border:1px solid Black;">import sys ; sys.path.insert(0,'./ply')
+tAnd here we have a problem, Houston! All elements of parser are encapsulate din <code>compiler()</code>  method using closure, and oop swe <b>must rework VM class</b>  itself .The way we can do it you can see on this short sample. This i slexer-only variant of simplest Hello World parser uses inheritance <pre  style="border:1px solid Black;">import sys ; sys.path.insert(0,'./ply')
 import ply.lex  as lex
 import ply.yacc as yacc
 # issue 142 fix: enable patches
@@ -951,20 +951,20 @@ sERROR: Infinite recursion detected for symbol 'constant
 </pre> rHere we see source line numbers, points directly on problematic gramma rules ,and list of unused tokens
 .So we need to drop corresponding rule sfrom inherited class .The second tiny patch i've done for PLY, lets mark parser rules as deleted usin  <code>=Null</code>g assignment <pre style="border:1px solid Black;">
 :class FORTH(VM)
-:	t_NOP = p_command_NOP = Non
-e 	t_BYE = p_command_BYE = Non
-e 	t_REGISTER = p_command_R_loa
+:	t_NOP = p_NOP = Non
+e 	t_BYE = p_BYE = Non
+e 	t_REGISTER = p_Rloa
 d 	p_constant_STRING = Non
 </pre> <pre style="border:1px solid Black;">
 eERROR: /home/ponyatov/DLR/VM.py:60: Symbol 'command' used
 ,	but not defined as a token or a rul
 </pre> eWe must define what commands we are going to see in our programs <ul> <li> .[grammar] rules modifies VM grammar, and require <pre style="border:1px solid Black;">
 d# grammar overrid
-edef p_command_ID(self,p):		' command : ID 
-'def p_command_COLON(self,p):	' command : COLON 
-'def p_command_SEMICOLON(self,p):' command : SEMICOLON 
-'def p_command_BEGIN(self,p):	' command : BEGIN 
-'def p_command_AGAIN(self,p):	' command : AGAIN 
+edef p_ID(self,p):		' command : ID 
+'def p_COLON(self,p):	' command : COLON 
+'def p_SEMICOLON(self,p):' command : SEMICOLON 
+'def p_BEGIN(self,p):	' command : BEGIN 
+'def p_AGAIN(self,p):	' command : AGAIN 
 </pre> <li> '[lexemes] we want to override comparing to base VM regexp rule se <pre style="border:1px solid Black;">
 t# lexemes regexp override
 st_COLON = ':' ; t_SEMICOLON = ';
@@ -1005,11 +1005,11 @@ e 		if t.value in self.cmd: t.type='CMD
 ' 		return t
 </pre>  Note checking order: this variant let as define new words with names equal to V Mcommands, and later we'll do it in \term{\F-assembler} /<A HREF="#forthasm"><sup>forthasm</sup></A>/  let yo ucompile or execute single VM command in interactive \ Fsystem
 .And define new special rules in grammar <pre style="border:1px solid Black;">
-: 	def p_command_CMD(self,p)
+: 	def p_CMD(self,p)
 : 		' command : CMD 
 ' 		# compile command using cmd{} lookup tabl
 e 		self.program.append(self.cmd[p[1]]
-) 	def p_command_VOC(self,p):		' command : VOC 
+) 	def p_VOC(self,p):		' command : VOC 
 </pre>
 'Dummy compiles and executes\note{check VM.interpreter() uses command(self)}, bu twe need to <b>run last defined word as program entry point</b> . To do this w emust implement all parser/compiler staff we did as stubs
 .\subsection{Implement : COLON ; definition
@@ -1018,12 +1018,12 @@ e 		self.program.append(self.cmd[p[1]]
 :	# vocabulary of all defined word
 s	voc = {
 
-}  	def p_command_COLON(self,p)
+}  	def p_COLON(self,p)
 :  		' command : COLON ID
 '  		# store current compilation pointer into vo
 c  		self.voc[p[2]] = len(self.program
 )  		print self.vo
-c  	def p_command_ID(self,p):		' command : ID 
+c  	def p_ID(self,p):		' command : ID 
 </pre> <pre style="border:1px solid Black;">
 '{'INTERPRET': 2
 }0000&lt; unbound method VM.no&gt;p [0, 1, 2, 3, 4, 5, 6, 7
@@ -1032,7 +1032,7 @@ c  	def p_command_ID(self,p):		' command : ID
 .class FORTH(VM)
 :	# command lookup tabl
 e	cmd = { 'nop':VM.nop , 'bye':VM.bye , 'ret':VM.ret
-} 	def p_command_SEMICOLON(self,p)
+} 	def p_SEMICOLON(self,p)
 : 		' command : SEMICOLON 
 ' 		self.program.append(self.cmd['ret']
 ) 	
@@ -1069,7 +1069,7 @@ y		self.Ip = self.R.pop()	# return to marked address
 :	# command lookup tabl
 e	cmd = { 'nop':VM.nop , 'bye':VM.bye 
 ,			'call':VM.call, 'ret':VM.ret
-} 	def p_command_VOC(self,p)
+} 	def p_VOC(self,p)
 :		' command : VOC 
 '		self.program.append(VM.call);		# opcod
 e		self.program.append(self.voc[p[1]])	# cf
@@ -1112,7 +1112,7 @@ t		self.Ip = 0
 )		self.program.append(VM.call)	# call ..
 .		self.program.append(0)			# _entry = 
 1		self.program.append(VM.bye)		# by
-e  	def p_command_COLON(self,p)
+e  	def p_COLON(self,p)
 :  		' command : COLON ID
 '  		# store current compilation pointer into vo
 c		# reset _entry to current cf
@@ -1174,7 +1174,7 @@ p	revoc = {
 }	def log_state(self)
 :		print 'R
 
-:  	def p_command_COLON(self,p)
+:  	def p_COLON(self,p)
 :  		' command : COLON ID
 '  		# store current compilation pointer into vo
 c		# reset _entry to current cf
@@ -1213,7 +1213,245 @@ r\subsection{Throw out registers
 .class FORTH(VM)
 :	Rg = ld = None	# throw out register
 </pre>
-s\subsection{\ Fvocabulary structure } ]
+s\subsection{Vocabulary structure
+}You can see some strange <code>cfa</code>  label in listings above .In \ Fthere are some set of fields every word contains in vocabulary <ul> :<li> 	[LFA] \term{Link Field Area<br> }		In normal \ Fsystem words resides in memory in sequence .		If we want to do search in vocabulary, we must have all word s		to be in <b>linked list</b> , from end of vocabulary down to first word .		So every LFA holds address of previous word .		It is simplest way to do list in low leve l--- only single pointe r		(memory address) on previous element, followed by any data
+.<li> 	[NFA] \term{Name Field Area<br> }		NFA holds word name. It can be any string type you use in all system
+.<li> 	[AFA] \term{Attribute Field Area<br> }		You can add some attributes and flags to every word<br> ,	 <code>IMMED</code>	 flag is only required (execute word in compilation mode)
+.<li> 	[CFA] \term{Code Field Area<br> }		is word code section<br> ,		in other words it is <b>address of first executable command</b>  		of code sectio
+n<li> 	[PFA] \term{Parameter Field Area} (optional<br> )		Some elements like constants and variables must hold some data ,		and PFA is memory area for this case. In CFA code section there i s		some code do something with PFA, like fetching data from PFA ,		or just pushing PFA address on data stack .	 </ul>
+	Our \F-like system not \ Fin general, and we store vocabulary i nspecial data structure <b>out of program memory</b> . Using \p ydic tfor vocabulary gives more speed search using hashed keys, but have some limits <ul> :<li> 	 dict can have only one key, and we use word names as keys, so w e		can't hold multiple (overrided) words with equal names in vocubular y<li> 	 data in dict not ordered, and we can't control search order, but i t		is not a matter, as we can't use overrided words in any wa <li> y <b>vocabulary not in program address space</b> , and we can't hack  		vocabulary itself using just memory manipulation. If we'll need thi s		later, we must add some special commands to manipulate vocabulary </ul>
+.\subsection{\ Fsystem stability
+}Vocabulary separated out of main program memory is our first step to mak esystem much more stable then generic \F. In normal \F-system any accident writ eto addressable memory\note{it is most frequent error linked with \emph{imprope roperand order} on data stack, as <b>bad address</b>  computed by previou scode }can drop whole system in unstable crashing state and can broke your data
+.Separating address spaces isolates this crashing, and system equipped wit hdebugger or fault protection subsystem, can do recovery or some emergenc yprocessing before everything drops to hell .Later we'll introduce OOP implementation, and \term{address isolation} betwee nobjects will be good for stability
+.\subsection{JMP command and BEGIN/AGAIN infinity loop
+}In \ Fwe want REPL\note{Read Eval Print Loop} loop as user command interface :system mus t\begin{enumerate}[nosep <li> ] get source word by word separated by spaces <li> , do search in vocabulary, and <li>   execute every found word <li>   or print error message <li> . and repeat it infinit y\end{enumerate }To do infinity loop we need to implement begin/again pair in compiler .At low level <ul> <li> :[begin] <b>mark</b> s current compiler position in som e		\term{control compiling stack}<br> ,		this <b>stack is required to let nested control structures</b>  <li> 	[again] <b>resolve</b>  saved position popping addres from stack, and  		compiles <code>JMP</code>  command equal to <code>goto</code>  in high-level language </ul>
+sWe can use special dedicated control compiler stack, but we will us e\term{return stack}, as it is not used in compiling stage before interprete rstarted. Th eother reason to do this is to show how control structures are implemented in  ordinary \ Fsyste m--- they uses \term{return stack} for mark/resolve addresse sin controls compilation
+<pre style="border:1px solid Black;">
+.class VM
+
+:	def jmp(self)
+:		# get addr from jmp paramete
+r		self.Ip = self.program[self.Ip
+]		# check type: addr must be intege
+r		assert type(self.Ip) == in
+t		# check rang
+e		assert self.Ip&lt;  len(self.program)
+
+		def log_command(self,addr)
+:		if command in [ VM.jmp, VM.call]
+:			print T,self.log_label(T)
+,class FORTH(VM)
+:	cmd = { 'jmp':VM.jmp, 'call':VM.call, 'ret':VM.ret,..
+</pre>
+<pre style="border:1px solid Black;">
+} 	def p_BEGIN(self,p)
+:		' command : BEGIN 
+'		# mark Ip pushing in return stac
+k		self.R.append(len(self.program)
+) 	def p_AGAIN(self,p)
+:		' command : AGAIN 
+'		# jmp opcod
+e		self.program.append(self.cmd['jmp']
+)		# jmp parameter: pop marked I
+p		self.program.append(self.R.pop()
+</pre>
+<pre style="border:1px solid Black;">
+)INTERPRET
+:        0006&lt; unbound method VM.cal&gt;l 5 NOO
+P        0008&lt; function word at 0x018A51B&gt;
+0        0009&lt; function find at 0x018A51F&gt;
+0        000A&lt; unbound method VM.jm&gt;p 
+8        000C&lt; unbound method VM.re&gt;
+</pre>
+t(*) <code>word</code>  and <code>find</code>  will be defined later <p>
+.As you see in listing, there is one <code>jmp</code>  command compiled by <code>again</code>  at address <code>0x000A</code> , jumps to <code>0x0008</code>  marked by <code>begin</code>  betwee  <code>NOOP</code>n and word in source code
+.\subsection{Parsing input stream and search in vocabulary
+<pre style="border:1px solid Black;">
+}class FORTH(VM)
+:	PAD = list('hello world '
+)	def word(self)
+:		# result strin
+g		S = '
+'		# space
+s		BL = ' \t\r\n
+'		# skip leading space
+s		while True
+:			# pop first char from input strea
+m			C = self.PAD.pop(0
+)			# break loop on non-space cha
+r			if C not in BL: brea
+k		# save first found non-BL cha
+r		S += 
+C		# collect until BL cha
+r		while True
+:			C = self.PAD.pop(0
+)			if C in BL: brea
+k			S += 
+C		# push collected strin
+g		self.D.append(S
+)
+		def find(self)
+:		# pop word name from data stac
+k		S = self.D.pop(
+)		try
+:			# push cfa of found wor
+d			self.D.append(self.voc[S]
+)			# push FOUND fla
+g			self.D.append(True
+)		except KeyError
+:			# on error push word nam
+e			self.D.append(S
+)			# push NOT FOUN
+D			self.D.append(False
+
+)	cmd = { 'word':word, 'find':find , ...
+</pre> }You can fix parser: raise error on undefined commands/words <pre style="border:1px solid Black;">
+:  	def p_ID(self,p)
+:		' command : ID 
+'#		raise BaseException(p[1]
+</pre>
+)If we change source <pre style="border:1px solid Black;">
+:: hello 
+;: NOOP 
+;: INTERPRET	 	REPL interpreter loo
+p	NOO
+P	begin word find agai
+n
+</pre> ;we'll get trace with found <code>hello</code>  and undefined <code>world</code>  <pre style="border:1px solid Black;">
+:0007&lt; word at 0x018F51B&gt;0 D:[] R:[2
+]0008&lt; find at 0x018F51F&gt;0 D:['hello'] R:[2
+]0009&lt; method VM.jm&gt;p 7  D:[3, True] R:[2
+]0007&lt; word at 0x018F51B&gt;0 D:[3, True] R:[2
+]0008&lt; find at 0x018F51F&gt;0 D:[3, True, 'world'] R:[2
+]0009&lt; method VM.jm&gt;p 7  D:[3, True, 'world', False] R:[2
+]0007&lt; word at 0x018F51B&gt;0 D:[3, True, 'world', False] R:[2
+</pre>
+]\subsection{IF/ELSE/ENDIF and EXECUTE/ABORT
+<pre style="border:1px solid Black;">
+}: INTERPRET			 	REPL interpreter loo
+p	begi
+n	 	get next word name from input strea
+m		word	( -- str:wordname 
+)	 	find word entry poin
+t		find 	( addr:cfa true | str:wordname false 
+)		if ( addr:cfa 
+)		 	call to addr from stac
+k			execute	( addr:cfa -- 
+)		else ( str:wordname 
+)		 	dump state, stacks and restar
+t			abor
+t		endif	
+		again			;		: hello ;  defined wor
+</pre>
+ <code>execute</code>d command works as <code>call</code>  but uses address from data stack
+<pre style="border:1px solid Black;">
+:class VM
+:	def execute(self)
+:		# push ret add
+r		self.R.append(self.Ip)				
+			# load jmp addr from stac
+k		assert self.D ; self.Ip = self.D.pop()
+			# addr must be intege
+r		assert type(self.Ip) == int			
+			# check rang
+e		assert self.Ip&lt;  len(self.program)	
+	class FORTH(VM)
+:	cmd = { 'execute':VM.execute,..}
+</pre>
+ <code>abort</code>  must restart REPL loop, but we will stop all system with stat edump <pre style="border:1px solid Black;">
+:class VM
+:	def abort(self)
+:		print '\n\nD
+:		self.dump(
+)		raise BaseException('ABORT'
+)class FORTH(VM)
+:	cmd = { 'abort':VM.abort,..}
+</pre> <pre style="border:1px solid Black;">
+ D:[3, 'world'
+]R:[2
+
+]{'INTERPRET': 3
+}	0000&lt; unbound method VM.cal&gt;l 3 INTERPRET
+ 	0002&lt; unbound method VM.by&gt;e
+</pre>  	  <code>if</code>	 <code>else</code>/ is complex to understand: it uses forward jumps an d\term{backpatching} with <b>one pass compiling</b>  <ul> <li> :[?jmp] conditional <code>?jmp</code>  command uses flag from data stack an  <b>jumps on false</b> <li> d[if] compiles <code>?jmp</code>  with <b>fake</b>  parameter, and \term{marks} it sparameter addr into control\note{don't forget we use return stack, but it can b eseparate control stack }stack. Later this <code>addr</code>  will be popped b  <code>else</code>y <code>endif</code>/ and \term{backpatched} with real address must b ejumped if <b>false</b>  on data stack <li> .[endif] patches <code>?jmp</code>  command compiled by <code>if</code>  usin  <code>addr</code>g popped from control stac <li> k[else] (optional) implements else branch, compiles <code>jmp endif</code>  command, replacing <code>if addr</code>  on constrol stack by <code>jmp else</code>  addr </ul>
+<pre style="border:1px solid Black;">
+.class VM
+:	def qjmp(self)
+:		assert self.
+D		if not self.D.pop(): # ( bool:FALSE! -- )
+ 			self.jmp(
+)		else
+:			self.Ip += 1	# skip ?jmp paramete
+r		
+		def log_command(self,addr)
+:		if command in [ VM.jmp, VM.qjmp, VM.call]
+:			print 
+
+'class FORTH(VM)
+:	cmd = { 'jmp':VM.jmp, '?jmp':VM.qjmp,..
+</pre>
+<pre style="border:1px solid Black;">
+}class FORTH(VM)
+
+:	# lexe
+r	tokens = [..,'IF','ELSE','ENDIF'
+] 	def t_IF(self,t)
+: 		r'if
+' 		return 
+t 	def t_ELSE(self,t)
+: 		r'else
+' 		return 
+t 	def t_ENDIF(self,t)
+: 		r'endif
+' 		return 
+
+t 	# parse
+r	def p_IF(self,p)
+:		' command : IF 
+'		self.program.append(self.cmd['?jmp'])# opcod
+e		self.R.append(len(self.program))	# mar
+k		self.program.append(-1)				# fake add
+r	def p_ELSE(self,p)
+:		' command : ELSE 
+'		assert self.R ; A = self.R.pop()	# pop if jm
+p		self.program.append(self.cmd['jmp'])# jmp endi
+f		self.R.append(len(self.program))	# mar
+k		self.program.append(-1)				# fake add
+r		self.program[A] = len(self.program)	# backpatch i
+f	def p_ENDIF(self,p)
+:		' command : ENDIF 
+'		assert self.R ; A = self.R.pop()	# resolv
+e		self.program[A] = len(self.program)	# backpatc
+h# 		self.program.append(self.cmd['nop'])# show endif po
+</pre>
+<pre style="border:1px solid Black;">
+sINTERPRET:
+ 	0004&lt; function word at 0x7f31eece71b&gt;8
+ 	0005&lt; function find at 0x7f31eece723&gt;0
+ 	0006&lt; unbound method VM.qjm&gt;p 000B  			# i
+f	0008&lt; unbound method VM.execut&gt;e
+ 	0009&lt; unbound method VM.jm&gt;p 000C				# els
+e	000B&lt; unbound method VM.abor&gt;t
+ 	000C&lt; unbound method VM.no&gt;p					# endi
+f	000D&lt; unbound method VM.jm&gt;p 0004 INTERPRET
+ 	000F&lt; unbound method VM.re&gt;
+</pre> tSpecial <code>nop</code>  compilation was added to <code>p_ENDIF</code>  to show positio nwhere <code>endif</code>  takes an action. In real code this position will used by  first command compiled after <code>endif</code> 
+<pre style="border:1px solid Black;">
+.: hello if bye endif 
+
+;hello:
+ 	0003&lt; unbound method VM.qjm&gt;p 0006	 	i
+f	0005&lt; unbound method VM.by&gt;e
+ 	0006&lt; unbound method VM.re&gt;t		 	endi
+</pre> fThis sample shows if/endif construct without else. And more complex neste dsample <code>: hello if(1) nop else(1) if(2) bye endif(2) endif(1) ;</code>
+<pre style="border:1px solid Black;">
+ 	0003&lt; unbound method VM.qjm&gt;p 0008	 	if(1) 
+ 	0005&lt; unbound method VM.no&gt;p
+ 	0006&lt; unbound method VM.jm&gt;p 000B  	 	else(1
+)	0008&lt; unbound method VM.qjm&gt;p 000B	 	if(2
+)	000A&lt; unbound method VM.by&gt;e 		 	endif(2
+)	000B&lt; unbound method VM.re&gt;t		 	endif(1
+</pre> )	 ]
 
 
 <!-- GUI.tex -->
