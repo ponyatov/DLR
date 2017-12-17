@@ -1451,7 +1451,138 @@ f	0005&lt; unbound method VM.by&gt;e
 )	0008&lt; unbound method VM.qjm&gt;p 000B	 	if(2
 )	000A&lt; unbound method VM.by&gt;e 		 	endif(2
 )	000B&lt; unbound method VM.re&gt;t		 	endif(1
-</pre> )	 ]
+</pre>
+)\subsection{Implementing in-system \ Fcompiler
+}The key feature of \ Fsystem in <b>self-extensibility</b> : you can expan dsystem in runtime doing new word definitions via compilation. The interna lcompiler is the same simple as \ Fsyntax
+<p> .\ Fsystem can work in two states: every found word <ul>   <li>  [interpretation]  <code>STATE=0</code>() :    will be immediately <code>execute</code> d\note{default state when you start system } <li>  [compilation]: <code>call</code>  will be compiled to the end of vocabulary </ul>  State is controlled by\ldots <code>STATE</code>  \term{variable}. You just chang  <code>STATE</code>e, and system changes mode
+<pre style="border:1px solid Black;">
+.false var STATE		 	interpret =0 / compile
+
+ : INTERPRET			 	REPL interpreter /compiler loo
+p	begin word fin
+d	if ( addr:cfa )		  word foun
+d		STATE @ ( bool )  compile =true / interpret =false 
+ 		i
+f			( addr:cfa ) compile  compile call to wor
+d		els
+e			( addr:cfa ) execute  call to addr from stac
+k		endi
+f	else abort endif 	word not found
+ 	again 
+</pre>
+;\subsection{Bool constants: TRUE/FALSE
+<pre style="border:1px solid Black;">
+}class FORTH(VM)
+:	tokens = [..,'TRUE','FALSE'
+]
+		# lexer: will be recognized as syntax element
+s 	def t_TRUE(self,t)
+: 		r'true
+' 		return 
+t 	def t_FALSE(self,t)
+: 		r'false
+' 		return 
+t 	
+	 	# parser: allowed in variable declarations (see later
+) 	def p_VAR(self,p)
+: 		' command : init VAR ID 
+' 	def p_init_bool(self,p)
+: 		' init : bool 
+' 		p[0] = p[1
+] 	def p_bool_true(self,p)
+: 		' bool : TRUE 
+' 		p[0] = Tru
+e 	def p_bool_false(self,p)
+: 		' bool : FALSE 
+' 		p[0] = Fals
+</pre>
+e\subsection{Variables, memory r/w, LIT and literals
+<pre style="border:1px solid Black;">
+}false var STATE		 	interpret =0 / compile
+
+ : INTERPRET			 	REPL interpreter /compiler loo
+p	..
+.		STATE @ ( bool )  compile =true / interpret =fals
+e	... 
+</pre>  Variables in classic \ Fresides in main memory. In C and UNI Xprograms\note{and DOS programs with \term{small model} and larger} traditionally use separat ememory segments for code <code>.text</code> , initialized <code>.data</code> , <code>.stack</code>  and uninitialized heap <code>.bss</code> . We can go separation way to increas estability, but using same commands to <b>read and write</b>  both variables an  <b>program memory</b>d can be very interesting. So lets use \term{flat memor ymodel} for data and code just as sample.
+<pre style="border:1px solid Black;">
+ class VM
+:	def fetch(self)
+:		assert self.D ; addr = self.D.pop(
+)		assert addr&lt;  len(self.program
+)		self.D.append(self.program[addr]
+)	def store(self)
+</pre>  <code>LIT</code>: command is required to <b>push constants</b>  as is on data stack <pre style="border:1px solid Black;">
+:	def lit(self)
+:		self.D.append(self.program[self.Ip]
+)		self.Ip += 
+1	def log_command(self,addr)
+:		if command in [ VM.jmp, VM.qjmp, VM.call, VM.lit]
+</pre> <pre style="border:1px solid Black;">
+:class FORTH(VM)
+:	cmd = { .., '@':VM.fetch, '!':VM.store , 'lit':VM.lit} 	
+</pre>
+ <pre style="border:1px solid Black;">
+	class FORTH(VM)
+:	tokens = [..,'VAR','FETCH','STORE'
+] 	def t_VAR(self,t)
+: 		r'var
+' 		return 
+t 	def t_FETCH(self,t)
+: 		r'@
+' 		return 
+t 	def t_STORE(self,t)
+: 		r'!
+' 		return 
+</pre> tWe can implement more complex number literals including hex, binary an dint/float numbers :<pre style="border:1px solid Black;">
+ 	tokens = [..,'NUM',..
+] 	def t_NUM(self,t)
+:		r'0x[0-9A-Fa-f]+
+|			0b[01]+
+|			[\+\-]?[0-9]+(\.[0-9]*)?([eE][\+\-]?[0-9]+)?
+'  		if t.value[:2] == '0x'
+:  			t.value = int(t.value[2:],0x10) # he
+x  		elif t.value[:2] == '0b'
+:  			t.value = int(t.value[2:],0x02) # bi
+n  		else
+:  			t.value = float(t.value
+) 		return 
+t 	def t_ID(self,t): # this rule must be last rul
+</pre>
+<pre style="border:1px solid Black;">
+eclass FORTH(VM)
+: 	def p_VAR(self,p)
+: 		' command : init VAR ID 
+' 		addr = len(self.program
+) 		self.voc[p[3]] = addr ; self.revoc[addr] = p[3
+] 		# lit PF
+A 		self.program.append(self.cmd['lit'])	 # lit ..
+. 		self.program.append(len(self.program)+2) # PF
+A 		# re
+t 		self.program.append(self.cmd['ret']
+) 		# compile PFA with init valu
+e 		self.program.append(p[1]
+) 	def p_FETCH(self,p)
+: 		' command : FETCH 
+' 		self.program.append(self.cmd['@']
+) 	def p_STORE(self,p)
+: 		' command : STORE 
+' 		self.program.append(self.cmd['!']
+) 	# var/const init value can be checked by syntax parse
+r 	def p_init_NUM(self,p)
+: 		' init : NUM 
+' 		p[0] = p[1
+] 	def p_init_bool(self,p)
+: 		' init : bool 
+' 		p[0] = p[1
+] 	def p_bool_true(self,p)
+: 		' bool : TRUE 
+' 		p[0] = Tru
+e 	def p_bool_false(self,p)
+: 		' bool : FALSE 
+' 		p[0] = Fals
+</pre>
+e ]
 
 
 <!-- GUI.tex -->

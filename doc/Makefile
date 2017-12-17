@@ -14,7 +14,7 @@ SRC += ../tmp/calc.mk ../inher.py
 FIG = ../tmp/lexer.pdf
 
 #BRANCH = $(shell git symbolic-ref -q HEAD | sed -r -e "s|refs/heads/||")
-NOW = $(shell date +%d%m%y)
+NOW = $(shell date +%y%m%d)
 RELEASE = DLR_$(NOW)
 #_$(BRANCH)
 
