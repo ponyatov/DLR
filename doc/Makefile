@@ -2,6 +2,7 @@ TEX = manual.tex header.tex bib.tex
 TEX += intro.tex tutor.tex terminology.tex whylanguage.tex pypy.tex pyvm.tex
 TEX += LLVM.tex SSA.tex
 TEX += reference.tex
+TEX += inference.tex
 TEX += parsing.tex plyass.tex calc.tex
 TEX += GUI.tex TUI.tex
 TEX += java.tex

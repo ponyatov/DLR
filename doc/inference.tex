@@ -1,0 +1,37 @@
+\part{Fuzzy logic inference}
+
+In this section we'll implement Prolog and fuzzy logic inference engine, and
+extend our metasystem with ability to do semantic network and hypergraph
+inference.
+
+First steps we will be do using well known
+\href{http://yieldprolog.sourceforge.net/}{Yield Prolog} (YP), and then
+generalize it to \term{predicate functions} and \term{green threads} to do distributed
+inference.
+
+\begin{lstlisting}[language=Python]
+def person():
+    yield "Chelsea"
+    yield "Hillary"
+    yield "Bill"
+
+for p in person(): print p
+\end{lstlisting}
+Here we define \verb|parson()| \term{generator function} which yeilds few
+persons in loop returning \term{iterator object} multiple times.
+In place of returning values from iterator, we will use \emph{Prolog variables},
+able to be binded/unbinded with values in process of \term{inference}. Return
+value from yield does not matter anythng, so we just yield.
+
+\begin{lstlisting}[language=Python]
+class Pvar: pass    # empty container class
+
+def person(V):
+    V.value = 'Chelsea' ; yield
+    V.value = 'Hillary' ; yield
+    V.value = 'Bill'	; yield
+
+var = Pvar()
+for p in person(var): print var.value
+\end{lstlisting}
+
