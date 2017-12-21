@@ -261,4 +261,18 @@ Chelsea has uncle Tony
 Chelsea has uncle Hugh
 Chelsea has uncle Roger
 \end{lstlisting}
+This is classical inference in Prolog:
+\begin{lstlisting}[language=Prolog]
+brother(Person, Brother) :-
+ Person = 'Hillary', (Brother = 'Tony' ; Brother = 'Hugh');
+ Person = 'Bill', Brother = 'Roger'.
+parent(Person, Parent) :-
+ Person = 'Chelsea', Parent = 'Hillary' ;
+ Person = 'Chelsea', Parent = 'Bill'.
+uncle(Person, Uncle) :-
+ parent(Person, Parent), brother(Parent, Uncle).
+
+:- uncle(Person, Uncle),
+ write(Person,'has uncle',Uncle), nl.
+\end{lstlisting}
 
