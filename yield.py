@@ -56,7 +56,17 @@ def uncle(Person,Uncle):
 	for i in parent(Person,Parent):
 		for j in brother(Parent,Uncle): yield
 
-Person,Uncle = var(),var()
-for i in uncle(Person,Uncle):
-	print Person.value,'has uncle',Uncle.value
+def square(Width,Height): # square rectangle
+	for i in unify(Width,Height): yield
+
+for i in square(11,11):	# check 11 x 11
+	print '11 x 11 is square'
+W,H = var(),var()
+for j in W << 22:
+	for k in square(W,H):
+		print W,H		# yields 22 x 22
+W,H = var(),var()
+for a in square(W,H):		# bind first
+	for b in unify(W,33):		# unify with value
+		print W,H
 

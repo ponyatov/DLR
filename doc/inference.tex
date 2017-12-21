@@ -9,7 +9,7 @@ First steps we will be do using well known
 generalize it to \term{predicate functions} and \term{green threads} to do
 distributed inference.
 
-\section{Yield Prolog}
+\section{Yield Prolog \copyright\ Jeff Thompson}
 
 \begin{lstlisting}[language=Python]
 def person():
@@ -19,7 +19,7 @@ def person():
 
 for p in person(): print p
 \end{lstlisting}
-Here we define \verb|parson()| \term{generator function} which yeilds few
+Here we define \verb|person()| \term{generator function} which yeilds few
 persons in loop returning \term{iterator object} multiple times. In place of
 returning values from iterator, we will use \emph{Prolog variables}, able to be
 binded/unbinded with values in process of \term{inference}. Return value from
@@ -275,4 +275,36 @@ uncle(Person, Uncle) :-
 :- uncle(Person, Uncle),
  write(Person,'has uncle',Uncle), nl.
 \end{lstlisting}
+
+\subsection{Variable chains}
+
+This sample is works fine:
+\begin{lstlisting}[language=Python]
+def square(Width,Height): # square rectangle
+	for i in unify(Width,Height): yield
+
+for i in square(11,11):	# check 11 x 11
+	print '11 x 11 is square'
+W,H = var(),var()
+for j in W << 22:
+	for k in square(W,H):
+		print W,H		# yields 22 x 22
+\end{lstlisting}
+But how can we implement this case:
+\begin{enumerate}[nosep]
+	\item call \verb|square| first (giving bound \verb|Width=Height|),\\
+		make it square before we know W/H
+	\item then \verb|unify(Width,33)|\\
+		assign some dimension giving square already unified:
+\end{enumerate}
+\begin{lstlisting}[language=Python]
+W,H = var(),var()
+for a in square(W,H):		# bind first
+	for b in unify(W,33):		# unify with value
+		print W,H
+# <bound:<bound:33>> <bound:33>
+# <bound:33> <bound:<bound:33>>
+\end{lstlisting}
+To do this, we must allow unify to bound 2+ unbound variables into
+\term{variable chain}, and then bound all of them to same value.
 
