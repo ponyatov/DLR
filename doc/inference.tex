@@ -6,8 +6,10 @@ inference.
 
 First steps we will be do using well known
 \href{http://yieldprolog.sourceforge.net/}{Yield Prolog} (YP), and then
-generalize it to \term{predicate functions} and \term{green threads} to do distributed
-inference.
+generalize it to \term{predicate functions} and \term{green threads} to do
+distributed inference.
+
+\section{Yield Prolog}
 
 \begin{lstlisting}[language=Python]
 def person():
@@ -18,10 +20,10 @@ def person():
 for p in person(): print p
 \end{lstlisting}
 Here we define \verb|parson()| \term{generator function} which yeilds few
-persons in loop returning \term{iterator object} multiple times.
-In place of returning values from iterator, we will use \emph{Prolog variables},
-able to be binded/unbinded with values in process of \term{inference}. Return
-value from yield does not matter anythng, so we just yield.
+persons in loop returning \term{iterator object} multiple times. In place of
+returning values from iterator, we will use \emph{Prolog variables}, able to be
+binded/unbinded with values in process of \term{inference}. Return value from
+yield does not matter anythng, so we just yield.
 
 \begin{lstlisting}[language=Python]
 class Pvar: pass    # empty container class
@@ -35,3 +37,57 @@ var = Pvar()
 for p in person(var): print var.value
 \end{lstlisting}
 
+\subsection{Variable unification}
+
+In computer science \term{unification} is process of solving logic equations in
+form of symbolic expressions. For example $cons(X,cons(X,nil)) = cons(2,Y)$
+where $cons(X,Y)$ is Lisp constructor creates pair of $(X.Y)$ \emph{variables}
+is a \term{first-order unification} problem that has single solution
+$\{X\rightarrow 2,\ Y\rightarrow cons(2,nil)\}$ can be \term{substituted} in
+equation expression giving true. If variables allowed to be substituted with
+functions/terms like \verb|cons|, the process is called \term{high-order
+unification}\note{in high-order logic}.
+
+If fact in Prolog, DataLog and other \term{inference systems} there is \emph{no
+functions}, but \textbf{\term{terms} defines \term{relations} between data
+elements}.
+For example, some RDBMS table scheme can be described in Prolog in form of
+\term{predicate} \verb|table( user(index(uid),login,password,name,homedir) )| .
+
+\bigskip
+To implement unification we need control of \term{variable binding}: track value
+assignment (\emph{bound} variable) and variable \emph{unbound} with value
+unassignment.
+\begin{lstlisting}[language=Python]
+class Pvar:
+    def __init__(self):
+        self.bound = False  	# unbound variable
+    def __lshift__(self,val):	# assign operator <<
+        self.bound = True
+        self.value = val
+def person(V):
+    V << 'Chelsea' ; yield
+    V << 'Hillary' ; yield
+    V << 'Bill'    ; yield
+
+var = Pvar()
+for p in person(var): print var.bound,var.value
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+class Pvar:
+    def __repr__(self):         # dump in string form
+        if self.bound:
+            return '<bound:%s>' % self.value
+        else:
+            return '<unbound>'
+
+var = Pvar() ; print var
+for p in person(var): print var
+\end{lstlisting}
+\begin{lstlisting}
+<unbound>
+<bound:Chelsea>
+<bound:Hillary>
+<bound:Bill>
+\end{lstlisting}
