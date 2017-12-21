@@ -41,7 +41,7 @@ class VM:
 		assert self.Ip < len(self.program)		# check range
 	def abort(self):
 		print '\n\nD:%s\nR:%s\n' % (self.D,self.R)
-		self.dump()
+# 		self.dump()
 		raise BaseException('ABORT')
 
 	def ld(self):
@@ -417,7 +417,7 @@ class FORTH(VM):
 
 if __name__ == '__main__':
 	FORTH(r''' # use r' : we have escapes in string constants
-: hello if(1) nop else(1) if(2) bye endif(2) endif(1) ;
+: hello ;
 
 false var STATE			\ interpret =0 / compile 
 
