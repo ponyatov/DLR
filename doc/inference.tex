@@ -191,3 +191,45 @@ for j in person('Buddy'):   print 'Buddy'
 using general \verb|unify()| unification function without use of any extra
 variables.
 
+\subsection{Unify as relation}
+
+As unify can both bind and check values, it implements \term{logical relation}.
+Unification let us bring logic language capabilities into imperative
+languages like \py\ or any other language implemented on top of
+GNU Dynamic environment. Iterator loop defined by \verb|person(Who)|
+can bind \verb|Who| to all known persons, or in other terms all entities
+described by 1-ary \verb|person/1| \term{relation}. If \verb|Who| was binded
+at start of unification, loop will do \term{relation matching} with selected
+value. Later we'll see more complex cases of unification let us do
+\term{structural matching} for recursive data structures, including
+parsing of languages with complex ambiguous grammars, and \term{graph quering}.
+
+As sample, lets see new relation \verb|brother/2| between some persons:
+\begin{lstlisting}[language=Python]
+def brother(Person,Brother):
+	for i in unify(Person,'Hillary'):
+		for j in unify(Brother,'Tony'): yield
+		for j in unify(Brother,'Hugh'): yield
+	for i in unify(Person,'Bill'):
+		for j in unify(Brother,'Roger'): yield
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+V = var()
+for i in brother('Hillary',V):
+	print '%s has brother %s.' % ('Hillary',V.value)
+\end{lstlisting}
+\begin{lstlisting}
+Hillary has brother Tony.
+Hillary has brother Hugh.
+\end{lstlisting}
+And we can find all entities with \verb|brother/2| relation defined:
+\begin{lstlisting}[language=Python]
+A,B = var(),var()
+for j in brother(A,B): print B,'is brother of',A
+\end{lstlisting}
+\begin{lstlisting}
+<bound:Tony> is brother of <bound:Hillary>
+<bound:Hugh> is brother of <bound:Hillary>
+<bound:Roger> is brother of <bound:Bill>
+\end{lstlisting}
+
