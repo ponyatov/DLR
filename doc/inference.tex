@@ -91,3 +91,63 @@ for p in person(var): print var
 <bound:Hillary>
 <bound:Bill>
 \end{lstlisting}
+We need some fix to do full unification: variable can be unified \emph{with any
+value} if variable \emph{not bound}, or with \emph{only the same value} if \emph{bound}:
+\begin{lstlisting}[language=Python]
+class Pvar:						# Prolog unifying variable
+	def __init__(self):
+		self.bound = False      # unbound variable
+	def __lshift__(self,val):   # unify operator <<
+		if not self.bound:		# 1) unassigned
+			self.value = val	# assign var
+			self.bound = True
+			yield
+			self.bound = False	# drop binding
+		elif self.value == val:	# 2) assigned == val
+			yield
+	def __repr__(self):         # dump in string form
+		if self.bound:
+			return '<bound:%s>' % self.value
+		else:
+			return '<unbound>'
+
+def person(V):
+	for i in V << 'Chelsea'	: yield
+	for i in V << 'Hillary'	: yield
+	for i in V << 'Bill'	: yield
+\end{lstlisting}
+The equivalent Prolog program is:
+\begin{lstlisting}[language=Prolog]
+person(P) :- P = 'Chelsea' ; P = 'Hillary' ; P = 'Bill'.
+?- person(X) , write(X), nl.
+\end{lstlisting}
+For each value in \verb|person()| we run unification \emph{twice} in a loop:
+\begin{enumerate}[nosep]
+	\item unifies unbound V with given value, and yields
+	\item unbound variable on second loop iteration.
+\end{enumerate}
+Unbound is required as we need to bound with new value in next iteration.
+
+If we unify with bounded variable, it yields once if values equal,
+and no yield if not equal.
+
+\subsection{Using unify to check values}
+
+\begin{lstlisting}[language=Python]
+for i in var << 'Hillary':
+	for j in person(var):
+		print var
+
+# <bound:Hillary>
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+for i in var << 'Buddy':
+	for j in person(var):
+		print var
+# (nothing was unified)
+\end{lstlisting}
+First we bind variable to predefined \verb|'Hillary'| value, and then 
+call \verb|person()| unification. As variable is already bound, unification
+will be successful only for bound value. With \verb|'Buddy'| we never yields.
+
+
