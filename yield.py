@@ -45,9 +45,18 @@ def brother(Person,Brother):
 	for i in unify(Person,'Bill'):
 		for j in unify(Brother,'Roger'): yield
 
-V = var()
-for i in brother('Hillary',V):
-	print '%s has brother %s.' % ('Hillary',V.value)
-A,B = var(),var()
-for j in brother(A,B): print B,'is brother of',A
+def parent(Person,Parent):
+	for i in unify(Person,'Chelsea'):
+		for j in unify(Parent,'Hillary'): yield
+	for i in unify(Person,'Chelsea'):
+		for j in unify(Parent,'Bill'): yield
+
+def uncle(Person,Uncle):
+	Parent = var()
+	for i in parent(Person,Parent):
+		for j in brother(Parent,Uncle): yield
+
+Person,Uncle = var(),var()
+for i in uncle(Person,Uncle):
+	print Person.value,'has uncle',Uncle.value
 
