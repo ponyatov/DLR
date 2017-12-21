@@ -26,14 +26,14 @@ binded/unbinded with values in process of \term{inference}. Return value from
 yield does not matter anythng, so we just yield.
 
 \begin{lstlisting}[language=Python]
-class Pvar: pass    # empty container class
+class var: pass    # empty container class
 
 def person(V):
     V.value = 'Chelsea' ; yield
     V.value = 'Hillary' ; yield
     V.value = 'Bill'	; yield
 
-var = Pvar()
+var = var()
 for p in person(var): print var.value
 \end{lstlisting}
 
@@ -59,7 +59,7 @@ To implement unification we need control of \term{variable binding}: track value
 assignment (\emph{bound} variable) and variable \emph{unbound} with value
 unassignment.
 \begin{lstlisting}[language=Python]
-class Pvar:
+class var:
     def __init__(self):
         self.bound = False  	# unbound variable
     def __lshift__(self,val):	# assign operator <<
@@ -70,20 +70,20 @@ def person(V):
     V << 'Hillary' ; yield
     V << 'Bill'    ; yield
 
-var = Pvar()
-for p in person(var): print var.bound,var.value
+V = var()
+for p in person(V): print V.bound,V.value
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python]
-class Pvar:
+class var:
     def __repr__(self):         # dump in string form
         if self.bound:
             return '<bound:%s>' % self.value
         else:
             return '<unbound>'
 
-var = Pvar() ; print var
-for p in person(var): print var
+V = var() ; print var
+for p in person(V): print V
 \end{lstlisting}
 \begin{lstlisting}
 <unbound>
@@ -94,7 +94,7 @@ for p in person(var): print var
 We need some fix to do full unification: variable can be unified \emph{with any
 value} if variable \emph{not bound}, or with \emph{only the same value} if \emph{bound}:
 \begin{lstlisting}[language=Python]
-class Pvar:						# Prolog unifying variable
+class var:						# Prolog unifying variable
 	def __init__(self):
 		self.bound = False      # unbound variable
 	def __lshift__(self,val):   # unify operator <<
@@ -150,4 +150,44 @@ First we bind variable to predefined \verb|'Hillary'| value, and then
 call \verb|person()| unification. As variable is already bound, unification
 will be successful only for bound value. With \verb|'Buddy'| we never yields.
 
+\subsection{General unification}
+
+In previous section we have to bind variable to predefined value before
+\verb|person()| unification. We must do this as \verb|person()| takes argument
+in type of \verb|var|. To call \verb|person()| with any type, we can use
+this general functions:
+
+\begin{lstlisting}[language=Python]
+def getval(V):				# return value or unbound var
+	if isinstance(V,var):
+		if not V.bound: return V
+		else: return V.value
+	else: return V
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+def unify(arg1,arg2):			# general unification
+	arg1value = getval(arg1)		# \ get values
+	arg2value = getval(arg2)		# /
+	if isinstance(arg1value,var):	# unbound arg1
+		for i in arg1value << arg2value: yield
+	if isinstance(arg2value,var):	# unbound arg2
+		for j in arg2value << arg1value: yield
+	else:							# args non var's
+		if arg1value == arg2value: yield
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+def person(V):
+	for i in unify(V,'Chelsea'): yield
+	for i in unify(V,'Hillary'): yield
+	for i in unify(V,'Bill'):    yield
+\end{lstlisting}
+So we can unify not only \verb|var| instances, but any types, and this
+makes our code simpler:
+\begin{lstlisting}[language=Python]
+for i in person('Hillary'): print 'Hillary'
+for j in person('Buddy'):   print 'Buddy'
+\end{lstlisting}
+\verb|person()| takes object of any type as argument, and can do unification 
+using general \verb|unify()| unification function without use of any extra
+variables.
 

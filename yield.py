@@ -1,6 +1,6 @@
 # http://yieldprolog.sourceforge.net/tutorial1.html
 
-class Pvar:						# Prolog unifying variable
+class var:						# Prolog unifying variable
 	def __init__(self):
 		self.bound = False      # unbound variable
 	def __lshift__(self,val):   # unify operator <<
@@ -17,17 +17,27 @@ class Pvar:						# Prolog unifying variable
 		else:
 			return '<unbound>'
 
-def person(V):
-	for i in V << 'Chelsea'	: yield
-	for i in V << 'Hillary'	: yield
-	for i in V << 'Bill'	: yield
+def getval(V):				# return value or unbound var
+	if isinstance(V,var):
+		if not V.bound: return V
+		else: return V.value
+	else: return V
 
-var = Pvar() ; print var
-#for p in person(var): print var
-for i in var << 'Hillary':
-	for j in person(var):
-		print var
-for i in var << 'Buddy':
-	for j in person(var):
-		print var
+def unify(arg1,arg2):			# general unification
+	arg1value = getval(arg1)		# \ get values
+	arg2value = getval(arg2)		# /
+	if isinstance(arg1value,var):	# unbound arg1
+		for i in arg1value << arg2value: yield
+	if isinstance(arg2value,var):	# unbound arg2
+		for j in arg2value << arg1value: yield
+	else:							# args non var's
+		if arg1value == arg2value: yield
+
+def person(V):
+	for i in unify(V,'Chelsea'): yield
+	for i in unify(V,'Hillary'): yield
+	for i in unify(V,'Bill'):    yield
+
+for i in person('Hillary'): print 'Hillary'
+for j in person('Buddy'):   print 'Buddy'
 
