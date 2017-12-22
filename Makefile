@@ -23,7 +23,7 @@ forth: FORTH/bin.bin
 FORTH/bin.bin:
 	cd FORTH ; $(MAKE)
 
-packages: ply/ply/lex.py
+packages: ply/ply/lex.py YP
 	sudo apt install \
 		make build-essential \
 		texlive-latex-extra graphviz \
@@ -37,3 +37,7 @@ ply/ply/lex.py:
 
 Eijkhout/pdf.pdf: 
 	cd Eijkhout ; $(MAKE)
+
+YP: YP/README.md
+YP/README.md:
+	git clone -o gh https://github.com/vslab/YieldProlog.git YP	
