@@ -401,3 +401,24 @@ for j in anyBrother('Hillary',B): print B
 
 # brother=Tony
 \end{lstlisting}
+Prolog syntax:
+\begin{lstlisting}[language=Prolog]
+anyBrother(Person, Brother) :- brother(Person, Brother), !.
+\end{lstlisting}
+
+\clearpage
+\subsection{Negation via cut}
+
+We can use cut to do negation:
+\begin{lstlisting}[language=Python]
+def noBrother(Person):
+	Brother = var('B')
+	# if any brother, cut inference
+	for i in brother(Person,Brother): return 
+	yield					# no brother found							  
+	
+for j in noBrother('Hillary'): print 'Hillary'
+for j in noBrother('Chelsea'): print 'Chelsea'
+
+# Chelsea
+\end{lstlisting}

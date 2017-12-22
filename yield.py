@@ -83,6 +83,12 @@ def uncle(Person,Uncle):
 def anyBrother(Person,Brother):
 	for i in brother(Person,Brother):
 		yield ; break # will found only 0 or 1 solution
+		
+def noBrother(Person):
+	Brother = var('B')
+	# if any brother, cut inference
+	for i in brother(Person,Brother): return 
+	yield					# no brother found							  
 	
-B = var('brother')
-for j in anyBrother('Hillary',B): print B
+for j in noBrother('Hillary'): print 'Hillary'
+for j in noBrother('Chelsea'): print 'Chelsea'
