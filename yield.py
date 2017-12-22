@@ -24,7 +24,7 @@ class var:						# Prolog unifying variable
 			return self
 		V = self.value				# else do loop until
 		while isinstance(V, var):	# non-variable found
-			if not V.bound: return V # or unbound var
+			if not V.bound: return V # o unbound var
  			V = V.value				# scan var chain
 		return V		
 
@@ -45,14 +45,16 @@ def unify(arg1,arg2):			# general unification
 	if not (A and B):				# args non var's
 		if arg1value == arg2value: yield
 
-def square(Width,Height): # square rectangle
-	for i in unify(Width,Height): yield
+##############################################################################
 
-W,H = var('W'),var('H')
-for a in square(W,H):	print W,H
-for a in square(W,H):			# bind first
-   	for b in unify(W,33):		# unify with value
- 		print W,H
+# def square(Width,Height): # square rectangle
+# 	for i in unify(Width,Height): yield
+# 
+# W,H = var('W'),var('H')
+# for a in square(W,H):	print W,H
+# for a in square(W,H):			# bind first
+#    	for b in unify(W,33):		# unify with value
+#  		print W,H
  		
 ##############################################################################
 def person(V):
@@ -77,3 +79,10 @@ def uncle(Person,Uncle):
 	Parent = var()
 	for i in parent(Person,Parent):
 		for j in brother(Parent,Uncle): yield
+
+def anyBrother(Person,Brother):
+	for i in brother(Person,Brother):
+		yield ; break # will found only 0 or 1 solution
+	
+B = var('brother')
+for j in anyBrother('Hillary',B): print B

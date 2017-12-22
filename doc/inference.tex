@@ -385,4 +385,19 @@ for a in square(W,H):			# bind first
 # W=H=33 H=33
 # W=33 H=W=33
 \end{lstlisting}
-		
+
+\subsection{Cutting inference}
+
+If you need \emph{only one} solution, you can cut inference, and save
+computational time.
+
+\begin{lstlisting}[language=Python]
+def anyBrother(Person,Brother):
+	for i in brother(Person,Brother):
+		yield ; break # will found only 0 or 1 solution
+	
+B = var('brother')
+for j in anyBrother('Hillary',B): print B
+
+# brother=Tony
+\end{lstlisting}
