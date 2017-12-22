@@ -328,9 +328,10 @@ class var:
 	def getval(self):
 		if not self.bound:		# return unbound as is
 			return self
-		V = self.value			# else do loop until
-		if isinstance(V, var):	# non-variable found
-			return V.getval()	# recursive scan vars
+		V = self.value				# else do loop until
+		while isinstance(V, var):	# non-variable found
+			if not V.bound: return V # or unbound var
+ 			V = V.value				# scan var chain
 		return V		
 
 def getval(V):				# return value or unbound var
@@ -354,6 +355,21 @@ class var:
 \end{lstlisting}
 \clearpage
 \begin{lstlisting}[language=Python]
+def unify(arg1,arg2):			# general unification
+	arg1value = getval(arg1)		# \ get values
+	arg2value = getval(arg2)		# /
+	A = B = False
+	if isinstance(arg1value,var):	# arg1 is variable
+		A = True
+ 		for i in arg1value << arg2value: yield
+	if isinstance(arg2value,var):	# arg2 is variable
+		B = True
+ 		for j in arg2value << arg1value: yield
+	if not (A and B):				# args non var's
+		if arg1value == arg2value: yield
+\end{lstlisting}
+\clearpage
+\begin{lstlisting}[language=Python]
 for a in square(W,H):	print W,H
 
 # return two variants of unknown variables: W->H and H->W
@@ -364,8 +380,8 @@ for a in square(W,H):			# bind first
    	for b in unify(W,33):		# unify with value
  		print W,H
 
-# SWI prolog returns only: H = W, W = 33, but we got
-# two possible variants as 33->W=H chains to 33->H , W=H		
+# SWI prolog returns only one: H = W, W = 33, but we got
+# two possible variants as 33->W=H chains to 33->H,H->W		
 # W=H=33 H=33
 # W=33 H=W=33
 \end{lstlisting}

@@ -24,8 +24,8 @@ class var:						# Prolog unifying variable
 			return self
 		V = self.value				# else do loop until
 		while isinstance(V, var):	# non-variable found
-			if not V.bound: return V
- 			V = V.value				# scan bound vars
+			if not V.bound: return V # or unbound var
+ 			V = V.value				# scan var chain
 		return V		
 
 def getval(V):				# return value or unbound var
