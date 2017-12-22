@@ -1,13 +1,14 @@
 \part{Fuzzy logic inference}
 
+\noindent
 In this section we'll implement Prolog and fuzzy logic inference engine, and
 extend our metasystem with ability to do semantic network and hypergraph
 inference.
-
-First steps we will be do using well known
-\href{http://yieldprolog.sourceforge.net/}{Yield Prolog} (YP), and then
-generalize it to \term{predicate functions} and \term{green threads} to do
-distributed inference.
+First steps we will be do using well known \emph{Yield
+Prolog}\note{\url{http://yieldprolog.sourceforge.net/} \copyright\ Jeff
+Thompson} (YP), and then generalize it to \term{predicate functions} and
+\term{green threads} to do distributed inference. Later this text will be
+replaced with DLR script, avoiding \copyright\ violation.
 
 \section{Yield Prolog \copyright\ Jeff Thompson}
 
@@ -16,7 +17,6 @@ def person():
     yield "Chelsea"
     yield "Hillary"
     yield "Bill"
-
 for p in person(): print p
 \end{lstlisting}
 Here we define \verb|person()| \term{generator function} which yeilds few
