@@ -406,6 +406,25 @@ Prolog syntax:
 anyBrother(Person, Brother) :- brother(Person, Brother), !.
 \end{lstlisting}
 
+We have some problem with cut and loop breaking: as you remember any variable
+must be unbinded after unification. If we just break loop, we fail here. To fix
+this problem, we can do hint with \verb|try/finally| will unroll binding:
+\begin{lstlisting}[language=Python]
+class var:						# Prolog unifying variable
+	def __lshift__(self,val):   # unify operator <<
+		if not self.bound:		# 1) unassigned
+			self.value = getval(val) # get var
+			if self.value == self: yield # can be itself
+			else:
+				self.bound = True	# bound
+				try: yield			# fix for cut unbound
+				finally:
+					self.bound = False	# drop binding
+		else:
+			for i in unify(self,val): yield
+\end{lstlisting}
+
+
 \clearpage
 \subsection{Negation via cut}
 

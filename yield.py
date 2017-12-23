@@ -10,8 +10,9 @@ class var:						# Prolog unifying variable
 			if self.value == self: yield # can be itself
 			else:
 				self.bound = True	# bound
-				yield
-				self.bound = False	# drop binding
+				try: yield			# fix for cut unbound
+				finally:
+					self.bound = False	# drop binding
 		else:
 			for i in unify(self,val): yield
 	def __repr__(self):         # dump in string form
