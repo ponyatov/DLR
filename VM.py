@@ -465,8 +465,7 @@ class FORTH(VM):
  		' bool : FALSE '
  		p[0] = False
 
-if __name__ == '__main__':
-	FORTH(r''' # use r' : we have escapes in string constants
+FORTH(r''' # use r' : we have escapes in string constants
 : hello ;
 
 false var STATE			\ interpret =0 / compile 
@@ -490,7 +489,7 @@ false var STATE			\ interpret =0 / compile
 		endif		
 	again			;		
 
-	''')
+''')
 
-	thread_GUI.join()	# wait until GUI stops
+thread_GUI.join()	# wait until GUI stops
 
