@@ -6,47 +6,38 @@ wxapp = wx.App()			# create wx GUI application
 class MainWindow(wx.Frame):	# inherit GUI widget
 	def __init__(self):
 		# initialize superclass
-		wx.Frame.__init__(self,None,
-			title='GNU Dynamic (FORTH)')
+		wx.Frame.__init__(self,None,title='GNU Dynamic (FORTH)')
 		# set window icon
 		self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
 		# show window
 		self.Show()
 		# add control elements
-		self.panel = wx.Panel(self)
-		self.sizer = wx.BoxSizer(wx.VERTICAL)
-#		self.panel.SetSizer(self.sizer)
-		self.SetSizer(self.sizer)
-		## console
-		SW0,SH0 = wx.GetDisplaySizeMM()	# in mm
+#		W,H = self.GetSize()			# main window size
+#		SW0,SH0 = wx.GetDisplaySizeMM()	# in mm
 		SW1,SH1 = wx.GetDisplaySize()	# in pixels
-		DW,DH = float(SW1)/SW0,float(SH1)/SH0 # calc dpi (/mm)
-		W,H = self.GetSize()			# main window size
-		self.console = wx.TextCtrl(self,
-			style=wx.TE_MULTILINE)#,size=(W/10*9,H/10*9))
-		self.console.SetFont(
-				wx.Font(SH1/32,
+		self.SetSize((SW1/2,SH1/2))		# main window size
+		self.font = wx.Font(SH1/32,			# console font
 					wx.FONTFAMILY_MODERN,
 					wx.FONTSTYLE_NORMAL,
-					wx.FONTWEIGHT_BOLD))
+					wx.FONTWEIGHT_BOLD)
+		self.sizer = wx.BoxSizer(wx.VERTICAL)
+		self.SetSizer(self.sizer)
+
+		## console
+		self.console = wx.TextCtrl(self,style=wx.TE_MULTILINE)
+		self.console.SetFont(self.font)
 		self.console.SetValue('console')
-		
 		self.console.SetBackgroundColour(wx.BLACK)
 		self.console.SetForegroundColour(wx.GREEN)
-		self.sizer.Add(self.console,3,wx.EXPAND|wx.ALL)
+		self.sizer.Add(self.console,3,wx.EXPAND)#,wx.EXPAND|wx.ALL)
 		## commands entry field
-		self.command = wx.TextCtrl(self,
-			style=wx.TE_MULTILINE)
-		self.command.SetFont(
-				wx.Font(SH1/32,
-					wx.FONTFAMILY_MODERN,
-					wx.FONTSTYLE_NORMAL,
-					wx.FONTWEIGHT_BOLD))
+		self.command = wx.TextCtrl(self,style=wx.TE_MULTILINE)
+		self.command.SetFont(self.font)
 		self.command.SetValue('command')
-		self.command.SetBackgroundColour(wx.WHITE)
-		self.command.SetForegroundColour(wx.BLACK)
-		self.sizer.Add(self.command,1,wx.EXPAND|wx.ALL)
-		# allot
+		self.command.SetBackgroundColour(wx.BLUE)
+		self.command.SetForegroundColour(wx.YELLOW)
+		self.sizer.Add(self.command,1,wx.EXPAND)#,wx.EXPAND|wx.ALL)
+		# allot space
 		self.sizer.Fit(self)
 
 def GUI():
