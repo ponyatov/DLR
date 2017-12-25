@@ -1125,3 +1125,65 @@ class FORTH(VM):
  		p[0] = False
 \end{lstlisting}
 
+\subsection{Mobile-targetted GUI}
+
+You can make \F\ work in text console mode, but we must think mobile, so we 
+jump
+start from GUI interface, tuned for smartphone look\&feel. We must be ready to
+face up with one thumb interface with vertical screen covered by half
+with Android keyboard starting from scratch of Skynet development. You must be
+able to do something cool with one hand doing Vrschikasana in crowded bus.
+
+For fast start we will use wxWidgets \cite{zetwx}\ toolkit,
+but later we'll move to native GUI to make system much lighter and closer to 
+native host platform.
+
+\begin{lstlisting}[language=python]
+import wx						# import wxWidgets
+wxapp = wx.App()				# create wx GUI application
+wxmain = wx.Frame(None)			# start simplest GUI widget
+wxmain.Show()					# set visible
+wxapp.MainLoop()				# start wx GUI main loop
+\end{lstlisting}
+% wxmain = wx.Frame(None,-1,sys.argv[0])	# ?,?,window title
+
+\fig{gui00.png}{height=0.65\textheight}
+
+\begin{lstlisting}[language=python]
+wxmain = wx.Frame(None			# start simplest GUI widget
+,title='GNU Dynamic (FORTH)')	# window title
+
+wxmain.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
+\end{lstlisting}
+Here we have some problem: \verb|.MainLoop()| works in foreground and locks
+everything. Later we must process GUI events independently from system work
+in parallel. So we must use \py\ threading capabilities:
+\begin{lstlisting}[language=python]
+import threading			# GUI must be separate thread
+import wx					# import wxWidgets
+wxapp = wx.App()			# create wx GUI application
+
+class MainWindow(wx.Frame):	# inherit GUI widget
+	def __init__(self):
+		# initialize superclass
+		wx.Frame.__init__(self,None,
+			title='GNU Dynamic (FORTH)')
+		# set window icon
+		self.SetIcon(wx.ArtProvider.GetIcon(
+			wx.ART_INFORMATION))
+		# show window
+		self.Show()
+
+def GUI():
+	wxmain = MainWindow()
+	wxapp.MainLoop()
+
+# create & start GUI thread
+thread_GUI = threading.Thread(None,GUI)
+thread_GUI.start()
+
+import sys
+thread_GUI.join()	# wait until GUI stops
+sys.exit()
+\end{lstlisting}
+

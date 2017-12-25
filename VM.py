@@ -1,4 +1,28 @@
-import sys 
+
+import threading			# GUI must be separate thread
+import wx					# import wxWidgets
+wxapp = wx.App()			# create wx GUI application
+
+class MainWindow(wx.Frame):	# inherit GUI widget
+	def __init__(self):
+		# initialize superclass
+		wx.Frame.__init__(self,None,
+			title='GNU Dynamic (FORTH)')
+		# set window icon
+		self.SetIcon(wx.ArtProvider.GetIcon(
+			wx.ART_INFORMATION))
+		# show window
+		self.Show()
+
+def GUI():
+	wxmain = MainWindow()
+	wxapp.MainLoop()
+
+# create & start GUI thread
+thread_GUI = threading.Thread(None,GUI)
+thread_GUI.start()
+
+import sys
 
 sys.path.insert(0,'./ply')	# use fixed PLY: https://github.com/ponyatov/ply.git
 import ply.lex  as lex
@@ -441,3 +465,6 @@ false var STATE			\ interpret =0 / compile
 	again			;		
 
 	''')
+
+	thread_GUI.join()	# wait until GUI stops
+

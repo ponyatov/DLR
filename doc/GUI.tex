@@ -1,27 +1,5 @@
 \chapter{GUI application in TaskBar}\clearpage
 
-\section{Mobile-targetted GUI}
-You can make \F\ work in text console mode, but we think mobile, so we jump
-start from GUI interface, tuned for smartphone look\&feel. We must be ready to
-face up with one thumb interface with vertical screen covered by half
-with Android keyboard starting from scratch of Skynet development. You must be
-able to do something cool with one hand doing Vrschikasana in crowded bus.
-
-For fast start we will use wxWidgets \cite{zetwx}\ toolkit,
-but later will
-move to native GUI to make system must lighter and closer to native host
-platform.
-
-\begin{lstlisting}[language=python]
-import wx					# import wxWidgets
-wxapp = wx.App()			# create wx GUI application
-wxmain = wx.Frame(None,-1,sys.argv[0])	# ?,?,window title
-wxmain.Show()				# set visible
-wxapp.MainLoop()			# start wx GUI main loop
-\end{lstlisting}
-
-\fig{gui00.png}{height=0.7\textheight}
-
 To take this screenshot we must make GUI work in parallel thread:
 \begin{lstlisting}[language=python]
 import threading
