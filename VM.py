@@ -9,13 +9,48 @@ class MainWindow(wx.Frame):	# inherit GUI widget
 		wx.Frame.__init__(self,None,
 			title='GNU Dynamic (FORTH)')
 		# set window icon
-		self.SetIcon(wx.ArtProvider.GetIcon(
-			wx.ART_INFORMATION))
+		self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
 		# show window
 		self.Show()
+		# add control elements
+		self.panel = wx.Panel(self)
+		self.sizer = wx.BoxSizer(wx.VERTICAL)
+#		self.panel.SetSizer(self.sizer)
+		self.SetSizer(self.sizer)
+		## console
+		SW0,SH0 = wx.GetDisplaySizeMM()	# in mm
+		SW1,SH1 = wx.GetDisplaySize()	# in pixels
+		DW,DH = float(SW1)/SW0,float(SH1)/SH0 # calc dpi (/mm)
+		W,H = self.GetSize()			# main window size
+		self.console = wx.TextCtrl(self,
+			style=wx.TE_MULTILINE)#,size=(W/10*9,H/10*9))
+		self.console.SetFont(
+				wx.Font(SH1/32,
+					wx.FONTFAMILY_MODERN,
+					wx.FONTSTYLE_NORMAL,
+					wx.FONTWEIGHT_BOLD))
+		self.console.SetValue('console')
+		
+		self.console.SetBackgroundColour(wx.BLACK)
+		self.console.SetForegroundColour(wx.GREEN)
+		self.sizer.Add(self.console,3,wx.EXPAND|wx.ALL)
+		## commands entry field
+		self.command = wx.TextCtrl(self,
+			style=wx.TE_MULTILINE)
+		self.command.SetFont(
+				wx.Font(SH1/32,
+					wx.FONTFAMILY_MODERN,
+					wx.FONTSTYLE_NORMAL,
+					wx.FONTWEIGHT_BOLD))
+		self.command.SetValue('command')
+		self.command.SetBackgroundColour(wx.WHITE)
+		self.command.SetForegroundColour(wx.BLACK)
+		self.sizer.Add(self.command,1,wx.EXPAND|wx.ALL)
+		# allot
+		self.sizer.Fit(self)
 
 def GUI():
-	wxmain = MainWindow()
+	global wxmain ; wxmain = MainWindow()
 	wxapp.MainLoop()
 
 # create & start GUI thread

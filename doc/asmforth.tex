@@ -1175,7 +1175,7 @@ class MainWindow(wx.Frame):	# inherit GUI widget
 		self.Show()
 
 def GUI():
-	wxmain = MainWindow()
+	global wxmain ; wxmain = MainWindow()
 	wxapp.MainLoop()
 
 # create & start GUI thread
