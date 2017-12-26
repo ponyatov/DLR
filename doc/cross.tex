@@ -240,17 +240,18 @@ gz_cross:
 	$(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/cross]
+CROSS_CFG = --target=$(TARGET) 
+
 .PHONY: binutils
 binutils: $(CROSS)/bin/$(TARGET)-as
 $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
 	rm -rf $(BLD)/$(BINUTILS) ; mkdir $(BLD)/$(BINUTILS) ;\
 	cd $(BLD)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) \
-		--with-sysroot=$(ROOT) &&\
+		$(CROSS_CFG) --with-sysroot=$(ROOT) &&\
 	$(MAKE) && make install-strip
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/cfg]
-CFG = configure --disable-nls \
-	--prefix=$(CROSS) --target=$(TARGET) \
+CFG = configure --disable-nls --prefix=$(CROSS) \
 	--docdir=$(TMP)/doc --mandir=$(TMP)/man \
 		--infodir=$(TMP)/info
 \end{lstlisting}
@@ -266,6 +267,19 @@ disable-nls & don't use internationalization in messages \\
 \end{tabular}
 
 \subsubsection{gcclibs: libraries required for GCC compiling}
+
+\begin{lstlisting}
+$ make gcclibs [gmp] [mpfr] [mpc]
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/version]
+GMP_VER = 6.1.2
+MPFR_VER =
+MPC_VER = 
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/gz]
+gz_cross:
+	$(WGET) ftp://ftp.gmplib.org/pub/gmp/$(GMP_GZ)
+\end{lstlisting}
 
 \subsubsection{gcc: GNU compler toolchain}
 
