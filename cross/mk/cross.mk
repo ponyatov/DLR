@@ -9,10 +9,7 @@ MAKE = make -j$(BUILD_CPU_NUMBER)
 .PHONY: binutils
 binutils: $(CROSS)/bin/$(TARGET)-as
 $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
-	rm -rf $(BLD)/$(BINUTILS) ;\
-	mkdir $(BLD)/$(BINUTILS) ;\
-	cd $(BLD)/$(BINUTILS) ;\
-	$(SRC)/$(BINUTILS)/configure \
-		--prefix=$(CROSS) --target=$(TARGET) \
+	rm -rf $(BLD)/$(BINUTILS) ; mkdir $(BLD)/$(BINUTILS) ;\
+	cd $(BLD)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) \
 		--with-sysroot=$(ROOT) &&\
 	$(MAKE) && make install-strip

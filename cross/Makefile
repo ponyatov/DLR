@@ -32,6 +32,8 @@ dirs:
 
 include mk/gz.mk
 
+include mk/cfg.mk
+
 include mk/cross.mk
 
 include mk/unpack.mk

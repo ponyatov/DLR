@@ -243,13 +243,16 @@ gz_cross:
 .PHONY: binutils
 binutils: $(CROSS)/bin/$(TARGET)-as
 $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
-	rm -rf $(BLD)/$(BINUTILS) ;\
-	mkdir $(BLD)/$(BINUTILS) ;\
-	cd $(BLD)/$(BINUTILS) ;\
-	$(SRC)/$(BINUTILS)/configure \
-		--prefix=$(CROSS) --target=$(TARGET) \
+	rm -rf $(BLD)/$(BINUTILS) ; mkdir $(BLD)/$(BINUTILS) ;\
+	cd $(BLD)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) \
 		--with-sysroot=$(ROOT) &&\
 	$(MAKE) && make install-strip
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/cfg]
+CFG = configure --disable-nls \
+	--prefix=$(CROSS) --target=$(TARGET) \
+	--docdir=$(TMP)/doc --mandir=$(TMP)/man \
+		--infodir=$(TMP)/info
 \end{lstlisting}
 
 \begin{tabular}{l l}
@@ -257,6 +260,9 @@ prefix & cross compiler toolchain install directory\\
 target & target architecture triplet \verb|cpu-[hw]-os-abi| \\
 sysroot & path where include/libraries must be found,\\
 & \emph{avoid to use build system dirs} at \verb$/usr/(include|lib)$\\
+\hline
+disable-nls & don't use internationalization in messages \\
+\verb$*dir$ & remove documentation from \verb|$CROSS|\\
 \end{tabular}
 
 \subsection{kernel: Linux kernel}
