@@ -13,3 +13,10 @@ $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
 	cd $(BLD)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) \
 		--with-sysroot=$(ROOT) &&\
 	$(MAKE) && make install-strip
+
+.PHONY: gcc
+gcc: $(CROSS)/bin/$(TARGET)-gcc
+$(CROSS)/bin/$(TARGET)-gcc: $(SRC)/$(GCC)/README
+	rm -rf $(BLD)/$(GCC) ; mkdir $(BLD)/$(GCC) ;\
+	cd $(BLD)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) \
+		--with-gmp=$(CROSS) --with-mpfr=$(CROSS) --with-mpc=$(CROSS)

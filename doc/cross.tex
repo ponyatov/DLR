@@ -265,6 +265,31 @@ disable-nls & don't use internationalization in messages \\
 \verb$*dir$ & remove documentation from \verb|$CROSS|\\
 \end{tabular}
 
+\subsubsection{gcclibs: libraries required for GCC compiling}
+
+\subsubsection{gcc: GNU compler toolchain}
+
+\begin{lstlisting}
+$ make gcc
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/version]
+GCC_VER = 7.2.0
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/package]
+GCC = gcc-$(GCC_VER)
+GCC_GZ = $(GCC).tar.xz
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/gz]
+gz_cross:
+	$(WGET) \
+	http://gcc.skazkaforyou.com/releases/$(GCC)/$(GCC_GZ)
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/cross]
+.PHONY: gcc
+gcc: $(CROSS)/bin/$(TARGET)-gcc
+$(CROSS)/bin/$(TARGET)-gcc: $(SRC)/$(GCC)/README
+\end{lstlisting}
+
 \subsection{kernel: Linux kernel}
 
 \subsection{ulibc: base system library}
