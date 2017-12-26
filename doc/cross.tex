@@ -1,0 +1,20 @@
+\chapter{Cross-compiling Linux for server node}\label{cross}\clearpage
+
+\noindent
+If you plan to use dedicated server\note{single, cluster or grid} for private
+network, you can use Linux running on x86 PC or set of Raspberry Pi -like boards
+mounted in compact chassie. Another way can be more cheap and safe, use virtual
+hosting able to run custom minisystem from image, or use own virtualization
+server to do some debugging and play with multiple VMs.
+
+You can use any mainstream Linux distro\note{especially on side hostings}, but
+in this chapter we'll see how to build some special \term{embedded Linux}
+variant able to run on tiny ARM computers, or use full resources on large x86
+PC.
+
+% \bigskip
+Another goal of this chapter to show some technique on \emph{using inference
+engine}\ \ref{inference}\ for large and complex \term{configuration
+management}. You can define hage amount of configuration parameters and build
+options of hardware platform and software packages, \emph{and its dependency},
+and inference lets you do parameter coordination.

@@ -8,7 +8,7 @@ TEX += GUI.tex TUI.tex
 TEX += java.tex
 TEX += Forth.tex asmforth.tex Forth.sty
 TEX += PLC.tex
-TEX += vim.tex
+TEX += vim.tex cross.tex
 
 SRC += ../tmp/calc.mk ../inher.py
 
