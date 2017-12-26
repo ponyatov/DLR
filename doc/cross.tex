@@ -62,14 +62,37 @@ CWD = $(CURDIR)
 GZ = $(CWD)/gz
 						# temp directory
 TMP = $(CWD)/tmp
-						# directory list must be created
-DIRS = $(GZ) $(TMP) 
+
+						# cross compiler tools						
+CROSS = $(CWD)/$(TARGET).cross
+						# target filesystem
+ROOT = $(CWD)/$(TARGET)
+							# source code
+SRC = $(TMP)/src
+							# off-tree build
+BLD = $(TMP)/build
+
+							# directory list must be created
+DIRS = $(GZ) $(TMP) $(SRC) $(BLD) $(CROSS) $(ROOT)
 
 PHONY: dirs
 dirs:
 	mkdir -p $(DIRS)
 \end{lstlisting}
 
+To build you should use build system with SSD and \emph{large amount of RAM}.
+\emph{It is much better to use ramdisk} for source code and build/temp files.
+
+\begin{lstlisting}[title=add this to /etc/fstab (change to your home/gid/uid)]
+tmpfs /home/ponyatov/DLR/cross/tmp tmpfs \
+	auto,uid=ponyatov,gid=ponyatov 0 0
+\end{lstlisting}
+and remount ramdisks:
+\begin{lstlisting}
+$ sudo mount -a ; make dirs
+\end{lstlisting}
+
+\clearpage
 \section{Target system parameters}
 
 There are few mainstream target plaforms, supported by this build scripts. Some
@@ -90,6 +113,14 @@ Target system must be defined by set of \term{target configuration variables}:
 
 \subsection{Virtualization patforms}
 
+\begin{lstlisting}[language=make,title=Makefile]
+HW ?= i486sx
+
+include hw/$(HW).mk
+include cpu/$(CPU).mk
+include arch/$(ARCH).mk
+\end{lstlisting}
+
 \subsubsection{hw/KVM}
 
 We'll use KVM as default (virtualization) platform, and Debian GNU/Linux manual
@@ -98,6 +129,18 @@ on its configuration\note{\url{https://debian-handbook.info/browse/stable/sect.v
 \subsection{x86 variants}
 
 \subsubsection{hw/i486sx and hw/i486dx}
+
+\begin{lstlisting}[language=make,title=hw/i486sx]
+CPU = i486sx
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=cpu/i486sx]
+ARCH = i386
+# override CPU (will be used for TARGET)
+CPU = i486
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=arch/i386]
+TARGET = $(CPU)-linux-uclibc
+\end{lstlisting}
 
 You can have some fun for a few tens of bucks with old notebook: take some on
 eBay, and play with it. Or you can bye industrial PC104 embedded computer with
@@ -138,3 +181,98 @@ interfaces, and USB host. Can be used for network gateways, slow data
 storages using USB flash drive, or host tiny web sites.
 
 \subsubsection{MR3020}
+
+\section{Packages}
+
+\begin{lstlisting}[language=make,title=Makefile]
+include mk/version.mk
+include mk/package.mk
+include mk/gz.mk
+include mk/unpack.mk
+\end{lstlisting}
+
+\begin{lstlisting}[language=make,title=mk/unpack]
+# automate source code unpack
+$(SRC)/%/README: $(GZ)/%.tar.gz
+	cd $(SRC) &&  zcat $< | tar x && touch $@
+$(SRC)/%/README: $(GZ)/%.tar.bz2
+	cd $(SRC) && bzcat $< | tar x && touch $@
+\end{lstlisting}
+
+\subsection{Download source code archives}
+
+Run download script to make local copy of all package source codes:
+\begin{lstlisting}
+$ make gz
+\end{lstlisting}
+
+\subsection{cross: Cross-compiler toolchain}
+
+\begin{lstlisting}[language=make,title=Makefile]
+include mk/cross.mk
+\end{lstlisting}
+
+\begin{lstlisting}[language=make,title=mk/cross]
+.PHONY: cross
+cross: binutils
+
+# get number or CPU cores for build system
+BUILD_CPU_NUMBER = \
+	$(shell grep processor /proc/cpuinfo | wc -l)
+# parallel make
+MAKE = make -j$(BUILD_CPU_NUMBER)
+\end{lstlisting}
+
+\subsubsection{binutils: assembler and linker}
+
+\begin{lstlisting}
+$ make binutils
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/version]
+BINUTILS_VER = 2.29.1
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/package]
+BINUTILS = binutils-$(BINUTILS_VER)
+BINUTILS_GZ = $(BINUTILS).tar.bz2
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/gz]
+gz_cross:
+	$(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/cross]
+.PHONY: binutils
+binutils: $(CROSS)/bin/$(TARGET)-as
+$(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
+	rm -rf $(BLD)/$(BINUTILS) ;\
+	mkdir $(BLD)/$(BINUTILS) ;\
+	cd $(BLD)/$(BINUTILS) ;\
+	$(SRC)/$(BINUTILS)/configure \
+		--prefix=$(CROSS) --target=$(TARGET) \
+		--with-sysroot=$(ROOT) &&\
+	$(MAKE) && make install-strip
+\end{lstlisting}
+
+\begin{tabular}{l l}
+prefix & cross compiler toolchain install directory\\
+target & target architecture triplet \verb|cpu-[hw]-os-abi| \\
+sysroot & path where include/libraries must be found,\\
+& \emph{avoid to use build system dirs} at \verb$/usr/(include|lib)$\\
+\end{tabular}
+
+\subsection{kernel: Linux kernel}
+
+\subsection{ulibc: base system library}
+
+\subsection{busybox: core UNIX}
+
+\section{Download software}
+
+\begin{lstlisting}[language=make,title=Makefile]
+include mk/gz.mk
+\end{lstlisting}
+
+\begin{lstlisting}[language=make,title=mk/gz]
+WGET = wget -P $(GZ) -c	
+PHONY: gz gz_cross
+gz: gz_cross
+\end{lstlisting}
