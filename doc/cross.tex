@@ -15,6 +15,126 @@ PC.
 % \bigskip
 Another goal of this chapter to show some technique on \emph{using inference
 engine}\ \ref{inference}\ for large and complex \term{configuration
-management}. You can define hage amount of configuration parameters and build
-options of hardware platform and software packages, \emph{and its dependency},
-and inference lets you do parameter coordination.
+management}. You can define huge amount of configuration parameters and build
+options of hardware platform and software packages, \emph{and its
+interdependency}, and inference lets you do parameter coordination.
+
+For system build we will use set of Makefiles as it is simplest way to do easy
+automation without infolving complex script system. As sample you can also see
+separate project at \url{https://github.com/ponyatov/L}.
+
+% \bigskip
+Linux is not only one true way to do server farm, you can use your existing
+Windows Server or IBM AIX infrastructure. But there is one feature of Linux made
+this OS used all over
+\href{https://www.top500.org/statistics/details/osfam/1}{Top 500
+Supercomputers}: \emph{Linux is totally open system}, and you can read, study
+and \emph{modify any byte} of whole system without any NDA or usage fees.
+
+Another problem is hardware: there are a lot of ARM/MIPS embedded computers
+staring from your mobile phone, able to run only Android as based on Linux
+kernel. Big Windows still unable to run on any CPU other then x86\note{Alpha is
+dead now}, and Windows Embedded is still extra limited in requirements to RAM
+and computing power: you can't run it on cheap headless router with 32M RAM.
+
+\clearpage
+\section{Build directory structure}
+
+Run \verb|$ cd cross ; make dirs| to create directory structure:
+
+\bigskip
+\begin{tabular}{l l}
+\verb|cross/Makefile| & main Makefile \\
+\verb|cross/gz/| & software packages source tarballs \\
+\verb|cross/tmp/| & temp directory \\
+\verb|cross/hw/| & supported hardware platforms\\
+				&(KVM is main virtual server system)\\
+\verb|cross/arch/| & target architecture\\
+\verb|cross/cpu/| & target CPU\\
+\end{tabular}
+
+\clearpage
+
+\begin{lstlisting}[language=make]
+						# current directory (full path)
+CWD = $(CURDIR)
+						# software packages source tarballs
+GZ = $(CWD)/gz
+						# temp directory
+TMP = $(CWD)/tmp
+						# directory list must be created
+DIRS = $(GZ) $(TMP) 
+
+PHONY: dirs
+dirs:
+	mkdir -p $(DIRS)
+\end{lstlisting}
+
+\section{Target system parameters}
+
+There are few mainstream target plaforms, supported by this build scripts. Some
+of them are especially for virtualization, and some are real hardware systems.
+Target system must be defined by set of \term{target configuration variables}:
+
+\bigskip
+\begin{tabular}{l l l}
+\verb|HW| & \verb|hw/| & hardware platform short name \\
+\verb|ARCH| & \verb|arch/| & architecture \\
+\verb|CPU| & \verb|cpu/| & CPU \\
+\hline
+&& \term{Triplets}: System where you \\
+\verb|BUILD| && build (\verb|x86_64-gnu-linux|) \\
+\verb|HOST| && run tools (\verb|mingw32|) \\
+\verb|TARGET| && run resulting software (\verb|arm-linux-uclibceabihf|)\\
+\end{tabular}
+
+\subsection{Virtualization patforms}
+
+\subsubsection{hw/KVM}
+
+We'll use KVM as default (virtualization) platform, and Debian GNU/Linux manual
+on its configuration\note{\url{https://debian-handbook.info/browse/stable/sect.virtualization.html}}
+
+\subsection{x86 variants}
+
+\subsubsection{hw/i486sx and hw/i486dx}
+
+You can have some fun for a few tens of bucks with old notebook: take some on
+eBay, and play with it. Or you can bye industrial PC104 embedded computer with
+some Vortex86 SoC like
+\href{http://www.advantech.ru/products/1-2jkltu/pcm-3343/mod_645a1e17-167a-4476-b253-ca4cf2e19428}{Advantech PCM-4434}.
+
+\emph{Don't bye x86 hardware with CPU lower then i486sx}: i386 support was
+totally dropped from Linux kernel many years ago, and we have a chance to loose
+it also in GCC toolchain.
+
+If you want to have some practical benefit from this old notebook, you can do
+some light computations or electronics and mechanical design, and it is better
+to bye it with i486dx processor, as it have hardware floating point. 
+
+\subsubsection{hw/i686}
+
+There are huge amount of old computers you can reuse, and lot of new boards
+starting from Intel Atom.
+
+\subsubsection{hw/amd64}
+
+Cheap and power SOHO servers, up to topmost i7 CPUs.
+
+\subsection{Raspberry Pi, china clones}
+
+Cheap, ultra compact and power effective able to run with battery power source.
+
+\subsubsection{Raspberry Pi}
+
+Large community, available off the shelf in local stores.
+
+\subsubsection{Orange Pi} 
+
+\subsection{MIPS routers: cheap and too small}
+
+Have a small amount of RAM (starting from 32M), but embedded network
+interfaces, and USB host. Can be used for network gateways, slow data
+storages using USB flash drive, or host tiny web sites.
+
+\subsubsection{MR3020}
