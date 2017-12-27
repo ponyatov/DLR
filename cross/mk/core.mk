@@ -5,7 +5,12 @@ KERNEL_ARCH ?= $(ARCH)
 KERNEL_CFG = ARCH=$(KERNEL_ARCH) \
 	INSTALL_HDR_PATH=$(ROOT) INSTALL_MOD_PATH=$(ROOT)
  
-kernel: $(SRC)/$(KERNEL)/README
+kernel: $(BOOT)/$(HW)_$(APP).kernel 
+$(BOOT)/$(HW)_$(APP).kernel: $(SRC)/$(KERNEL)/arch/$(KERNEL_ARCH)/boot/bzImage
+	cp $< $@ 
+$(SRC)/$(KERNEL)/arch/$(KERNEL_ARCH)/boot/bzImage: $(SRC)/$(KERNEL)/README
+	ls -la $(SRC)/$(KERNEL)/arch/$(KERNEL_ARCH)/boot/bzImage
+	exit -1
 	# empty config
 	cd $(SRC)/$(KERNEL) ; make $(KERNEL_CFG) distclean
 	cd $(SRC)/$(KERNEL) ; make $(KERNEL_CFG) allnoconfig
