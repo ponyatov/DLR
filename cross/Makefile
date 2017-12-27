@@ -1,3 +1,5 @@
+APP = dynamic
+
 HW ?= i486sx
 
 include hw/$(HW).mk
@@ -28,6 +30,9 @@ BLD = $(TMP)/build
 							# directory list must be created
 DIRS = $(GZ) $(TMP) $(SRC) $(BLD) $(CROSS) $(ROOT) $(BOOT)
 
+							# set path search
+XPATH = PATH=$(CROSS)/bin:$(PATH)
+
 PHONY: dirs
 dirs:
 	mkdir -p $(DIRS)
@@ -37,6 +42,7 @@ include mk/gz.mk
 include mk/cfg.mk
 
 include mk/cross.mk
+include mk/core.mk
 
 include mk/unpack.mk
 

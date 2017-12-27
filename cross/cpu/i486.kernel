@@ -1,0 +1,4 @@
+CONFIG_SMP=n
+CONFIG_M486=y
+# disable SATA AHCI for old computers
+CONFIG_SATA_AHCI_PLATFORM=n

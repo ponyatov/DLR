@@ -4,7 +4,7 @@ cross: binutils cclibs gcc0
 # get number or CPU cores for build system
 BUILD_CPU_NUMBER = $(shell grep processor /proc/cpuinfo | wc -l)
 # parallel make
-MAKE = make -j$(BUILD_CPU_NUMBER)
+MAKE = $(XPATH) make -j$(BUILD_CPU_NUMBER)
 
 WITH_CCLIBS = --with-gmp=$(CROSS) --with-mpfr=$(CROSS) --with-mpc=$(CROSS)  
 CROSS_CFG = --target=$(TARGET) $(WITH_CCLIBS) \

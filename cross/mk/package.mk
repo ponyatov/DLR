@@ -12,3 +12,6 @@ MPFR_GZ = $(MPFR).tar.bz2
 
 MPC = mpc-$(MPC_VER)
 MPC_GZ = $(MPC).tar.gz
+
+KERNEL = linux-$(KERNEL_VER)
+KERNEL_GZ = $(KERNEL).tar.xz

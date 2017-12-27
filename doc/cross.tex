@@ -352,6 +352,27 @@ ramclean:
 	rm -rf $(SRC)/* $(BLD)/*
 \end{lstlisting}
 
+\begin{lstlisting}[language=make,title=mk/version]
+KERNEL_VER = 4.14.9
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/package]
+KERNEL = linux-$(KERNEL_VER)
+KERNEL_GZ = $(KERNEL).tar.xz
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/gz]
+gz: gz_cross gz_core
+gz_core:
+	$(WGET) http://www.kernel.org/pub/linux/kernel/ \
+		v4.x/$(KERNEL_GZ)
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/core]
+.PHONY: core kernel
+core: kernel
+
+kernel: $(SRC)/$(KERNEL)/README
+\end{lstlisting}
+
+
 \subsection{ulibc: base system library}
 
 \subsection{busybox: core UNIX}
