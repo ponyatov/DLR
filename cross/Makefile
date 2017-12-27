@@ -18,13 +18,15 @@ TMP = $(CWD)/tmp
 CROSS = $(CWD)/$(TARGET).cross
 							# target filesystem
 ROOT = $(CWD)/$(TARGET)
+							# bootloader images
+BOOT = $(ROOT)/boot
 							# source code
 SRC = $(TMP)/src
 							# off-tree build
 BLD = $(TMP)/build
 
 							# directory list must be created
-DIRS = $(GZ) $(TMP) $(SRC) $(BLD) $(CROSS) $(ROOT)
+DIRS = $(GZ) $(TMP) $(SRC) $(BLD) $(CROSS) $(ROOT) $(BOOT)
 
 PHONY: dirs
 dirs:

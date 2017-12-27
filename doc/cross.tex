@@ -47,6 +47,8 @@ Run \verb|$ cd cross ; make dirs| to create directory structure:
 \verb|cross/Makefile| & main Makefile \\
 \verb|cross/gz/| & software packages source tarballs \\
 \verb|cross/tmp/| & temp directory \\
+\verb|cross/tmp/src/| & packages source code \\
+\verb|cross/tmp/build/| & out of tree build \\
 \verb|cross/hw/| & supported hardware platforms\\
 				&(KVM is main virtual server system)\\
 \verb|cross/arch/| & target architecture\\
@@ -62,7 +64,6 @@ CWD = $(CURDIR)
 GZ = $(CWD)/gz
 						# temp directory
 TMP = $(CWD)/tmp
-
 						# cross compiler tools						
 CROSS = $(CWD)/$(TARGET).cross
 						# target filesystem
@@ -72,7 +73,6 @@ SRC = $(TMP)/src
 							# off-tree build
 BLD = $(TMP)/build
 
-							# directory list must be created
 DIRS = $(GZ) $(TMP) $(SRC) $(BLD) $(CROSS) $(ROOT)
 
 PHONY: dirs
@@ -105,8 +105,8 @@ Target system must be defined by set of \term{target configuration variables}:
 \verb|ARCH| & \verb|arch/| & architecture \\
 \verb|CPU| & \verb|cpu/| & CPU \\
 \hline
-&& \term{Triplets}: System where you \\
-\verb|BUILD| && build (\verb|x86_64-gnu-linux|) \\
+&& \term{Triplets}: System where you \\&\\
+\verb|BUILD| && build (\verb|x86_64-pc-linux-gnu|) \\
 \verb|HOST| && run tools (\verb|mingw32|) \\
 \verb|TARGET| && run resulting software (\verb|arm-linux-uclibceabihf|)\\
 \end{tabular}
@@ -182,6 +182,18 @@ storages using USB flash drive, or host tiny web sites.
 
 \subsubsection{MR3020}
 
+\section{Download software source code arhives}
+
+Run download script to make local copy of all package source codes:
+\begin{lstlisting}[language=make,title=Makefile]
+include mk/gz.mk
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/gz]
+WGET = wget -P $(GZ) -c	
+PHONY: gz gz_cross
+gz: gz_cross
+\end{lstlisting}
+
 \section{Packages}
 
 \begin{lstlisting}[language=make,title=Makefile]
@@ -197,13 +209,6 @@ $(SRC)/%/README: $(GZ)/%.tar.gz
 	cd $(SRC) &&  zcat $< | tar x && touch $@
 $(SRC)/%/README: $(GZ)/%.tar.bz2
 	cd $(SRC) && bzcat $< | tar x && touch $@
-\end{lstlisting}
-
-\subsection{Download source code archives}
-
-Run download script to make local copy of all package source codes:
-\begin{lstlisting}
-$ make gz
 \end{lstlisting}
 
 \subsection{cross: Cross-compiler toolchain}
@@ -273,12 +278,32 @@ $ make gcclibs [gmp] [mpfr] [mpc]
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/version]
 GMP_VER = 6.1.2
-MPFR_VER =
-MPC_VER = 
+MPFR_VER = 4.0.0
+MPC_VER = 1.0.3
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/gz]
 gz_cross:
 	$(WGET) ftp://ftp.gmplib.org/pub/gmp/$(GMP_GZ)
+	$(WGET) \
+	http://www.mpfr.org/mpfr-$(MPFR_VER)/$(MPFR).tar.bz2
+	$(WGET) \
+	http://www.multiprecision.org/mpc/download/$(MPC_GZ)
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=mk/cross]
+WITH_CCLIBS = --with-gmp=$(CROSS) --with-mpfr=$(CROSS) \
+				--with-mpc=$(CROSS)  
+CCLIBS_CFG = --disable-shared $(WITH_CCLIBS)
+
+.PHONY: gcclibs
+gcclibs: gmp mpfr mpc
+
+.PHONY: gmp
+gmp: $(CROSS)/lib/libgmp.a
+$(CROSS)/lib/libgmp.a: $(SRC)/$(GMP)/README
+	rm -rf $(BLD)/$(GMP) ; mkdir $(BLD)/$(GMP) ;\
+	cd $(BLD)/$(GMP) ; $(SRC)/$(GMP)/$(CFG) $(CCLIBS_CFG) &&\
+	$(MAKE) && make install-strip
+...	
 \end{lstlisting}
 
 \subsubsection{gcc: GNU compler toolchain}
@@ -310,14 +335,3 @@ $(CROSS)/bin/$(TARGET)-gcc: $(SRC)/$(GCC)/README
 
 \subsection{busybox: core UNIX}
 
-\section{Download software}
-
-\begin{lstlisting}[language=make,title=Makefile]
-include mk/gz.mk
-\end{lstlisting}
-
-\begin{lstlisting}[language=make,title=mk/gz]
-WGET = wget -P $(GZ) -c	
-PHONY: gz gz_cross
-gz: gz_cross
-\end{lstlisting}
