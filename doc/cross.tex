@@ -280,7 +280,8 @@ $ make gcclibs [gmp] [mpfr] [mpc]
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/version]
 GMP_VER = 6.1.2
-MPFR_VER = 4.0.0
+MPFR_VER = 3.1.6
+# MPFR 4.0.0 mpc build error: conflicting types for mpfr_fmma  
 MPC_VER = 1.0.3
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/gz]
@@ -340,6 +341,16 @@ gcc0: $(SRC)/$(GCC)/README
 \end{lstlisting}
 
 \subsection{kernel: Linux kernel}
+
+Before kernel build clean up TMP directory \emph{if you use ramdisk build}:
+\begin{lstlisting}
+$ make ramclean
+\end{lstlisting}
+\begin{lstlisting}[language=make,title=Makefile]
+.PHONY: ramclean
+ramclean:
+	rm -rf $(SRC)/* $(BLD)/*
+\end{lstlisting}
 
 \subsection{ulibc: base system library}
 

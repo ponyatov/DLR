@@ -39,3 +39,7 @@ include mk/cfg.mk
 include mk/cross.mk
 
 include mk/unpack.mk
+
+.PHONY: ramclean
+ramclean:
+	rm -rf $(SRC)/* $(BLD)/*
