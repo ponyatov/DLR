@@ -245,14 +245,16 @@ gz_cross:
 	$(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/cross]
-CROSS_CFG = --target=$(TARGET) 
+CROSS_CFG = --target=$(TARGET) $(WITH_CCLIBS) \
+	--with-sysroot=$(ROOT) \
+	--with-native-system-header-dir=/include  
 
 .PHONY: binutils
 binutils: $(CROSS)/bin/$(TARGET)-as
 $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
 	rm -rf $(BLD)/$(BINUTILS) ; mkdir $(BLD)/$(BINUTILS) ;\
 	cd $(BLD)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) \
-		$(CROSS_CFG) --with-sysroot=$(ROOT) &&\
+		$(CROSS_CFG) &&\
 	$(MAKE) && make install-strip
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/cfg]
@@ -306,10 +308,13 @@ $(CROSS)/lib/libgmp.a: $(SRC)/$(GMP)/README
 ...	
 \end{lstlisting}
 
-\subsubsection{gcc: GNU compler toolchain}
+\clearpage
+\subsubsection{gcc0: GNU compler toolchain (only for kernel build)}
 
+If you have problems with memory size, run make with \emph{limited make
+threads}:
 \begin{lstlisting}
-$ make gcc
+$ make BUILD_CPU_NUMBER=2 gcc0
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/version]
 GCC_VER = 7.2.0
@@ -324,9 +329,14 @@ gz_cross:
 	http://gcc.skazkaforyou.com/releases/$(GCC)/$(GCC_GZ)
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/cross]
-.PHONY: gcc
-gcc: $(CROSS)/bin/$(TARGET)-gcc
-$(CROSS)/bin/$(TARGET)-gcc: $(SRC)/$(GCC)/README
+GCC0_CFG = --without-headers --with-newlib \
+			--enable-languages="c"
+.PHONY: gcc0
+gcc0: $(SRC)/$(GCC)/README
+	rm -rf $(BLD)/$(GCC) ; mkdir $(BLD)/$(GCC) ;\
+	cd $(BLD)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) \
+		$(CROSS_CFG) $(GCC0_CFG) &&\
+	$(MAKE) all-gcc && make install-gcc
 \end{lstlisting}
 
 \subsection{kernel: Linux kernel}
