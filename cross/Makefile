@@ -44,6 +44,8 @@ include mk/cfg.mk
 include mk/cross.mk
 include mk/core.mk
 
+include mk/emu.mk
+
 include mk/unpack.mk
 
 .PHONY: ramclean
