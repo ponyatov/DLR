@@ -23,3 +23,5 @@ kernel: $(SRC)/$(KERNEL)/README
 	cd $(SRC)/$(KERNEL) ; $(MAKE) $(KERNEL_CFG)
 	# copy to BOOT
 	cp $(SRC)/$(KERNEL)/arch/$(KERNEL_ARCH)/boot/bzImage $(BOOT)/$(HW)_$(APP).kernel
+	# inclall headers to ROOT
+	cd $(SRC)/$(KERNEL) ; $(MAKE) $(KERNEL_CFG) headers_install

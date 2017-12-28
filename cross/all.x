@@ -1,8 +1,4 @@
 
-# core filesystems
-CONFIG_PROC_FS=y
-CONFIG_SYSFS=y
-
 ## HID (USB)
 CONFIG_HID=y
 CONFIG_HID_GENERIC=y
