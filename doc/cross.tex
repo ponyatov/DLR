@@ -69,7 +69,7 @@ CROSS = $(CWD)/$(TARGET).cross
 						# target filesystem
 ROOT = $(CWD)/$(TARGET)
 							# source code
-SRC = $(TMP)/src
+SRC = $(CWD)/src
 							# off-tree build
 BLD = $(TMP)/build
 
@@ -85,6 +85,8 @@ To build you should use build system with SSD and \emph{large amount of RAM}.
 
 \begin{lstlisting}[title=add this to /etc/fstab (change to your home/gid/uid)]
 tmpfs /home/ponyatov/DLR/cross/tmp tmpfs \
+	auto,uid=ponyatov,gid=ponyatov 0 0
+tmpfs /home/ponyatov/DLR/cross/src tmpfs \
 	auto,uid=ponyatov,gid=ponyatov 0 0
 \end{lstlisting}
 and remount ramdisks:
