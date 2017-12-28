@@ -1,5 +1,5 @@
 .PHONY: cross
-cross: binutils cclibs gcc0
+cross: gcclibs binutils gcc0
 
 # get number or CPU cores for build system
 BUILD_CPU_NUMBER = $(shell grep processor /proc/cpuinfo | wc -l)
@@ -8,8 +8,7 @@ MAKE = $(XPATH) make -j$(BUILD_CPU_NUMBER)
 
 WITH_CCLIBS = --with-gmp=$(CROSS) --with-mpfr=$(CROSS) --with-mpc=$(CROSS)  
 CROSS_CFG = --target=$(TARGET) $(WITH_CCLIBS) \
-	--with-sysroot=$(ROOT) \
-	--with-native-system-header-dir=/include  
+	--with-sysroot=$(ROOT) --with-native-system-header-dir=/include  
 
 .PHONY: binutils
 binutils: $(CROSS)/bin/$(TARGET)-as
@@ -29,25 +28,25 @@ gcc0: $(SRC)/$(GCC)/README
 .PHONY: gcclibs
 gcclibs: gmp mpfr mpc
 
-CCLIBS_CFG = --disable-shared $(WITH_CCLIBS)
+GCCLIBS_CFG = --disable-shared $(WITH_CCLIBS)
 
 .PHONY: gmp
 gmp: $(CROSS)/lib/libgmp.a
 $(CROSS)/lib/libgmp.a: $(SRC)/$(GMP)/README
 	rm -rf $(TMP)/$(GMP) ; mkdir $(TMP)/$(GMP) ;\
-	cd $(TMP)/$(GMP) ; $(SRC)/$(GMP)/$(CFG) $(CCLIBS_CFG) &&\
+	cd $(TMP)/$(GMP) ; $(SRC)/$(GMP)/$(CFG) $(GCCLIBS_CFG) &&\
 	$(MAKE) && make install-strip
  
 .PHONY: mpfr
 mpfr: $(CROSS)/lib/libmpfr.a
 $(CROSS)/lib/libmpfr.a: $(SRC)/$(MPFR)/README
 	rm -rf $(TMP)/$(MPFR) ; mkdir $(TMP)/$(MPFR) ;\
-	cd $(TMP)/$(MPFR) ; $(SRC)/$(MPFR)/$(CFG) $(CCLIBS_CFG) &&\
+	cd $(TMP)/$(MPFR) ; $(SRC)/$(MPFR)/$(CFG) $(GCCLIBS_CFG) &&\
 	$(MAKE) && make install-strip
 
 .PHONY: mpc
 mpc: $(CROSS)/lib/libmpc.a
 $(CROSS)/lib/libmpc.a: $(SRC)/$(MPC)/README
 	rm -rf $(TMP)/$(MPC) ; mkdir $(TMP)/$(MPC) ;\
-	cd $(TMP)/$(MPC) ; $(SRC)/$(MPC)/$(CFG) $(CCLIBS_CFG) &&\
+	cd $(TMP)/$(MPC) ; $(SRC)/$(MPC)/$(CFG) $(GCCLIBS_CFG) &&\
 	$(MAKE) && make install-strip

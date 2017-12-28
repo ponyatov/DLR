@@ -34,7 +34,7 @@ XPATH = PATH=$(CROSS)/bin:$(PATH)
 PHONY: dirs
 dirs:
 	mkdir -p $(DIRS)
-
+	
 include mk/gz.mk
 
 include mk/cfg.mk
@@ -49,3 +49,8 @@ include mk/unpack.mk
 .PHONY: ramclean
 ramclean:
 	rm -rf $(SRC)/* $(TMP)/*
+.PHONY: distclean
+distclean:
+	make ramclean
+	rm -rf $(CROSS) $(ROOT)
+	make dirs
