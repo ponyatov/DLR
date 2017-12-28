@@ -13,8 +13,10 @@ include mk/package.mk
 CWD = $(CURDIR)
 							# software packages source tarballs
 GZ = $(CWD)/gz
-							# temp directory
+							# temp directory for off-tree build
 TMP = $(CWD)/tmp
+							# temp directory for source code
+SRC = $(CWD)/src
 							
 							# cross compiler tools						
 CROSS = $(CWD)/$(TARGET).cross
@@ -22,13 +24,9 @@ CROSS = $(CWD)/$(TARGET).cross
 ROOT = $(CWD)/$(TARGET)
 							# bootloader images
 BOOT = $(ROOT)/boot
-							# source code
-SRC = $(TMP)/src
-							# off-tree build
-BLD = $(TMP)/build
 
 							# directory list must be created
-DIRS = $(GZ) $(TMP) $(SRC) $(BLD) $(CROSS) $(ROOT) $(BOOT)
+DIRS = $(GZ) $(TMP) $(SRC) $(TMP) $(CROSS) $(ROOT) $(BOOT)
 
 							# set path search
 XPATH = PATH=$(CROSS)/bin:$(PATH)
@@ -50,4 +48,4 @@ include mk/unpack.mk
 
 .PHONY: ramclean
 ramclean:
-	rm -rf $(SRC)/* $(BLD)/*
+	rm -rf $(SRC)/* $(TMP)/*
