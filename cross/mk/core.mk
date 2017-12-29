@@ -31,10 +31,13 @@ ulibc: $(SRC)/$(ULIBC)/README
 	# empty config
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) distclean
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) allnoconfig
+	# cross config
+	echo "KERNEL_HEADERS=\"$(ROOT)/include\"" >> $(SRC)/$(ULIBC)/.config
 	# load predefined ulibc config
 	cat all.ulibc >> $(SRC)/$(ULIBC)/.config
-	cat cpu/$(CPU).ulibc >> $(SRC)/$(ULIBC)/.config
 	cat arch/$(ARCH).ulibc >> $(SRC)/$(ULIBC)/.config
+	cat cpu/$(CPU).ulibc >> $(SRC)/$(ULIBC)/.config
 	# run menu config
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) menuconfig
-	
+	# run make
+	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG)
