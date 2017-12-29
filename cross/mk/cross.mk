@@ -17,7 +17,9 @@ $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
 	cd $(TMP)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) $(CROSS_CFG) &&\
 	$(MAKE) && make install-strip
 
-GCC0_CFG = --without-headers --with-newlib --enable-languages="c"
+GCC0_CFG = --disable-shared --disable-threads \
+			--without-headers --with-newlib \
+			--enable-languages="c"
 .PHONY: gcc0
 gcc0: $(SRC)/$(GCC)/README
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ;\

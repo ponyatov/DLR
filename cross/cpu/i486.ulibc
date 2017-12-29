@@ -1,2 +1,3 @@
 CONFIG_486=y
-UCLIBC_HAS_FPU=n
+# emulation must be in kernel or special emulator library
+UCLIBC_HAS_FPU=y

@@ -41,3 +41,4 @@ ulibc: $(SRC)/$(ULIBC)/README
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) menuconfig
 	# run make
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG)
+	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) install
