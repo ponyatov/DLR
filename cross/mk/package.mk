@@ -15,3 +15,6 @@ MPC_GZ = $(MPC).tar.gz
 
 KERNEL = linux-$(KERNEL_VER)
 KERNEL_GZ = $(KERNEL).tar.xz
+
+ULIBC = uClibc-$(ULIBC_VER)
+ULIBC_GZ = $(ULIBC).tar.xz

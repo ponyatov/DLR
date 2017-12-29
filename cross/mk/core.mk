@@ -1,4 +1,4 @@
-.PHONY: core kernel
+.PHONY: core kernel ulibc
 core: kernel
 
 KERNEL_ARCH ?= $(ARCH)
@@ -25,3 +25,16 @@ kernel: $(SRC)/$(KERNEL)/README
 	cp $(SRC)/$(KERNEL)/arch/$(KERNEL_ARCH)/boot/bzImage $(BOOT)/$(HW)_$(APP).kernel
 	# inclall headers to ROOT
 	cd $(SRC)/$(KERNEL) ; $(MAKE) $(KERNEL_CFG) headers_install
+
+ULIBC_CFG = CROSS=$(TARGET)- ARCH=$(ARCH) PREFIX=$(ROOT)
+ulibc: $(SRC)/$(ULIBC)/README
+	# empty config
+	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) distclean
+	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) allnoconfig
+	# load predefined ulibc config
+	cat all.ulibc >> $(SRC)/$(ULIBC)/.config
+	cat cpu/$(CPU).ulibc >> $(SRC)/$(ULIBC)/.config
+	cat arch/$(ARCH).ulibc >> $(SRC)/$(ULIBC)/.config
+	# run menu config
+	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) menuconfig
+	
