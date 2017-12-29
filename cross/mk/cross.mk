@@ -21,9 +21,9 @@ GCC0_CFG = --without-headers --with-newlib --enable-languages="c"
 .PHONY: gcc0
 gcc0: $(SRC)/$(GCC)/README
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ;\
-	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) \
-		$(CROSS_CFG) $(GCC0_CFG) &&\
-	$(MAKE) all-gcc && make install-gcc
+	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) $(CROSS_CFG) $(GCC0_CFG)
+	cd $(TMP)/$(GCC) ; $(MAKE) all-gcc && make install-gcc
+	cd $(TMP)/$(GCC) ; $(MAKE) all-target-libgcc && make install-target-libgcc 
 
 .PHONY: gcclibs
 gcclibs: gmp mpfr mpc
