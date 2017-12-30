@@ -13,6 +13,7 @@ TEX += vim.tex cross.tex
 SRC += ../tmp/calc.mk ../inher.py
 
 FIG = ../tmp/lexer.pdf
+FIG = ../tmp/cross_00.pdf
 
 #BRANCH = $(shell git symbolic-ref -q HEAD | sed -r -e "s|refs/heads/||")
 NOW = $(shell date +%y%m%d)
@@ -34,6 +35,11 @@ manual.pdf: $(TEX) $(SRC) $(FIG)
 	$(LATEX) manual && $(LATEX) manual && cp ../tmp/manual.pdf $@
 
 ../tmp/%.pdf: %.dot
+	dot -Tpdf -o $@ $<
+#	&& pdfcrop $@t $@
+	inkscape $@ --export-area-drawing --export-pdf=$@
+
+../tmp/cross_%.pdf: cross/%.dot
 	dot -Tpdf -o $@ $<
 #	&& pdfcrop $@t $@
 	inkscape $@ --export-area-drawing --export-pdf=$@

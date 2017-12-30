@@ -1,0 +1,18 @@
+digraph {
+    Linux -> OS [label=ako];
+    emLinux -> Linux [label=ako];
+    emLinux -> "embedded Linux system" [label=desc];
+    dynamic [label="GNU\ndynamic"];
+    dynamic -> Linux [label=req];
+    kernel -> Linux [label=in];
+    libc -> Linux [label=in];
+    busybox -> emLinux [label=in];
+    ulibc -> libc [label=ako];
+    ulibc -> emLinux [label=in];
+    libc -> "core library\lrequired for all C/C++\lcompiled programs" [label=desc];
+    kernel -> emLinux [label=in,style=dotted];
+    busybox -> "UNIX tool set including\lcommand line shell" [label=desc];
+    
+    Windows -> OS [label=ako];
+    dynamic -> Windows [label=opt];
+}
