@@ -39,9 +39,14 @@ ulibc: $(SRC)/$(ULIBC)/README
 	cat cpu/$(CPU).ulibc >> $(SRC)/$(ULIBC)/.config
 	# run menu config
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) menuconfig
-	# run make
+	# run make & install
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG)
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) install
+	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) install_utils
+	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) hostutils
+	cp $(SRC)/$(ULIBC)/utils/ldd.host      $(CROSS)/bin/$(TARGET)-ldd
+	cp $(SRC)/$(ULIBC)/utils/ldconfig.host $(CROSS)/bin/$(TARGET)-ldconfig
+	cp $(SRC)/$(ULIBC)/utils/getconf.host  $(CROSS)/bin/$(TARGET)-getconf
 
 BUSYBOX_CFG =  CROSS_COMPILE=$(TARGET)- SYSROOT=$(ROOT) \
 				CONFIG_PREFIX=$(ROOT)

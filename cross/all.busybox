@@ -7,7 +7,7 @@ SRC = F.read() ; F.close()
 
 for i in [
 	'CONFIG_INSTALL_NO_USR',
-	'CONFIG_STATIC',
+ 	'CONFIG_STATIC', # shared libc problem not fixed
 	# shells
  	'CONFIG_ASH','CONFIG_SH_IS_ASH','CONFIG_BASH_IS_ASH',
  	'CONFIG_ASH_INTERNAL_GLOB',

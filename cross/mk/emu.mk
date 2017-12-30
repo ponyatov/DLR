@@ -9,11 +9,13 @@ emu: $(BOOT)/$(HW)_$(APP).kernel $(BOOT)/$(HW)_$(APP).rootfs
 #	 -append "noquiet vga=current loglevel=11"
 
 ROOTREX = "./(boot|include|lib/.+\.a)"
+LDCONFIG = $(XPATH) $(TARGET)-ldconfig
 .PHONY: root
 root:
 	# /etc
 	rm -rf $(ROOT)/etc ; cp -r etc $(ROOT)/
-#	 ; chmod +x $(ROOT)/etc/init.d/*
+	# update shared libs
+	$(LDCONFIG) -v -r $(ROOT)
 	# build initrd 
 	cd $(ROOT) && find . | egrep -v $(ROOTREX) | cpio -o -H newc > $(BOOT)/$(HW)_$(APP).cpio
 	cat $(BOOT)/$(HW)_$(APP).cpio | gzip -9 > $(BOOT)/$(HW)_$(APP).rootfs
