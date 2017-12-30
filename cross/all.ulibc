@@ -5,9 +5,9 @@ UCLIBC_HAS_FLOATS=y
 
 # req for gcc/g++ threads/libgomp
 LINUXTHREADS_OLD=y
-
 # req for g++
 UCLIBC_CTOR_DTOR=y
-#DO_C99_MATH=y
-## locale stub need for g++-lib
 UCLIBC_HAS_CTYPE_TABLES=y
+# req for fotran libs
+DO_C99_MATH=y
+UCLIBC_HAS_WCHAR=y
