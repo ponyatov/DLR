@@ -6,9 +6,12 @@ F = open(sys.argv[1])
 SRC = F.read() ; F.close()
 
 for i in [
+	'CONFIG_STATIC',
+	'CONFIG_FEATURE_EDITING','CONFIG_FEATURE_TAB_COMPLETION',
 	'CONFIG_INIT','CONFIG_FEATURE_USE_INITTAB',
 	'CONFIG_INSTALL_NO_USR',
 	'CONFIG_HUSH','CONFIG_SH_IS_HUSH','CONFIG_BASH_IS_HUSH',
+	'CONFIG_LS','CONFIG_FEATURE_LS_COLOR',
 	]:
 	SRC = re.sub(r'#\s*%s is not set.*' % i, '%s=y' % i, SRC)
 	

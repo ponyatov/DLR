@@ -2,14 +2,14 @@
 ## enable initrd
 CONFIG_BLK_DEV_INITRD=y
 ### initrd compression
-CONFIG_RD_GZIP=n
-CONFIG_RD_BZIP2=y
+CONFIG_RD_GZIP=y
+CONFIG_RD_BZIP2=n
 CONFIG_RD_LZMA=n
 CONFIG_RD_XZ=n
 CONFIG_RD_LZO=n
 CONFIG_RD_LZ4=n
 ### kernel compression
-CONFIG_KERNEL_BZIP2=y
+CONFIG_KERNEL_GZIP=y
 ####CONFIG_KERNEL_GZIP=y hangs
 # core filesystems
 CONFIG_PROC_FS=y
