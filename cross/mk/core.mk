@@ -1,5 +1,5 @@
-.PHONY: core kernel ulibc
-core: kernel
+.PHONY: core kernel ulibc busybox
+core: kernel ulibc busybox
 
 KERNEL_ARCH ?= $(ARCH)
 KERNEL_CFG = ARCH=$(KERNEL_ARCH) \
@@ -42,3 +42,17 @@ ulibc: $(SRC)/$(ULIBC)/README
 	# run make
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG)
 	cd $(SRC)/$(ULIBC) ; $(MAKE) $(ULIBC_CFG) install
+
+BUSYBOX_CFG =  CROSS_COMPILE=$(TARGET)- SYSROOT=$(ROOT) \
+				CONFIG_PREFIX=$(ROOT)
+			
+busybox: $(SRC)/$(BUSYBOX)/README
+	# empty config
+	cd $(SRC)/$(BUSYBOX) ; $(MAKE) $(BUSYBOX_CFG) distclean
+	cd $(SRC)/$(BUSYBOX) ; $(MAKE) $(BUSYBOX_CFG) allnoconfig
+	# load predefined ulibc config via regexp patcher (python)
+	./all.busybox $(SRC)/$(BUSYBOX)/.config $(TARGET)- $(ROOT)
+	# run menu config
+	cd $(SRC)/$(BUSYBOX) ; $(MAKE) $(BUSYBOX_CFG) menuconfig
+	# run make
+	cd $(SRC)/$(BUSYBOX) ; $(MAKE) $(BUSYBOX_CFG) install

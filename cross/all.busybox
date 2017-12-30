@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+import os,sys,re
+
+F = open(sys.argv[1])
+SRC = F.read() ; F.close()
+
+for i in [
+	'CONFIG_INIT','CONFIG_FEATURE_USE_INITTAB',
+	'CONFIG_INSTALL_NO_USR',
+	'CONFIG_HUSH','CONFIG_SH_IS_HUSH','CONFIG_BASH_IS_HUSH',
+	]:
+	SRC = re.sub(r'#\s*%s is not set.*' % i, '%s=y' % i, SRC)
+	
+for j in [
+	'CONFIG_SH_IS_ASH','CONFIG_BASH_IS_ASH','CONFIG_BASH_IS_NONE'
+	]:
+	SRC = re.sub(r'%s=y'%j,r'# %s disables'%j,SRC)
+	
+# SRC = re.sub(
+# 	r'CONFIG_CROSS_COMPILER_PREFIX.+',
+# 	r'CONFIG_CROSS_COMPILER_PREFIX="%s"' % sys.argv[2], SRC)
+# 
+# SRC = re.sub(
+# 	r'(CONFIG_SYSROOT|CONFIG_PREFIX).+',
+# 	r'\1="%s"' % sys.argv[3], SRC)
+	
+open(sys.argv[1],'w').write(SRC)

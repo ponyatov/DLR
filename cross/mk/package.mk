@@ -18,3 +18,6 @@ KERNEL_GZ = $(KERNEL).tar.xz
 
 ULIBC = uClibc-$(ULIBC_VER)
 ULIBC_GZ = $(ULIBC).tar.xz
+
+BUSYBOX = busybox-$(BUSYBOX_VER)
+BUSYBOX_GZ = $(BUSYBOX).tar.bz2

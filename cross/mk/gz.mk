@@ -13,5 +13,6 @@ gz_cross:
 gz_core:
 #	exit -1
 	$(WGET) http://www.uclibc.org/downloads/$(ULIBC).tar.xz
+	$(WGET) http://busybox.net/downloads/$(BUSYBOX_GZ)
 	-$(WGET) http://www.kernel.org/pub/linux/kernel/v3.x/$(KERNEL_GZ)
 	-$(WGET) http://www.kernel.org/pub/linux/kernel/v4.x/$(KERNEL_GZ)
