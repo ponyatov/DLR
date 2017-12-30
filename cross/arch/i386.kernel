@@ -1,9 +1,9 @@
 CONFIG_X86_GENERIC=y
 
 # power management
-CONFIG_ACPI=n
-#CONFIG_CPU_IDLE=y
-#CONFIG_INTEL_IDLE=y
+CONFIG_ACPI=y
+CONFIG_CPU_IDLE=y
+CONFIG_INTEL_IDLE=y
 
 # buses
 ## ISA (old systems)
