@@ -1,0 +1,11 @@
+digraph {
+    rankdir=LR;
+    dirs -> gz -> cross -> core -> root -> emu [label=next];
+    mk [label="Makefile\ltarget"];
+    dirs -> mk [label=is];
+    gz -> mk [label=is];
+    cross -> mk [label=is];
+    core -> mk [label=is];
+    root -> mk [label=is];
+    emu -> mk [label=is];
+}

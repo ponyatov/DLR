@@ -13,7 +13,7 @@ TEX += vim.tex cross.tex
 SRC += ../tmp/calc.mk ../inher.py
 
 FIG = ../tmp/lexer.pdf
-FIG = ../tmp/cross_00.pdf
+FIG = ../tmp/cross_00.pdf ../tmp/cross_01.pdf
 
 #BRANCH = $(shell git symbolic-ref -q HEAD | sed -r -e "s|refs/heads/||")
 NOW = $(shell date +%y%m%d)

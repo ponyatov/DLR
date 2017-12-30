@@ -41,6 +41,9 @@ and computing power: you can't run it on cheap headless router with 32M RAM.
 \fig{../tmp/cross_00.pdf}{height=\textheight}%width=\textwidth,
 
 \clearpage
+\fig{../tmp/cross_01.pdf}{width=\textwidth}%width=\textwidth,
+
+\clearpage
 \section{Build directory structure}
 
 Run \verb|$ cd cross ; make dirs| to create directory structure:
@@ -49,9 +52,8 @@ Run \verb|$ cd cross ; make dirs| to create directory structure:
 \begin{tabular}{l l}
 \verb|cross/Makefile| & main Makefile \\
 \verb|cross/gz/| & software packages source tarballs \\
-\verb|cross/tmp/| & temp directory \\
-\verb|cross/tmp/src/| & packages source code \\
-\verb|cross/tmp/build/| & out of tree build \\
+\verb|cross/src/| & packages source code (temp/ramdisk)\\
+\verb|cross/tmp/| & out of tree build (temp/ramdisk)\\
 \verb|cross/hw/| & supported hardware platforms\\
 				&(KVM is main virtual server system)\\
 \verb|cross/arch/| & target architecture\\
@@ -65,19 +67,17 @@ Run \verb|$ cd cross ; make dirs| to create directory structure:
 CWD = $(CURDIR)
 						# software packages source tarballs
 GZ = $(CWD)/gz
-						# temp directory
-TMP = $(CWD)/tmp
 						# cross compiler tools						
 CROSS = $(CWD)/$(TARGET).cross
 						# target filesystem
 ROOT = $(CWD)/$(TARGET)
+BOOT = $(ROOT)/boot
 							# source code
 SRC = $(CWD)/src
 							# off-tree build
-BLD = $(TMP)/build
+TMP = $(CWD)/tmp
 
-DIRS = $(GZ) $(TMP) $(SRC) $(BLD) $(CROSS) $(ROOT)
-
+DIRS = $(GZ) $(SRC) $(TMP) $(CROSS) $(ROOT) $(BOOT)
 PHONY: dirs
 dirs:
 	mkdir -p $(DIRS)
