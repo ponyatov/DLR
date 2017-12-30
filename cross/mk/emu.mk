@@ -12,5 +12,7 @@ ROOTREX = "./(boot|include|lib/.+\.a)"
 .PHONY: root
 root: 
 	ln -fs /sbin/init $(ROOT)/init
+	rm -rf $(ROOT)/etc ; cp -r etc $(ROOT)/
+	mkdir -p $(ROOT)/dev
 	cd $(ROOT) && find . | egrep -v $(ROOTREX) | cpio -o -H newc > $(BOOT)/$(HW)_$(APP).cpio
 	cat $(BOOT)/$(HW)_$(APP).cpio | gzip -9 > $(BOOT)/$(HW)_$(APP).rootfs

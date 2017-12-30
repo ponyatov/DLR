@@ -1,0 +1,10 @@
+#!/bin/sh
+# system dirs
+mkdir /tmp
+mkdir /proc ; mount -t proc  proc  /proc
+mkdir /sys  ; mount -t sysfs sysfs /sys
+# hotplug device manager (automount, firmware boot, config)
+mdev -s && echo /sbin/mdev > /proc/sys/kernel/hotplug
+# about
+uname -a
+cat /etc/README

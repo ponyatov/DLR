@@ -1,0 +1,8 @@
+::sysinit:/etc/init.d/rcS
+::shutdown:/etc/init.d/rcD
+::ctrlaltdel:/sbin/reboot
+tty1::askfirst:/bin/sh
+tty2::askfirst:/bin/sh
+tty3::askfirst:/bin/sh
+tty4::askfirst:/bin/sh
+#ttyS1::respawn:/bin/sh
