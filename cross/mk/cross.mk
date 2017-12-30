@@ -22,11 +22,34 @@ GCC0_CFG = --disable-shared --disable-threads \
 			--enable-languages="c"
 .PHONY: gcc0
 gcc0: $(SRC)/$(GCC)/README
+	# configure
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ;\
 	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) $(CROSS_CFG) $(GCC0_CFG)
+	# build
 	cd $(TMP)/$(GCC) ; $(MAKE) all-gcc && make install-gcc
 	cd $(TMP)/$(GCC) ; $(MAKE) all-target-libgcc && make install-target-libgcc 
 
+GCC_CFG = --enable-languages="c,c++,fortran" \
+		--enable-shared --enable-threads --enable-libgomp
+.PHONY: gcc
+gcc: $(SRC)/$(GCC)/README $(CROSS)/bin/$(TARGET)-gcc
+	# configure
+	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ;\
+	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) $(CROSS_CFG) $(GCC_CFG)
+	# build
+	## gcc/g++
+	cd $(TMP)/$(GCC) && $(MAKE) all-gcc
+	cd $(TMP)/$(GCC) && $(MAKE) install-gcc
+	## gcc libs
+	cd $(TMP)/$(GCC) && $(MAKE) all-target-libgcc
+	cd $(TMP)/$(GCC) && $(MAKE) install-target-libgcc
+	## g++ libs
+	cd $(TMP)/$(GCC) && $(MAKE) all-target-libstdc++-v3
+	cd $(TMP)/$(GCC) && $(MAKE) install-target-libstdc++-v3
+	## fortran (need for for some numerical libs build)
+	cd $(TMP)/$(GCC) && $(MAKE) all-target-libgfortran
+	cd $(TMP)/$(GCC) && $(MAKE) install-target-libgfortran	
+	
 .PHONY: gcclibs
 gcclibs: gmp mpfr mpc
 
