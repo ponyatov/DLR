@@ -61,6 +61,8 @@ Run \verb|$ cd cross ; make dirs| to create directory structure:
 \end{tabular}
 
 \clearpage
+\fig{../tmp/cross_02.pdf}{width=\textwidth}%height=\textheight
+\clearpage
 
 \begin{lstlisting}[language=make]
 						# current directory (full path)
@@ -87,10 +89,10 @@ To build you should use build system with SSD and \emph{large amount of RAM}.
 \emph{It is much better to use ramdisk} for source code and build/temp files.
 
 \begin{lstlisting}[title=add this to /etc/fstab (change to your home/gid/uid)]
-tmpfs /home/ponyatov/DLR/cross/tmp tmpfs \
-	auto,uid=ponyatov,gid=ponyatov 0 0
-tmpfs /home/ponyatov/DLR/cross/src tmpfs \
-	auto,uid=ponyatov,gid=ponyatov 0 0
+tmpfs /home/user/DLR/cross/tmp tmpfs \
+	auto,uid=user,gid=users 0 0
+tmpfs /home/user/DLR/cross/src tmpfs \
+	auto,uid=user,gid=users 0 0
 \end{lstlisting}
 and remount ramdisks:
 \begin{lstlisting}
@@ -115,6 +117,10 @@ Target system must be defined by set of \term{target configuration variables}:
 \verb|HOST| && run tools (\verb|mingw32|) \\
 \verb|TARGET| && run resulting software (\verb|arm-linux-uclibceabihf|)\\
 \end{tabular}
+
+% \clearpage
+\fig{../tmp/cross_03.pdf}{width=\textwidth}%height=\textheight
+\clearpage
 
 \subsection{Virtualization patforms}
 

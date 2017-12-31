@@ -1,0 +1,42 @@
+digraph {
+HW -> ARCH [label=has];
+CPU -> HW [label=in];
+HOST
+triplet [label="triplet:\lARCH-HW-OS-ABI"];
+TARGET -> triplet [label=is];
+i386 -> ARCH [label=is];
+armeabi -> ARCH [label=is];
+armeabihf -> armeabi [label=ako,color=blue];
+pc -> HW [label=is];
+KVM -> HW [label=is];
+Rpi -> HW [label=is];
+RpiB -> Rpi [label=ako,color=blue]; 
+BCM2835 -> CPU [label=is];
+i486 -> CPU [label=is];
+i686 -> CPU [label=is];
+x86_64 -> CPU [label="is\l64bit"];
+BCM2835 -> Rpi [label=in];
+OS -> triplet [label="in\l=Linux"];
+HW -> triplet [label=in];
+ARCH -> triplet [label=in];
+BCM2835 -> armeabihf [label=arch];
+x86_64 -> BUILD [label=is];
+HOST -> mingw32 [label=opt];
+HOST -> BUILD [label="="];
+x64pc [label="x86_64-pc-linux-gnu"];
+x64pc -> ws;
+ws [label="workstation:\lDebian GNU/Linux\li3..i7 CPU, 6+ Gb RAM",shape=box];
+x86_64 -> x64pc [label=in];
+x86_64 -> ARCH [label=is];
+x64pc -> BUILD [label=is];
+platform -> BUILD [label=is];
+platform -> HOST [label=is];
+platform -> TARGET [label=is];
+pc -> i386 [label=is];
+HW [color=red];
+CPU [color=red];
+ARCH [color=red];
+BUILD [color=green];
+HOST [color=green];
+TARGET [color=green];
+}

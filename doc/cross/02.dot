@@ -1,0 +1,20 @@
+digraph {
+GZ -> CWD [label=in];
+CROSS -> CWD [label=in];
+TMP -> CWD [label=in];
+SRC -> CWD [label=in];
+ROOT -> CWD [label=in];
+BOOT -> ROOT [label=in];
+TARGET -> CROSS [label="+.cross"];
+TARGET -> ROOT [label="="];
+HW -> CWD [label=in];
+ARCH -> CWD [label=in];
+CPU -> CWD [label=in];
+TMP -> ramdisk [label="mount\ltmpfs"];
+SRC -> ramdisk [label="mount\ltmpfs"];
+"TARGET.kernel" -> BOOT [label=in];
+"TARGET.rootfs" -> BOOT [label=in];
+#TARGET -> "TARGET.kernel" [label=def];
+#TARGET -> "TARGET.rootfs" [label=def];
+#ARCH -> TARGET [label=def];
+}

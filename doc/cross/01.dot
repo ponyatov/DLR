@@ -1,11 +1,17 @@
 digraph {
     rankdir=LR;
-    dirs -> gz -> cross -> core -> root -> emu [label=next];
-    mk [label="Makefile\ltarget"];
-    dirs -> mk [label=is];
-    gz -> mk [label=is];
-    cross -> mk [label=is];
-    core -> mk [label=is];
-    root -> mk [label=is];
-    emu -> mk [label=is];
+    dirs -> gz -> cross -> core -> root -> emu [label=next,color=blue];
+    gcc0 -> cross [label=in];
+    gcc -> cross [label=in];
+    cclibs -> cross [label=in];
+    binutils -> cross [label=in];
+    
+    kernel -> core [label=in];
+    ulibc -> core [label=in];
+    busybox -> core [label=in];
+
+	"run qemu-i386\lor qemu-kvm\lemulator" -> emu [label=in];
+	
+	gcc -> ulibc [label=req,color=red];
+   
 }
