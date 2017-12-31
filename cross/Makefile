@@ -1,6 +1,5 @@
 APP = dynamic
-
-HW ?= i486sx
+HW ?= PC104
 
 include hw/$(HW).mk
 include cpu/$(CPU).mk

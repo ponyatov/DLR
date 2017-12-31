@@ -43,6 +43,9 @@ and computing power: you can't run it on cheap headless router with 32M RAM.
 \clearpage
 \fig{../tmp/cross_01.pdf}{width=\textwidth}%width=\textwidth,
 
+\bigskip
+See full scripts code for building Linux system in \verb|/DLR/cross|.
+
 \clearpage
 \section{Build directory structure}
 
@@ -108,6 +111,7 @@ Target system must be defined by set of \term{target configuration variables}:
 
 \bigskip
 \begin{tabular}{l l l}
+\verb|APP| & & application name is GNU =dynamic server \\ 
 \verb|HW| & \verb|hw/| & hardware platform short name \\
 \verb|ARCH| & \verb|arch/| & architecture \\
 \verb|CPU| & \verb|cpu/| & CPU \\
@@ -122,15 +126,29 @@ Target system must be defined by set of \term{target configuration variables}:
 \fig{../tmp/cross_03.pdf}{width=\textwidth}%height=\textheight
 \clearpage
 
-\subsection{Virtualization patforms}
+\begin{tabular}{l l l l}
+HW & ARCH & CPU & description \\
+\hline
+KVM & =BUILD & x86\_64 & Linux workstation\\&&&as virtualization server \\
+Rpi & armeabihf & BCM2835 & Raspberry Pi (any model compatible) \\
+PC104 & i386 & i486sx & PC104 board or any old PC computer\\
+PC & i386 & i686 & more or less modern PC\\ 
+\end{tabular}
+{\footnotesize At this point we don't see on modern PC with i3..i7 processors
+and huge amount of RAM for dedicated Dynamic server farm. If you have enough
+money to invest into Dynamic-based hosting, its your turn to write custom
+scripts to build it for i3+ computer. But now it can be better to play with
+heap of reused hardware you can bye in a few dollars. Or Amazon EC.}
 
 \begin{lstlisting}[language=make,title=Makefile]
-HW ?= i486sx
-
+APP = dynamic
+HW ?= PC104
 include hw/$(HW).mk
 include cpu/$(CPU).mk
 include arch/$(ARCH).mk
 \end{lstlisting}
+
+\subsection{Virtualization patforms}
 
 \subsubsection{hw/KVM}
 
@@ -139,9 +157,9 @@ on its configuration\note{\url{https://debian-handbook.info/browse/stable/sect.v
 
 \subsection{x86 variants}
 
-\subsubsection{hw/i486sx and hw/i486dx}
+\subsubsection{hw/PC104}
 
-\begin{lstlisting}[language=make,title=hw/i486sx]
+\begin{lstlisting}[language=make,title=hw/PC104]
 CPU = i486sx
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=cpu/i486sx]

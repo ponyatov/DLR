@@ -12,9 +12,6 @@ ARCH -> CWD [label=in];
 CPU -> CWD [label=in];
 TMP -> ramdisk [label="mount\ltmpfs"];
 SRC -> ramdisk [label="mount\ltmpfs"];
-"TARGET.kernel" -> BOOT [label=in];
-"TARGET.rootfs" -> BOOT [label=in];
-#TARGET -> "TARGET.kernel" [label=def];
-#TARGET -> "TARGET.rootfs" [label=def];
-#ARCH -> TARGET [label=def];
+"$HW_$APP.kernel" -> BOOT [label="in\l_kernel"];
+"$HW_$APP.rootfs" -> BOOT [label="in\l_initrd"];
 }
