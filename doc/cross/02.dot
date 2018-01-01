@@ -4,7 +4,7 @@ CROSS -> CWD [label=in];
 TMP -> CWD [label=in];
 SRC -> CWD [label=in];
 ROOT -> CWD [label=in];
-BOOT -> ROOT [label=in];
+BOOT -> ROOT [label="\ in"];
 TARGET -> CROSS [label="+.cross"];
 TARGET -> ROOT [label="="];
 HW -> CWD [label=in];
@@ -12,6 +12,6 @@ ARCH -> CWD [label=in];
 CPU -> CWD [label=in];
 TMP -> ramdisk [label="mount\ltmpfs"];
 SRC -> ramdisk [label="mount\ltmpfs"];
-"$HW_$APP.kernel" -> BOOT [label="in\l_kernel"];
-"$HW_$APP.rootfs" -> BOOT [label="in\l_initrd"];
+"$HW_$APP.kernel" -> BOOT [label="in\n_kernel"];
+"$HW_$APP.rootfs" -> BOOT [label="in\n_initrd\nAPP=dynamic"];
 }

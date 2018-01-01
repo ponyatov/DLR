@@ -72,9 +72,9 @@ Run \verb|$ cd cross ; make dirs| to create directory structure:
 CWD = $(CURDIR)
 						# software packages source tarballs
 GZ = $(CWD)/gz
-						# cross compiler tools						
+								# cross compiler tools						
 CROSS = $(CWD)/$(TARGET).cross
-						# target filesystem
+								# target filesystem
 ROOT = $(CWD)/$(TARGET)
 BOOT = $(ROOT)/boot
 							# source code
@@ -138,8 +138,9 @@ PC & i386 & i686 & more or less modern PC\\
 and huge amount of RAM for dedicated Dynamic server farm. If you have enough
 money to invest into Dynamic-based hosting, its your turn to write custom
 scripts to build it for i3+ computer. But now it can be better to play with
-heap of reused hardware you can bye in a few dollars. Or Amazon EC.}
+heap of reused hardware you can buy in a few dollars. Or Amazon EC.}
 
+\clearpage
 \begin{lstlisting}[language=make,title=Makefile]
 APP = dynamic
 HW ?= PC104
@@ -172,26 +173,26 @@ TARGET = $(CPU)-linux-uclibc
 \end{lstlisting}
 
 You can have some fun for a few tens of bucks with old notebook: take some on
-eBay, and play with it. Or you can bye industrial PC104 embedded computer with
+eBay, and play with it. Or you can buy industrial PC104 embedded computer with
 some Vortex86 SoC like
 \href{http://www.advantech.ru/products/1-2jkltu/pcm-3343/mod_645a1e17-167a-4476-b253-ca4cf2e19428}{Advantech PCM-4434}.
 
-\emph{Don't bye x86 hardware with CPU lower then i486sx}: i386 support was
+\emph{Don't buy x86 hardware with CPU lower then i486sx}: i386 CPU support was
 totally dropped from Linux kernel many years ago, and we have a chance to loose
 it also in GCC toolchain.
 
 If you want to have some practical benefit from this old notebook, you can do
 some light computations or electronics and mechanical design, and it is better
-to bye it with i486dx processor, as it have hardware floating point. 
+to buy it with i486dx processor, as it have FPU (hardware floating point). 
 
 \subsubsection{hw/i686}
 
 There are huge amount of old computers you can reuse, and lot of new boards
-starting from Intel Atom.
+starting from Intel Atom and compatible AMD Geode.
 
 \subsubsection{hw/amd64}
 
-Cheap and power SOHO servers, up to topmost i7 CPUs.
+Cheap and power SOHO servers, up to topmost i7 and low-end Xeon CPUs.
 
 \subsection{Raspberry Pi, china clones}
 
@@ -201,15 +202,15 @@ Cheap, ultra compact and power effective able to run with battery power source.
 
 Large community, available off the shelf in local stores.
 
-\subsubsection{Orange Pi} 
+\subsubsection{Orange/Banana Pi}
+\clearpage
 
-\subsection{MIPS routers: cheap and too small}
+\subsection{MIPS routers (MR3020): cheap and too small}
 
-Have a small amount of RAM (starting from 32M), but embedded network
-interfaces, and USB host. Can be used for network gateways, slow data
-storages using USB flash drive, or host tiny web sites.
-
-\subsubsection{MR3020}
+Have a small amount of RAM (starting from 32M), but have embedded network
+interfaces, WiFi and USB host for GSM modem and external storage. Can be used
+for network gateways, slow data storages using USB flash drive, or host tiny web
+sites.
 
 \section{Download software source code arhives}
 
@@ -219,10 +220,23 @@ include mk/gz.mk
 \end{lstlisting}
 \begin{lstlisting}[language=make,title=mk/gz]
 WGET = wget -P $(GZ) -c	
-PHONY: gz gz_cross
-gz: gz_cross
-\end{lstlisting}
+PHONY: gz gz_cross gz_core
+gz: gz_cross gz_core
 
+gz_cross:
+	$(WGET) ftp://ftp.gmplib.org/pub/gmp/$(GMP_GZ)
+	$(WGET) http://www.mpfr.org/mpfr-$(MPFR_VER)/$(MPFR).tar.bz2
+	$(WGET) http://www.multiprecision.org/mpc/download/$(MPC_GZ)
+	$(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
+	$(WGET) http://gcc.skazkaforyou.com/releases/$(GCC)/$(GCC_GZ)
+gz_core:
+	$(WGET) http://www.uclibc.org/downloads/$(ULIBC).tar.xz
+	$(WGET) http://busybox.net/downloads/$(BUSYBOX_GZ)
+	$(WGET) http://www.kernel.org/pub/linux/kernel/v4.x/$(KERNEL_GZ)
+\end{lstlisting}
+\fig{../tmp/cross_04.pdf}{width=\textwidth}%height=\textheight
+
+\clearpage
 \section{Packages}
 
 \begin{lstlisting}[language=make,title=Makefile]
@@ -239,6 +253,16 @@ $(SRC)/%/README: $(GZ)/%.tar.gz
 $(SRC)/%/README: $(GZ)/%.tar.bz2
 	cd $(SRC) && bzcat $< | tar x && touch $@
 \end{lstlisting}
+
+\fig{../tmp/cross_05.pdf}{height=\textheight}%width=\textwidth
+\clearpage
+\fig{../tmp/cross_06.pdf}{height=\textheight}%width=\textwidth
+
+\noindent
+\begin{tabular}{l l l}
+binutils & 2.29.1 & assembler, linker, ELF format tools \\
+gcc & 7.2.0 & GNU Compiler Collection (\ccpp,Fortran) \\ 
+\end{tabular}
 
 \subsection{cross: Cross-compiler toolchain}
 

@@ -1,0 +1,18 @@
+digraph {
+	#rankdir=LR;
+	gz -> gz_cross [label=dep,color=blue];
+	gz -> gz_core [label=dep,color=blue];
+	gmp -> cclibs -> gz_cross [label=in];
+	mpc -> cclibs [label=in];
+	mpfr -> cclibs [label=in];
+	binutils -> gz_cross [label=in];
+	gcc -> gz_cross [label=in];
+	cluster_Core {  
+		kernel -> gz_core [label=in];
+		ulibc -> gz_core [label=in];
+		busybox -> gz_core [label=in];
+	} 
+	gz_cross -> dynamic [label=req,color=red];
+	gz_core -> dynamic [label=req,color=red];
+	{ rank=same; gz_cross; gz_core; }
+}

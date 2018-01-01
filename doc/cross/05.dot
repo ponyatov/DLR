@@ -1,0 +1,13 @@
+digraph {
+	package -> pg [label=in];
+	pg [label="package\ngroup"];
+	cross -> pg [label=is,color=blue];
+	core -> pg [label=is,color=blue];
+	libs -> pg [label=is,color=blue];
+	gcc -> cross [label=in];
+	binutils -> cross [label=in];
+	kernel -> core [label=in];
+	ulibc -> core [label=in];
+	busybox -> core [label=in];
+	gcc -> package [label=is,color=blue];
+}

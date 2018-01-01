@@ -1,0 +1,26 @@
+digraph {
+#rankdir=LR;
+	package -> version [label=has];
+	PACKAGE -> "name-version" [label="value"];
+	ver [label="[0-9.-]+",shape=box];
+	PACKAGE_VER -> ver [label="value\nregexp"];
+	package -> PACKAGE [label=makeVar];
+	version -> PACKAGE_VER [label=makeVar];
+	package -> name [label=has];
+	name -> "name-version" [label=in];
+	ver -> "name-version" [label=in];
+	package -> URL [label=mirror];
+	gz [label="/cross/mk/gz.mk"];
+	URL -> gz [label=in];
+	package -> archive [label=has];
+	archive -> PACKAGE_GZ [label=makeVar];
+	PACKAGE_GZ -> gz [label=in];
+	{ rank=same; PACKAGE_VER; PACKAGE; PACKAGE_GZ; } 
+	PACKAGE_VER -> PACKAGE [label=def,color=blue];
+	PACKAGE -> PACKAGE_GZ [label=def,color=blue];
+	{ rank=same; name; version; archive; URL; }
+	archive [label="source code\narchive"];
+	PACKAGE_GZ -> prex [label="value\nregexp"];
+	prex [label="{PACKAGE}.(\rzip\rtgz | tar.( gz | bzip2 | xz ))",shape=box];
+	archive -> "/cross/mk/unpack.mk" [label=unpack];
+}
