@@ -17,7 +17,7 @@ kernel: $(SRC)/$(KERNEL)/README
 	cat all.kernel >> $(SRC)/$(KERNEL)/.config
 	cat arch/$(ARCH).kernel >> $(SRC)/$(KERNEL)/.config
 	cat cpu/$(CPU).kernel >> $(SRC)/$(KERNEL)/.config
-	cat arch/$(HW).kernel >> $(SRC)/$(KERNEL)/.config
+	cat hw/$(HW).kernel >> $(SRC)/$(KERNEL)/.config
 	# run menu config
 	cd $(SRC)/$(KERNEL) ; make $(KERNEL_CFG) menuconfig
 	# run build
