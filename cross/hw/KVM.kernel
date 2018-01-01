@@ -1,0 +1,19 @@
+# req for KVM hosting
+CONFIG_GENERIC_CPU=y
+CONFIG_HYPERVISOR_GUEST=y
+CONFIG_PARAVIRT=y
+CONFIG_KVM_GUEST=y
+#CONFIG_PARAVIRT_SPINLOCKS=y
+## multicore KVM firendly fixes 
+CONFIG_SMP=y
+CONFIG_SCHED_SMT=n
+
+# server sheduling opt
+CONFIG_PREEMPT_NONE=y
+CONFIG_HZ_100=y
+
+# KVM optimizations
+#CONFIG_KSM=y
+
+# disable graphics
+CONFIG_FB=n

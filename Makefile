@@ -25,7 +25,7 @@ FORTH/bin.bin:
 
 packages: ply/ply/lex.py YP
 	sudo apt install \
-		make build-essential \
+		make build-essential libelf-dev \
 		texlive-latex-extra graphviz \
 		python2.7 python-wxgtk3.0 python-ply
 	sudo pip install yattag
