@@ -1,6 +1,6 @@
 digraph {
     rankdir=LR;
-    dirs -> gz -> cross -> core -> root -> emu [label=next,color=blue];
+    dirs -> gz -> cross -> core -> libs -> dynamic -> root -> emu [label=next,color=blue];
     gcc0 -> cross [label=in];
     gcc -> cross [label=in];
     cclibs -> cross [label=in];
@@ -13,5 +13,12 @@ digraph {
 	"run qemu-i386\lor qemu-kvm\lemulator" -> emu [label=in];
 	
 	gcc -> ulibc [label=req,color=red];
-   
+	
+	{ rank=same;
+	dynamic -> libs [label=req,color=red];
+	core -> libs [label=next,color=blue];
+	}
+	dynamic -> root [label=in];
+	
+	{ rank=same; root; emu; }
 }

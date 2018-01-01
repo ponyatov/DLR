@@ -20,7 +20,7 @@ options of hardware platform and software packages, \emph{and its
 interdependency}, and inference lets you do parameter coordination.
 
 For system build we will use set of Makefiles as it is simplest way to do easy
-automation without infolving complex script system. As sample you can also see
+automation without involving complex script system. As sample you can also see
 separate project at \url{https://github.com/ponyatov/L}.
 
 % \bigskip
@@ -32,19 +32,18 @@ Supercomputers}: \emph{Linux is totally open system}, and you can read, study
 and \emph{modify any byte} of whole system without any NDA or usage fees.
 
 Another problem is hardware: there are a lot of ARM/MIPS embedded computers
-staring from your mobile phone, able to run only Android as based on Linux
+starting from your mobile phone, able to run only Android as based on Linux
 kernel. Big Windows still unable to run on any CPU other then x86\note{Alpha is
 dead now}, and Windows Embedded is still extra limited in requirements to RAM
 and computing power: you can't run it on cheap headless router with 32M RAM.
 
 \clearpage
-\fig{../tmp/cross_00.pdf}{height=\textheight}%width=\textwidth,
+\fig{../tmp/cross_00.pdf}{height=0.9\textheight}%width=\textwidth,
+\\See full \verb|make| scripts code for building \term{emLinux} system in
+\verb|/DLR/cross|.
 
 \clearpage
-\fig{../tmp/cross_01.pdf}{width=\textwidth}%width=\textwidth,
-
-\bigskip
-See full scripts code for building Linux system in \verb|/DLR/cross|.
+\fig{../tmp/cross_01.pdf}{height=\textheight}%width=\textwidth,
 
 \clearpage
 \section{Build directory structure}
@@ -258,12 +257,31 @@ $(SRC)/%/README: $(GZ)/%.tar.bz2
 \clearpage
 \fig{../tmp/cross_06.pdf}{height=\textheight}%width=\textwidth
 
-\noindent
+\noindent/cross/mk/version.mk\\
 \begin{tabular}{l l l}
+PACKAGE & PACKAGE\_VER & \\
+\hline
+cross/ && cross-compiler toolchain \\
+\hline
 binutils & 2.29.1 & assembler, linker, ELF format tools \\
 gcc & 7.2.0 & GNU Compiler Collection (\ccpp,Fortran) \\ 
+gcc0 && standalone \emph{gcc only for kernel/ulibc build} \\
+cclibs/ && {\footnotesize libraries required for gcc build:}\\
+gmp & 6.1.2 & Gnu MultiPrecision numbers \\
+mpfr & 3.1.6 & MultiPrecision FRactions \\
+mpc & 1.0.3 & MultiPrecision Complex numbers \\
+\hline
+core/ && core UNIX system \\
+\hline
+kernel & 4.14.9 & Linux kernel \\
+ulibc & 0.9.33 & library required for any \ccpp\ program \\
+busybox & 1.27.2 & base tools and commands \\
+\hline
+libs/ && extra libs required for GNU Dynamic build \\
+\hline
 \end{tabular}
 
+\clearpage
 \subsection{cross: Cross-compiler toolchain}
 
 \begin{lstlisting}[language=make,title=Makefile]

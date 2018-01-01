@@ -1,7 +1,7 @@
 digraph {
     Linux -> OS [label=ako,color=blue];
     emLinux -> Linux [label=ako,color=blue];
-    emLinux -> "embedded Linux system" [label=desc];
+    emLinux -> "embedded Linux system" [label=doc];
     dynamic [label="GNU\ndynamic"];
     dynamic -> Linux [label=req];
     kernel -> Linux [label=in];
@@ -9,9 +9,9 @@ digraph {
     busybox -> emLinux [label=in];
     ulibc -> libc [label=ako,color=blue];
     ulibc -> emLinux [label=in];
-    libc -> "core library\lrequired for all C/C++\lcompiled programs" [label=desc];
+    libc -> "core library\lrequired for all C/C++\lcompiled programs" [label=doc];
     kernel -> emLinux [label=in,style=dotted];
-    busybox -> "UNIX tool set including\lcommand line shell" [label=desc];
+    busybox -> "UNIX tool set including\lcommand line shell" [label=doc];
     
     Windows -> OS [label=ako,color=blue];
     dynamic -> Windows [label=opt];
