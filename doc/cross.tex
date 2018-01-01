@@ -284,21 +284,9 @@ libs/ && extra libs required for GNU Dynamic build \\
 \clearpage
 \subsection{cross: Cross-compiler toolchain}
 
-\begin{lstlisting}[language=make,title=Makefile]
-include mk/cross.mk
-\end{lstlisting}
+\fig{../tmp/cross_07.pdf}{width=\textwidth}%height=0.85\textheight}%
 
-\begin{lstlisting}[language=make,title=mk/cross]
-.PHONY: cross
-cross: binutils
-
-# get number or CPU cores for build system
-BUILD_CPU_NUMBER = \
-	$(shell grep processor /proc/cpuinfo | wc -l)
-# parallel make
-MAKE = make -j$(BUILD_CPU_NUMBER)
-\end{lstlisting}
-
+\clearpage
 \subsubsection{binutils: assembler and linker}
 
 \begin{lstlisting}

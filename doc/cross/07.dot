@@ -1,0 +1,25 @@
+digraph {
+
+mk [label="mk/cross.mk"];
+
+BUILD_CPU_NUMBER -> mk [label=in,color=green];
+
+BUILD_CPU_NUMBER -> makeVar [label=is,color=blue];
+BUILD_CPU_NUMBER -> doc [label="doc"];
+"/proc/cpuinfo" ->  BUILD_CPU_NUMBER  [label="val\lgrep processor | wc -l",color=red];
+
+MAKE -> makeVar [label=is,color=blue];
+MAKE -> "XPATH make -jCPU_NUM" [label=val];
+BUILD_CPU_NUMBER -> MAKE [label=def,color=red];
+XPATH -> makeVar [label=is,color=blue];
+XPATH -> "/Makefile" [label=in,color=green];
+XPATH -> MAKE [label=def,color=red];
+XPATH -> "PATH=$TARGET/bin:$PATH" [label=val];
+TARGET -> XPATH [label=def,color=red];
+PATH -> XPATH [label=def,color=red];
+PATH -> BUILD [label="in\lenvironment"];
+
+{rank=same; "/proc/cpuinfo"; mk; cross -> mk [label=in,color=green]; }
+doc [label="number of CPU cores\nin build system"];
+{rank=same; "/Makefile"; makeVar; }
+}
