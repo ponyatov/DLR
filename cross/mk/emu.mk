@@ -19,3 +19,11 @@ root:
 	# build initrd 
 	cd $(ROOT) && find . | egrep -v $(ROOTREX) | cpio -o -H newc > $(BOOT)/$(HW)_$(APP).cpio
 	cat $(BOOT)/$(HW)_$(APP).cpio | gzip -9 > $(BOOT)/$(HW)_$(APP).rootfs
+
+KVM_CFG = 
+.PHONY: kvm
+kvm: $(BOOT)/$(HW)_$(APP).kernel $(BOOT)/$(HW)_$(APP).rootfs
+	qemu-kvm $(KVM_CFG) \ 
+		-kernel $(BOOT)/$(HW)_$(APP).kernel \
+		-initrd $(BOOT)/$(HW)_$(APP).rootfs
+	
