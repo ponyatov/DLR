@@ -3,3 +3,4 @@ i486-linux-uclibc.cross/
 gz/
 tmp/
 src/
+*-linux-uclibc*

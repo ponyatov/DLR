@@ -20,10 +20,9 @@ root:
 	cd $(ROOT) && find . | egrep -v $(ROOTREX) | cpio -o -H newc > $(BOOT)/$(HW)_$(APP).cpio
 	cat $(BOOT)/$(HW)_$(APP).cpio | gzip -9 > $(BOOT)/$(HW)_$(APP).rootfs
 
-KVM_CFG = 
+KVM_CFG = -append "vga=none" \
+			-kernel $(BOOT)/KVM_$(APP).kernel \
+			-initrd $(BOOT)/KVM_$(APP).rootfs
 .PHONY: kvm
-kvm: $(BOOT)/$(HW)_$(APP).kernel $(BOOT)/$(HW)_$(APP).rootfs
-	qemu-kvm $(KVM_CFG) \ 
-		-kernel $(BOOT)/$(HW)_$(APP).kernel \
-		-initrd $(BOOT)/$(HW)_$(APP).rootfs
-	
+kvm: $(BOOT)/KVM_$(APP).kernel $(BOOT)/KVM_$(APP).rootfs
+	kvm $(KVM_CFG)
