@@ -1,5 +1,5 @@
 .PHONY: cross
-cross: gcclibs binutils gcc0
+cross: cclibs binutils gcc0
 
 # get number or CPU cores for build system
 BUILD_CPU_NUMBER = $(shell grep processor /proc/cpuinfo | wc -l)
@@ -50,8 +50,8 @@ gcc: $(SRC)/$(GCC)/README $(CROSS)/bin/$(TARGET)-gcc
 	cd $(TMP)/$(GCC) && $(MAKE) all-target-libgfortran
 	cd $(TMP)/$(GCC) && $(MAKE) install-target-libgfortran	
 	
-.PHONY: gcclibs
-gcclibs: gmp mpfr mpc
+.PHONY: cclibs
+cclibs: gmp mpfr mpc
 
 GCCLIBS_CFG = --disable-shared $(WITH_CCLIBS)
 
