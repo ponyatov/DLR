@@ -1,0 +1,28 @@
+digraph {
+rankdir=LR;
+package -> "SRC/PACKAGE" -> unpack -> configure -> MAKE -> "make install" [label=next,color=blue];
+any_PACKAGE_CFG -> configure;
+configure -> "SRC/PACKAGE" [label=in];
+cross -> MAKE [label=use];
+
+TC [label="--prefix=$TARGET.cross",color=green];
+"make install" -> TC [label=into,color=red];
+{rank=same; unpack; configure; MAKE; "make install"; }
+{rank=same; any_PACKAGE_CFG; "SRC/PACKAGE"; }
+
+{rank=same; package; TC;}
+{rank=same; cross; any_PACKAGE_CFG; TMP; }
+MAKE -> TMP [label="out of source tree\lbuild in $TMP",color=cyan];
+configure -> TMP [color=cyan];
+TMP [label="TMP/PACKAGE"]; 
+
+"--target=$TARGET" -> any_PACKAGE_CFG [label="def\lplatform"];
+TC -> any_PACKAGE_CFG [label="def\linstall path"];
+"--disable-nls" -> any_PACKAGE_CFG [label="no i18n"];
+
+{ 
+"--target=$TARGET" [color=green];
+"--disable-nls" [color=green];
+}
+   
+}

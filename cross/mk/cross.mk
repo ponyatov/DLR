@@ -14,7 +14,7 @@ CROSS_CFG = --target=$(TARGET) $(WITH_CCLIBS) \
 binutils: $(CROSS)/bin/$(TARGET)-as
 $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
 	rm -rf $(TMP)/$(BINUTILS) ; mkdir $(TMP)/$(BINUTILS) ;\
-	cd $(TMP)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) $(CROSS_CFG) &&\
+	cd $(TMP)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CCFG) $(CROSS_CFG) &&\
 	$(MAKE) && make install-strip
 
 GCC0_CFG = --disable-shared --disable-threads \
@@ -24,7 +24,7 @@ GCC0_CFG = --disable-shared --disable-threads \
 gcc0: $(SRC)/$(GCC)/README
 	# configure
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ;\
-	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) $(CROSS_CFG) $(GCC0_CFG)
+	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CCFG) $(CROSS_CFG) $(GCC0_CFG)
 	# build
 	cd $(TMP)/$(GCC) ; $(MAKE) all-gcc && make install-gcc
 	cd $(TMP)/$(GCC) ; $(MAKE) all-target-libgcc && make install-target-libgcc 
@@ -35,7 +35,7 @@ GCC_CFG = --enable-languages="c,c++,fortran" \
 gcc: $(SRC)/$(GCC)/README $(CROSS)/bin/$(TARGET)-gcc
 	# configure
 	rm -rf $(TMP)/$(GCC) ; mkdir $(TMP)/$(GCC) ;\
-	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CFG) $(CROSS_CFG) $(GCC_CFG)
+	cd $(TMP)/$(GCC) ; $(SRC)/$(GCC)/$(CCFG) $(CROSS_CFG) $(GCC_CFG)
 	# build
 	## gcc/g++
 	cd $(TMP)/$(GCC) && $(MAKE) all-gcc
@@ -59,19 +59,19 @@ GCCLIBS_CFG = --disable-shared $(WITH_CCLIBS)
 gmp: $(CROSS)/lib/libgmp.a
 $(CROSS)/lib/libgmp.a: $(SRC)/$(GMP)/README
 	rm -rf $(TMP)/$(GMP) ; mkdir $(TMP)/$(GMP) ;\
-	cd $(TMP)/$(GMP) ; $(SRC)/$(GMP)/$(CFG) $(GCCLIBS_CFG) &&\
+	cd $(TMP)/$(GMP) ; $(SRC)/$(GMP)/$(CCFG) $(GCCLIBS_CFG) &&\
 	$(MAKE) && make install-strip
  
 .PHONY: mpfr
 mpfr: $(CROSS)/lib/libmpfr.a
 $(CROSS)/lib/libmpfr.a: $(SRC)/$(MPFR)/README
 	rm -rf $(TMP)/$(MPFR) ; mkdir $(TMP)/$(MPFR) ;\
-	cd $(TMP)/$(MPFR) ; $(SRC)/$(MPFR)/$(CFG) $(GCCLIBS_CFG) &&\
+	cd $(TMP)/$(MPFR) ; $(SRC)/$(MPFR)/$(CCFG) $(GCCLIBS_CFG) &&\
 	$(MAKE) && make install-strip
 
 .PHONY: mpc
 mpc: $(CROSS)/lib/libmpc.a
 $(CROSS)/lib/libmpc.a: $(SRC)/$(MPC)/README
 	rm -rf $(TMP)/$(MPC) ; mkdir $(TMP)/$(MPC) ;\
-	cd $(TMP)/$(MPC) ; $(SRC)/$(MPC)/$(CFG) $(GCCLIBS_CFG) &&\
+	cd $(TMP)/$(MPC) ; $(SRC)/$(MPC)/$(CCFG) $(GCCLIBS_CFG) &&\
 	$(MAKE) && make install-strip

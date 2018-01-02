@@ -7,12 +7,17 @@ digraph {
 	mpfr -> cclibs [label=in];
 	binutils -> gz_cross [label=in];
 	gcc -> gz_cross [label=in];
-	cluster_Core {  
 		kernel -> gz_core [label=in];
 		ulibc -> gz_core [label=in];
 		busybox -> gz_core [label=in];
-	} 
 	gz_cross -> dynamic [label=req,color=red];
 	gz_core -> dynamic [label=req,color=red];
 	{ rank=same; gz_cross; gz_core; }
+	
+	{rank=same; gz_cross -> "mk/gz.mk" [label=in,color=green];}
+	
+	{rank=same; mpc -> mpfr -> gmp [label=req,color=red];}
+	{rank=same; gcc -> cclibs [label=req,color=red];
+	#gcc -> binutils [label=req,color=red]; 
+	}  
 }

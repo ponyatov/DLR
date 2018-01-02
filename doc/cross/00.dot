@@ -15,4 +15,6 @@ digraph {
     
     Windows -> OS [label=ako,color=blue];
     dynamic -> Windows [label=opt];
+    
+    Linux -> "KVM virtual server (leased VDS hosting)" [label="run on",color=red];
 }

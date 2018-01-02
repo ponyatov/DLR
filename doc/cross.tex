@@ -128,7 +128,8 @@ Target system must be defined by set of \term{target configuration variables}:
 \begin{tabular}{l l l l}
 HW & ARCH & CPU & description \\
 \hline
-KVM & =BUILD & x86\_64 & Linux workstation\\&&&as virtualization server \\
+KVM & =BUILD & x86\_64 & Linux workstation as\\&&& virtualization server (or
+leased VDS)\\
 Rpi & armeabihf & BCM2835 & Raspberry Pi (any model compatible) \\
 PC104 & i386 & i486sx & PC104 board or any old PC computer\\
 PC & i386 & i686 & more or less modern PC\\ 
@@ -281,43 +282,43 @@ libs/ && extra libs required for GNU Dynamic build \\
 \hline
 \end{tabular}
 
-\clearpage
-\subsection{cross: Cross-compiler toolchain}
+\noindent
+For building speed up we use \term{parallel make} with \emph{cross tools
+included into PATH}:
+\smallskip
 
 \fig{../tmp/cross_07.pdf}{width=\textwidth}%height=0.85\textheight}%
 
 \clearpage
-\subsubsection{binutils: assembler and linker}
+\subsection{cross: Cross-compiler toolchain}
 
-\begin{lstlisting}
-$ make binutils
-\end{lstlisting}
-\begin{lstlisting}[language=make,title=mk/version]
-BINUTILS_VER = 2.29.1
-\end{lstlisting}
-\begin{lstlisting}[language=make,title=mk/package]
-BINUTILS = binutils-$(BINUTILS_VER)
-BINUTILS_GZ = $(BINUTILS).tar.bz2
-\end{lstlisting}
-\begin{lstlisting}[language=make,title=mk/gz]
-gz_cross:
-	$(WGET) http://ftp.gnu.org/gnu/binutils/$(BINUTILS_GZ)
-\end{lstlisting}
-\begin{lstlisting}[language=make,title=mk/cross]
+Any \emph{cross-compiler package} we build using this steps:
+
+\bigskip
+\fig{../tmp/cross_08.pdf}{width=\textwidth}%height=0.7\textheight}%}%
+\clearpage
+
+\subsubsection{binutils: assembler and linker for \$TARGET platform}
+
+\begin{lstlisting}[language=make,title=mk/cross.mk: run make binutils]
 CROSS_CFG = --target=$(TARGET) $(WITH_CCLIBS) \
 	--with-sysroot=$(ROOT) \
 	--with-native-system-header-dir=/include  
 
 .PHONY: binutils
 binutils: $(CROSS)/bin/$(TARGET)-as
+# use one of tool executable as build done flag 
 $(CROSS)/bin/$(TARGET)-as: $(SRC)/$(BINUTILS)/README
-	rm -rf $(BLD)/$(BINUTILS) ; mkdir $(BLD)/$(BINUTILS) ;\
-	cd $(BLD)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CFG) \
+	rm -rf $(TMP)/$(BINUTILS) ; mkdir $(TMP)/$(BINUTILS) ;\
+	cd $(TMP)/$(BINUTILS) ; $(SRC)/$(BINUTILS)/$(CCFG) \
 		$(CROSS_CFG) &&\
 	$(MAKE) && make install-strip
 \end{lstlisting}
-\begin{lstlisting}[language=make,title=mk/cfg]
-CFG = configure --disable-nls --prefix=$(CROSS) \
+
+\fig{../tmp/cross_09.pdf}{width=\textwidth}%height=\textheight}%
+
+\begin{lstlisting}[language=make,title=mk/cfg.mk]
+CCFG = configure --disable-nls --prefix=$(CROSS) \
 	--docdir=$(TMP)/doc --mandir=$(TMP)/man \
 		--infodir=$(TMP)/info
 \end{lstlisting}
@@ -332,6 +333,7 @@ disable-nls & don't use internationalization in messages \\
 \verb$*dir$ & remove documentation from \verb|$CROSS|\\
 \end{tabular}
 
+\clearpage
 \subsubsection{gcclibs: libraries required for GCC compiling}
 
 \begin{lstlisting}

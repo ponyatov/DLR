@@ -1,0 +1,25 @@
+digraph {
+rankdir=LR;
+binutils [color=blue];
+{rank=same; gcc -> binutils -> cclibs [label=req,color=red];}
+CROSS_CFG -> binutils [label=configure];
+cclibs -> CROSS_CFG [label="--with-*"];
+cclibs -> CROSS [label=in];
+ROOT -> ssrt [label="TARGET\lfile system"]; 
+ssrt -> CROSS_CFG [label="libs and\l.h includes"];
+{ rank=same;
+incl [label="--with-native-system-header-dir=/include"];
+ssrt [label="--with-sysroot"];
+doc [label="--docdir=TMP/doc"];
+}
+doc -> CCFG [label="remove documentation"];
+incl -> CROSS_CFG [label="include path"];
+CROSS_CFG [color=green];
+incl -> ROOT [label=relative];
+{rank=same; ssrt; incl;}
+{rank=same;
+CCFG [color=green];
+CCFG -> CROSS_CFG [label=in];
+ROOT; CROSS;
+}
+}

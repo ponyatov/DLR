@@ -16,7 +16,7 @@ FIG = ../tmp/lexer.pdf
 FIG += ../tmp/cross_00.pdf ../tmp/cross_01.pdf ../tmp/cross_02.pdf
 FIG += ../tmp/cross_03.pdf ../tmp/cross_04.pdf 
 FIG += ../tmp/cross_05.pdf ../tmp/cross_06.pdf
-FIG += ../tmp/cross_07.pdf
+FIG += ../tmp/cross_07.pdf ../tmp/cross_08.pdf ../tmp/cross_09.pdf
 
 #BRANCH = $(shell git symbolic-ref -q HEAD | sed -r -e "s|refs/heads/||")
 NOW = $(shell date +%y%m%d)

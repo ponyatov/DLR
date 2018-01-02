@@ -10,8 +10,12 @@ TARGET -> ROOT [label="="];
 HW -> CWD [label=in];
 ARCH -> CWD [label=in];
 CPU -> CWD [label=in];
-TMP -> ramdisk [label="mount\ltmpfs"];
-SRC -> ramdisk [label="mount\ltmpfs"];
+TMP -> ramdisk [label="mount\ltmpfs",color=cyan];
+SRC -> ramdisk [label="mount\ltmpfs",color=cyan];
 "$HW_$APP.kernel" -> BOOT [label="in\n_kernel"];
 "$HW_$APP.rootfs" -> BOOT [label="in\n_initrd\nAPP=dynamic"];
+{rank=same;
+CWD -> "~/DLR/cross/" [label=val,color=red];
+"~/DLR/cross/" [shape=none];
+}
 }
