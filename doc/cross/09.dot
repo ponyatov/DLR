@@ -20,6 +20,6 @@ incl -> ROOT [label=relative];
 {rank=same;
 CCFG [color=green];
 CCFG -> CROSS_CFG [label=in];
-ROOT; CROSS;
+ROOT [color=red]; CROSS [color=red];
 }
 }
