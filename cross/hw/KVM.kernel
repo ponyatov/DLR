@@ -13,7 +13,7 @@ CONFIG_PREEMPT_NONE=y
 CONFIG_HZ_100=y
 
 # KVM optimizations
-#CONFIG_KSM=y
+CONFIG_KSM=y
 
 # disable graphics
 CONFIG_FB=n
