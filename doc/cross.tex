@@ -336,23 +336,8 @@ disable-nls & don't use internationalization in messages \\
 \clearpage
 \subsubsection{gcclibs: libraries required for GCC compiling}
 
-\begin{lstlisting}
-$ make gcclibs [gmp] [mpfr] [mpc]
-\end{lstlisting}
-\begin{lstlisting}[language=make,title=mk/version]
-GMP_VER = 6.1.2
-MPFR_VER = 3.1.6
-# MPFR 4.0.0 mpc build error: conflicting types for mpfr_fmma  
-MPC_VER = 1.0.3
-\end{lstlisting}
-\begin{lstlisting}[language=make,title=mk/gz]
-gz_cross:
-	$(WGET) ftp://ftp.gmplib.org/pub/gmp/$(GMP_GZ)
-	$(WGET) \
-	http://www.mpfr.org/mpfr-$(MPFR_VER)/$(MPFR).tar.bz2
-	$(WGET) \
-	http://www.multiprecision.org/mpc/download/$(MPC_GZ)
-\end{lstlisting}
+\fig{../tmp/cross_10.pdf}{width=\textwidth}%height=\textheight}%
+
 \begin{lstlisting}[language=make,title=mk/cross]
 WITH_CCLIBS = --with-gmp=$(CROSS) --with-mpfr=$(CROSS) \
 				--with-mpc=$(CROSS)  

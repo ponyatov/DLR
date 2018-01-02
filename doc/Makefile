@@ -17,6 +17,10 @@ FIG += ../tmp/cross_00.pdf ../tmp/cross_01.pdf ../tmp/cross_02.pdf
 FIG += ../tmp/cross_03.pdf ../tmp/cross_04.pdf 
 FIG += ../tmp/cross_05.pdf ../tmp/cross_06.pdf
 FIG += ../tmp/cross_07.pdf ../tmp/cross_08.pdf ../tmp/cross_09.pdf
+FIG += ../tmp/cross_10.pdf
+
+TEX += generics.tex
+FIG += ../tmp/sym_00.pdf ../tmp/sym_01.pdf
 
 #BRANCH = $(shell git symbolic-ref -q HEAD | sed -r -e "s|refs/heads/||")
 NOW = $(shell date +%y%m%d)
@@ -43,6 +47,11 @@ manual.pdf: $(TEX) $(SRC) $(FIG)
 	inkscape $@ --export-area-drawing --export-pdf=$@
 
 ../tmp/cross_%.pdf: cross/%.dot
+	dot -Tpdf -o $@ $<
+#	&& pdfcrop $@t $@
+	inkscape $@ --export-area-drawing --export-pdf=$@
+
+../tmp/sym_%.pdf: sym/%.dot
 	dot -Tpdf -o $@ $<
 #	&& pdfcrop $@t $@
 	inkscape $@ --export-area-drawing --export-pdf=$@

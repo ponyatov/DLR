@@ -1,0 +1,18 @@
+digraph {
+Symbol -> Primitive -> Object [label=ako];
+Number -> Primitive [label=ako];
+ComplexNumber -> Number [label=ako];
+FractionNumber -> Number [label=ako];
+Integer -> Number [label=ako];
+String -> Primitive [label=ako];
+AST -> Tree -> OrderedCollection -> Collection -> Object [label=ako];
+#"Graph" -> OrderedCollection [label=ako];
+Vector -> OrderedCollection [label=ako];
+Map -> Collection [label=ako];
+Queue -> Deque -> OrderedCollection [label=ako];
+Stack -> Deque [label=ako];
+Array -> Vector [label="ako\l fixed size"];
+#Array -> Primitive [label=is];
+Active -> Object [label=ako];
+Pointer -> Primitive [label=ako];
+}

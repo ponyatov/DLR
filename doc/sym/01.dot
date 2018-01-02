@@ -1,0 +1,13 @@
+digraph {
+Function -> Active [label=ako];
+Command -> Active [label=ako];
+Thread -> Active [label=ako];
+Algorithm -> Active [label=ako];
+Function -> Algorithm [label="in *"];
+Stack -> Thread [label=in];
+Task -> Collection [label=is];
+Task -> Thread [label="of *"];
+#Sort -> Algorithm [label=ako];
+#Index -> Algorithm [label=ako];
+#Search -> Algorithm [label=ako];
+}

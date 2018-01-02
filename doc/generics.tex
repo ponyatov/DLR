@@ -1,0 +1,26 @@
+\chapter{Generics: data types and algorithms}\clearpage
+
+As \emph{we are going to use \term{code autogeneration}}, we must create type
+system able to mimic any programming language data model, and \term{autogen}
+code specific to typically use cases. Another important thing: we must implement
+large set of widely known generic algorithms, and let them to be used as
+first class dynamic script elements (as algorithm libraries).
+To implement this we can define special classes set, powered with
+\term{reflection} and \emph{dynamic behaviour}:
+\begin{description}[nosep]
+\item[Primitive] superclass for elements can be implemented using
+computer hardware capabilities at low level code, like numbers and strings;
+\item[Collection] is anything can contain another data elements inside themself
+\item[AST] as widely accepterd form of programming languages constructs, as
+we are going to wors with program elements as is
+\item[Active] elements represents active part of computing system
+\item[Function] and methods is widely used as main programming language
+construct
+\item[Algorithm] would be great to be able to manipulate as first class object
+\item[Thread] is single process of sequential computing required for
+multitasking
+\end{description}
+
+\fig{../tmp/sym_00.pdf}{width=\textwidth}%height=\textheight}%
+
+\fig{../tmp/sym_01.pdf}{width=\textwidth}%height=\textheight}%
