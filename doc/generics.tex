@@ -94,4 +94,14 @@ def test_Number():
 \end{lstlisting}
 As you see \verb|__repr__| method repeats for every class inherited from
 Primitive, so we move it into base class:
+
+\begin{lstlisting}[language=Python]
+class Primitive(Object):
+    tag = 'prim'
+    def __init__(self): self.val = ''
+    def __repr__(self): return '%s:%s #%x' % \ 
+    	(self.tag, self.val, id(self))
+def test_Primitive():
+    assert re.match(r'prim: #[0-9a-f]+',str(Primitive()))
+\end{lstlisting}
  
