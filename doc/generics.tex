@@ -24,3 +24,38 @@ multitasking
 \fig{../tmp/sym_00.pdf}{width=\textwidth}%height=\textheight}%
 
 \fig{../tmp/sym_01.pdf}{width=\textwidth}%height=\textheight}%
+
+\begin{lstlisting}[language=Python]
+class Object:
+    tag = 'obj'
+    def __repr__(self): return '%s #%x'%(self.tag,id(self))
+print Object()
+\end{lstlisting}
+\begin{lstlisting}
+obj #7f4dea6a5878
+\end{lstlisting}
+\fig{../tmp/sym_02.pdf}{width=0.8\textwidth}%height=0.75\textheight}%
+\\We need some user friendly representation for all objects, so we use
+\verb|__repr__()| method let us get dump for all objects in human readable form.
+
+
+\begin{lstlisting}[language=Python,title=/SYM.py]
+class Primitive(Object):
+    tag = 'prim'
+print Primitive()
+\end{lstlisting}
+It is better to use unit tests then just printing results: you can use Eclipse
+with Pydev installed, and \verb|pip install pytest| to do simple function-based
+unit tesing. Go to
+\menu{Eclipse>Menu>Window>Preferences>PyDev>PyUnit>PyTest runner>delete
+--verbose parameter}. Configure \menu{Run as>Python unit-test} and press
+\keys{Ctrl-F11}
+\begin{lstlisting}[language=Python]
+import re # for tests
+def test_hello(): pass # use pytest
+class Primitive(Object):
+    tag = 'prim'
+def test_Primitive():
+    assert re.match(r'prim #[0-9a-f]+',str(Primitive()))
+\end{lstlisting}
+\fig{../tmp/sym_03.pdf}{height=0.75\textheight}%width=0.8\textwidth}%

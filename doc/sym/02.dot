@@ -1,0 +1,12 @@
+digraph {
+Object [color=red];
+Object -> native_class [label=ako,color=blue];
+tag -> Object [label=in,color=cyan];
+tag -> native_string [label=is,color=green];
+__repr__ -> Object [label=in,color=cyan];
+__repr__ -> native_method [label=is,color=green];
+__repr__ -> native_string [label=ret];
+{rank=same; native_class; native_method; native_string; }
+td [label="points to data\lelement class/type\l(in shoft form)",shape=box];
+tag -> td [label=doc];
+}

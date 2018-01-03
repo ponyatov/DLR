@@ -11,3 +11,6 @@ sshot.png
 
 ply/
 YP/
+
+.cache/
+*.pyc

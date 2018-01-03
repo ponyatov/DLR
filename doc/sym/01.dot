@@ -1,13 +1,14 @@
 digraph {
-Function -> Active [label=ako];
-Command -> Active [label=ako];
-Thread -> Active [label=ako];
-Algorithm -> Active [label=ako];
+Function -> Active [label=ako,color=blue];
+Command -> Active [label=ako,color=blue];
+Thread -> Active [label=ako,color=blue];
+Stream -> Active [label=ako,color=blue];
+Algorithm -> Active [label=ako,color=blue];
 Function -> Algorithm [label="in *"];
 Stack -> Thread [label=in];
 Task -> Collection [label=is];
 Task -> Thread [label="of *"];
-#Sort -> Algorithm [label=ako];
-#Index -> Algorithm [label=ako];
-#Search -> Algorithm [label=ako];
+#Sort -> Algorithm [label=ako,color=blue];
+#Index -> Algorithm [label=ako,color=blue];
+#Search -> Algorithm [label=ako,color=blue];
 }
