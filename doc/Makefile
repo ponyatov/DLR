@@ -28,8 +28,8 @@ RELEASE = DLR_$(NOW)
 #_$(BRANCH)
 
 LATEX = pdflatex -halt-on-error -output-directory ../tmp
-../tmp/manual.pdf: $(TEX) $(SRC) $(FIG) ../tmp/tex.tex
-	$(LATEX) manual
+../tmp/work.pdf: work.tex $(TEX) $(SRC) $(FIG) ../tmp/tex.tex
+	$(LATEX) $< && $(LATEX) $< 
 	
 ../tmp/tex.tex: $(TEX) ../.git/HEAD Makefile
 #	echo "\date{\scriptsize $(RELEASE)}" | sed -r "s|\_|\\\_|g" > ../tmp/tex.tex
