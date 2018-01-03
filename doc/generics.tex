@@ -38,24 +38,60 @@ obj #7f4dea6a5878
 \\We need some user friendly representation for all objects, so we use
 \verb|__repr__()| method let us get dump for all objects in human readable form.
 
+\section{Primitive}
 
-\begin{lstlisting}[language=Python,title=/SYM.py]
-class Primitive(Object):
-    tag = 'prim'
-print Primitive()
-\end{lstlisting}
 It is better to use unit tests then just printing results: you can use Eclipse
 with Pydev installed, and \verb|pip install pytest| to do simple function-based
 unit tesing. Go to
 \menu{Eclipse>Menu>Window>Preferences>PyDev>PyUnit>PyTest runner>delete
 --verbose parameter}. Configure \menu{Run as>Python unit-test} and press
 \keys{Ctrl-F11}
+
+\bigskip
 \begin{lstlisting}[language=Python]
 import re # for tests
 def test_hello(): pass # use pytest
+
 class Primitive(Object):
     tag = 'prim'
 def test_Primitive():
     assert re.match(r'prim #[0-9a-f]+',str(Primitive()))
 \end{lstlisting}
-\fig{../tmp/sym_03.pdf}{height=0.75\textheight}%width=0.8\textwidth}%
+
+\ \\
+\fig{../tmp/sym_03.pdf}{height=0.45\textheight}%width=0.8\textwidth}%
+
+\subsection{Symbol}
+
+Symbol represents anything can have name\ --- things, variables,
+physical constants,\ldots\ As any data can be represented in string form, we'll
+hold symbol name in string field: \emph{val}.
+
+\fig{../tmp/sym_04.pdf}{height=0.65\textheight}%width=0.8\textwidth}%
+
+\begin{lstlisting}[language=Python]
+class Symbol(Primitive):
+    tag = 'sym'
+    def __init__(self, V): self.val = V
+    def __repr__(self): return '%s:%s #%x' % \
+    	(self.tag, self.val, id(self))
+def test_Symbol():
+    assert re.match(r'sym:xxx #[0-9a-f]+',str(Symbol('xxx')))
+\end{lstlisting}
+
+\subsection{Number}
+
+\fig{../tmp/sym_05.pdf}{height=0.65\textheight}%width=0.8\textwidth}%
+
+\begin{lstlisting}[language=Python]
+class Number(Primitive):
+    tag = 'num'
+    def __init__(self, V): self.val = float(V)
+    def __repr__(self): return '%s:%s #%x' % \
+    	(self.tag, self.val, id(self))
+def test_Number():
+    assert re.match(r'num:1.2 #[0-9a-f]+',str(Number('1.2')))
+\end{lstlisting}
+As you see \verb|__repr__| method repeats for every class inherited from
+Primitive, so we move it into base class:
+ 

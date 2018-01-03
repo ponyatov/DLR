@@ -11,7 +11,7 @@ Vector -> OrderedCollection [label=ako,color=blue];
 Map -> Collection [label=ako,color=blue];
 Queue -> Deque -> OrderedCollection [label=ako,color=blue];
 Stack -> Deque [label=ako,color=blue];
-Array -> Vector [label="ako\l fixed size"];
+Array -> Vector [label="ako\l fixed size",color=blue];
 #Array -> Primitive [label=is];
 Active -> Object [label=ako,color=blue];
 Pointer -> Primitive [label=ako,color=blue];

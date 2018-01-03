@@ -1,0 +1,10 @@
+digraph {
+Symbol -> Primitive [label=ako,color=blue];
+Symbol [color=red];
+Symbol -> num [label=tag];
+val -> Symbol [label=in];
+val -> native_number [label=is,color=green];
+__repr__ -> Symbol [label=method];
+__repr__ -> "tag:val #id" [label=ret];
+"tag:val #id" -> native_string [label=is,color=green];
+}

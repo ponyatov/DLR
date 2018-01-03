@@ -1,4 +1,5 @@
 digraph {
 Primitive -> Object [label=ako,color=blue];
 Primitive -> prim [label=tag];
+Primitive [color=red];
 }

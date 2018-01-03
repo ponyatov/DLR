@@ -16,5 +16,16 @@ def test_Primitive():
     
 class Symbol(Primitive):
     tag = 'sym'
-    def __init__(self,V): self.val = V    
-print Symbol('xxx')
+    def __init__(self, V): self.val = V
+    def __repr__(self): return '%s:%s #%x' % (self.tag, self.val, id(self))
+
+def test_Symbol():
+    assert re.match(r'sym:xxx #[0-9a-f]+',str(Symbol('xxx')))
+
+class Number(Primitive):
+    tag = 'num'
+    def __init__(self, V): self.val = float(V)
+    def __repr__(self): return '%s:%s #%x' % (self.tag, self.val, id(self))
+
+def test_Number():
+    assert re.match(r'num:1.2 #[0-9a-f]+',str(Number('1.2')))
