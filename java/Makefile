@@ -6,19 +6,26 @@ JAS = $(JASMIN)/jasmin.jar
 
 WGET = wget -c
 
-go: Hello.class #latex
+go: latex Hello.class jHello.class 
 	java Hello
 
 latex:
 	cd .. ; $(MAKE) # latex
+	
+jHello.class: jHello.java
+	javac jHello.java && javap -c jHello > jHello.disassembly
 
 Hello.class: Hello.j $(JAS)
-	java -jar $(JAS) $<
+	java -jar $(JAS) $< && javap -c $@ > $@.disassembly
 
 .PHONY: install
-install: $(JAS)
+install: $(JAS) jasper/jasper.jar
 $(JAS): $(JASMIN_GZ)
 	unzip $< && touch $@
 $(JASMIN_GZ):
 	$(WGET) http://downloads.sourceforge.net/project/jasmin/jasmin/$(JASMIN)/$(JASMIN_GZ) && touch $@
 	
+jasper/jasper.jar: jasper/pom.xml
+	cd jasper ; javac -d . src/main/java/jasper/*.java && jar -cf jasper.jar jasper/*
+jasper/pom.xml:
+	git clone --depth=1 https://github.com/kohsuke/jasper.git
