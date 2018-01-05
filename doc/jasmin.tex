@@ -35,10 +35,46 @@ computer fading like light bulbs with bad welding machine!? I don't know\ldots
 
 \medskip\noindent This two directives \emph{is required} to run jasmine without
 errors, and make empty:
-\begin{description}[nosep]
+\begin{description}
 \item[.class] defines new class (file) you want to compile\note{Eclipse does
 not show .class files in Project Explorer}
 \item[.super] tells what core class your are going to expand
 \end{description}
+
+\begin{lstlisting}
+.method public <init>()V
+	aload_0
+	invokespecial java/lang/Object/<init>()V
+	return
+.end method
+\end{lstlisting}
+\verb|<init>| \term{constructor} method \emph{is required}, it must initialize
+instance of application class on start, \emph{nesting super class constructor}.
+See more in JVM manual
+\href{https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html}{Loading, Linking, and Initializing}
+
+\medskip
+You can see what code you should put in your .jasmin files, using this hint:
+\begin{lstlisting}[language=make,title=java/Makefile]
+jHello.class: jHello.java
+	javac jHello.java && \
+	javap -c jHello > jHello.disassembly
+\end{lstlisting}
+\lstinputlisting[language=Java,title=java/jHello.java]{../java/jHello.java}
+\begin{lstlisting}[title=java/jHello.disassembly]
+Compiled from "jHello.java"
+class jHello {
+  jHello();
+    Code:
+       0: aload_0
+       // Method java/lang/Object."<init>":()V
+       1: invokespecial #1                  
+       4: return
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: return
+}
+\end{lstlisting}
 
 \lstinputlisting{../java/Hello.j}
