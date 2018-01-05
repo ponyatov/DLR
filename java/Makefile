@@ -12,11 +12,13 @@ go: latex Hello.class jHello.class
 latex:
 	cd .. ; $(MAKE) # latex
 	
+JAVAP = javap -c -s -verbose
+	
 jHello.class: jHello.java
-	javac jHello.java && javap -c jHello > jHello.disassembly
+	javac $< && $(JAVAP) $@ > $@.dis
 
 Hello.class: Hello.j $(JAS)
-	java -jar $(JAS) $< && javap -c $@ > $@.disassembly
+	java -jar $(JAS) $< && $(JAVAP) $@ > $@.dis
 
 .PHONY: install
 install: $(JAS) jasper/jasper.jar

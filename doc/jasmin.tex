@@ -22,7 +22,7 @@ computer fading like light bulbs with bad welding machine!? I don't know\ldots
 \clearpage
 \subsection{Hello World}
 
-\begin{lstlisting}
+\begin{lstlisting}[title=java/Hello.j]
 .class Hello
 .super java/lang/Object
 \end{lstlisting}
@@ -35,7 +35,7 @@ computer fading like light bulbs with bad welding machine!? I don't know\ldots
 
 \medskip\noindent This two directives \emph{is required} to run jasmine without
 errors, and make empty:
-\begin{description}
+\begin{description}[nosep]
 \item[.class] defines new class (file) you want to compile\note{Eclipse does
 not show .class files in Project Explorer}
 \item[.super] tells what core class your are going to expand
@@ -52,6 +52,7 @@ not show .class files in Project Explorer}
 instance of application class on start, \emph{nesting super class constructor}.
 See more in JVM manual
 \href{https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html}{Loading, Linking, and Initializing}
+(default constructor).
 
 \medskip
 You can see what code you should put in your .jasmin files, using this hint:
@@ -77,4 +78,20 @@ class jHello {
 }
 \end{lstlisting}
 
-\lstinputlisting{../java/Hello.j}
+\begin{tabular}{l l}
+\verb|[a]load| & load address (pointer) \\
+\verb|#n| & refer to item in \term{constants pool}\\
+\end{tabular}
+
+\medskip\noindent
+To see more info including constant pool, use
+\begin{lstlisting}[language=make,title=java/Makefile]
+JAVAP = javap -c -s -verbose
+jHello.class: jHello.java
+	javac $< && $(JAVAP) $@ > $@.dis
+Hello.class: Hello.j $(JAS)
+	java -jar $(JAS) $< && $(JAVAP) $@ > $@.dis
+\end{lstlisting}
+
+
+% \lstinputlisting{../java/Hello.j}
