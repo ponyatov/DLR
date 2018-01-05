@@ -95,3 +95,19 @@ Hello.class: Hello.j $(JAS)
 
 
 % \lstinputlisting{../java/Hello.j}
+
+\subsection{Call frame}
+
+Every method call via \verb|invoke*| creates \term{call frame}, consists of:
+\begin{itemize}[nosep]
+  \item called method \term{operands stack}
+  \item \term{local variables} array
+  \item pointer to \term{class pool constants} of called method 
+\end{itemize}
+Stack and locals size determined at compile time, and should be configured via
+\begin{lstlisting}[title=java/Hello.j]
+.method public static main([Ljava/lang/String;)V
+	.limit stack 0	; ignore parameter
+	return
+.end method
+\end{lstlisting}

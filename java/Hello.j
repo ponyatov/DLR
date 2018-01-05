@@ -8,6 +8,7 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
-	ldc 0
+	.limit stack 0		; ignore parameter
+	;.limit locals 0
 	return
 .end method
