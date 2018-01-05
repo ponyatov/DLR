@@ -7,8 +7,12 @@ JAS = $(JASMIN)/jasmin.jar
 WGET = wget -c
 
 Hello.class: Hello.j $(JAS)
+	cd .. ; $(MAKE) # latex
+	@echo
 	java -jar $(JAS) $<
 
+.PHONY: install
+install: $(JAS)
 $(JAS): $(JASMIN_GZ)
 	unzip $< && touch $@
 $(JASMIN_GZ):
