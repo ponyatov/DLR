@@ -10,7 +10,7 @@ TEX += Forth.tex asmforth.tex Forth.sty
 TEX += PLC.tex
 TEX += vim.tex cross.tex
 
-SRC += ../tmp/calc.mk ../inher.py
+SRC += ../tmp/calc.mk ../inher.py ../java/Hello.j
 
 FIG = ../tmp/lexer.pdf
 FIG += ../tmp/cross_00.pdf ../tmp/cross_01.pdf ../tmp/cross_02.pdf

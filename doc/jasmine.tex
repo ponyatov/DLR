@@ -8,3 +8,37 @@ similar to our DLR VMs. So the right way to dig in is start to write programs in
 \begin{lstlisting}
 $ cd ~/DLR/java ; make install
 \end{lstlisting}
+Use
+\href{http://saksagan.ceng.metu.edu.tr/courses/ceng444/link/f3jasmintutorial.html}{ceng444} tutorial:
+You can think about Jasmin as a \J\ Assembler.
+
+\medskip\noindent
+Why not jast use \verb|javac|? It's about \emph{feel of underlying technology}
+behind \J. By design it is cool thing, but enterprize funding and buzzing made
+it crude: hack more or less tiny platform-specific software component, and make
+all the rest portable. What the hell starting JVM makes your cool modern
+computer fading like light bulbs with bad welding machine!? I don't know\ldots
+
+\clearpage
+\subsection{Hello World}
+
+\begin{lstlisting}
+.class Hello
+.super java/lang/Object
+\end{lstlisting}
+
+\begin{description}[nosep]
+\item[directive] line started with .
+\item[label] name followed by :
+\item[instruction] is line by line, as in any another assembly
+\end{description}
+
+\medskip\noindent This two directives \emph{is required} to run jasmine without
+errors, and make empty:
+\begin{description}[nosep]
+\item[.class] defines new class (file) you want to compile\note{Eclipse does
+not show .class files in Project Explorer}
+\item[.super] tells what core class your are going to expand
+\end{description}
+
+\lstinputlisting{../java/Hello.j}
