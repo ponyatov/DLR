@@ -49,6 +49,49 @@ All methods doing dump was moved into \verb|Object|:\\
 \fig{../tmp/sym_02x1.pdf}{width=0.55\textwidth}%height=0.7\textheight}%
 \fig{../tmp/sym_02x2.pdf}{width=0.45\textwidth}%height=0.7\textheight}%
 
+\clearpage
+\begin{lstlisting}[language=Python]
+class Object:
+	tag = 'obj'				# bind object type
+	def __init__(self, V=''):
+		self.val = V		# object single value
+		self.attr={}		# attributes {key:value}
+		self.nest=[]		# nested elements (ordered list)
+\end{lstlisting}
+\begin{lstlisting}[language=Python]
+	# dump object		
+	def __repr__(self): return self.dump()
+	def head(self): return '%s:%s #%x' % 
+		(self.tag, self.val, id(self))
+	def dump(self,depth=0,prefix=''):
+		# tabbed object header tag:value #id
+		S = '\n'+'\t'*depth + prefix + self.head()
+		# dump attributes if exists
+		for i in self.attr:
+			S += self.attr[i].dump(depth+1,'%s = '%i)
+		# dump nested elements if exists
+		for j in self.nest: S += j.dump(depth+1)
+		# return resulting dump string
+		return S
+	# add to nest[]ed using << operator
+	def __lshift__(self,o):
+		self.nest.append(o) ; return self
+	# set attribute value
+	def set(self,key,val):
+		self.attr[key]=val ; return self
+
+print Object('+') .set('doc',Object('attribite')) \
+		<< Object(1) << Object(2.3) 
+\end{lstlisting}
+\clearpage
+\begin{lstlisting}
+obj:+ #17d2760
+	doc = obj:attribite #17d2788
+	obj:1 #17d27b0
+	obj:2.3 #17d27d8
+\end{lstlisting}
+
+\clearpage
 \section{Primitive}
 
 It is better to use unit tests then just printing results: you can use Eclipse

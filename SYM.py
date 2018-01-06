@@ -19,8 +19,13 @@ class Object:
 		for j in self.nest: S += j.dump(depth+1)
 		# return resulting dump string
 		return S
-	# add to nest[]ed
+	# add to nest[]ed using << operator
 	def __lshift__(self,o): self.nest.append(o) ; return self
+	# set attribute value
+	def set(self,key,val): self.attr[key]=val ; return self
+
+print Object('+') .set('doc',Object('attribite')) \
+		<< Object(1) << Object(2.3) 
  
 def test_Object():
     assert re.match(r'obj #[0-9a-f]+', str(Object()))
