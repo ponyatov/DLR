@@ -1,0 +1,24 @@
+digraph {
+Object [color=red];
+Collection [color=red];
+OrderedCollection [color=red];
+Map [color=red];
+Vector [color=red];
+
+attr -> Map [label=is,color=green]; attr -> Object [label=in];
+nest -> Vector [label=is,color=green]; nest -> Object [label=in,color=cyan];
+Map -> Collection -> Object [label=ako,color=blue];
+Vector -> OrderedCollection -> Object [label=ako,color=blue];
+
+{rank=same; attr;nest;}
+{rank=same; Map;Vector;}
+{rank=same;OrderedCollection;Collection;}
+{rank=same;key;attribute;}
+
+attribute -> attr [label=in];
+key -> attr [label=in];
+key -> attribute [label=bind];
+
+"nested\nelement" -> nest [label=in];
+}
+

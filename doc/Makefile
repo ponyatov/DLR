@@ -23,6 +23,7 @@ FIG += ../tmp/cross_10.pdf
 TEX += generics.tex
 FIG += ../tmp/sym_00.pdf ../tmp/sym_01.pdf ../tmp/sym_02.pdf
 FIG += ../tmp/sym_03.pdf ../tmp/sym_04.pdf ../tmp/sym_05.pdf
+FIG += ../tmp/sym_02x1.pdf ../tmp/sym_02x2.pdf ../tmp/sym_02d.pdf 
 
 #BRANCH = $(shell git symbolic-ref -q HEAD | sed -r -e "s|refs/heads/||")
 NOW = $(shell date +%y%m%d)

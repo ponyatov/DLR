@@ -1,6 +1,7 @@
 digraph {
 Function -> Active [label=ako,color=blue];
 Command -> Active [label=ako,color=blue];
+Operator -> Active [label=ako,color=blue];
 Thread -> Active [label=ako,color=blue];
 Stream -> Active [label=ako,color=blue];
 Algorithm -> Active [label=ako,color=blue];

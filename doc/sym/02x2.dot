@@ -1,0 +1,12 @@
+digraph {
+Object [color=red];
+
+tag -> Object [label=in,color=cyan];
+val -> Object [label=in,color=cyan];
+id -> Object [label="object\nid"];
+
+"defines object class\llater will be changed\nto Class type" -> tag [label=doc];
+"single object value" -> val [label=doc];
+
+}
+

@@ -1,0 +1,23 @@
+digraph {
+Object [color=red];
+Object -> native_class [label=ako,color=blue];
+tag -> Object [label=in,color=cyan];
+tag -> native_string [label=is,color=green];
+val -> native_string [label=is,color=green];
+val -> Object [label=in,color=cyan];
+__repr__ -> Object [label=in,color=cyan];
+__repr__ -> native_method [label=is,color=green];
+__repr__ -> native_string [label=ret];
+{rank=same; native_class; native_method; native_string; }
+__repr__ -> dump [label=use];
+dump -> native_string [label=ret];
+head -> native_string [label=ret];
+dump -> head [label=use];
+dump -> Object [label=method];
+head -> tag [label=use];
+head -> val [label=use];
+head -> id  [label=use]; 
+id -> Object [label="object\nid"];
+{rank=same;tag;val;id;head;dump;__repr__};
+}
+
