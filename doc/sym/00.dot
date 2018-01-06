@@ -1,9 +1,11 @@
 digraph {
 Symbol -> Primitive -> Object [label=ako,color=blue];
 Number -> Primitive [label=ako,color=blue];
-ComplexNumber -> Number [label=ako,color=blue];
-FractionNumber -> Number [label=ako,color=blue];
+Complex -> Number [label=ako,color=blue];
+Fraction -> Number [label=ako,color=blue];
 Integer -> Number [label=ako,color=blue];
+Hex -> Integer [label=ako,color=blue];
+Binary -> Integer [label=ako,color=blue];
 String -> Primitive [label=ako,color=blue];
 AST -> Tree -> OrderedCollection -> Collection -> Object [label=ako,color=blue];
 #"Graph" -> OrderedCollection [label=ako,color=blue];
