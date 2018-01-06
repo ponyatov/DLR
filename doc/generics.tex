@@ -30,13 +30,24 @@ class Object:
     tag = 'obj'
     def __repr__(self): return '%s #%x'%(self.tag,id(self))
 print Object()
+
 # obj #7f4dea6a5878
 \end{lstlisting}
 \fig{../tmp/sym_02.pdf}{width=0.8\textwidth}%height=0.75\textheight}%
 \\We need some user friendly representation for all objects, so we use
 \verb|__repr__()| method let us get dump for all objects in human readable form.
 
-But here we have some problem.
+But here we have some problem. As we are going to use \term{metaprogramming},
+all objects even primitive must have ability to hold some \term{attributes} for
+object marking and extra data store. Another problem is storing data must be
+ordered, like subtree elements in AST trees, vector elements, and so on. To
+solve this problem we force that base \verb|Object| must be more universal
+object, able to hold more complex data.
+All methods doing dump was moved into \verb|Object|:\\
+\fig{../tmp/sym_02d.pdf}{height=0.7\textheight}%width=\textwidth}%
+
+\fig{../tmp/sym_02x1.pdf}{width=0.55\textwidth}%height=0.7\textheight}%
+\fig{../tmp/sym_02x2.pdf}{width=0.45\textwidth}%height=0.7\textheight}%
 
 \section{Primitive}
 
