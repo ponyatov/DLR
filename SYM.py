@@ -24,8 +24,8 @@ class Object:
 	# set attribute value
 	def set(self,key,val): self.attr[key]=val ; return self
 
-print Object('+') .set('doc',Object('attribite')) \
-		<< Object(1) << Object(2.3) 
+# print Object('+') .set('doc',Object('attribite')) \
+# 		<< Object(1) << Object(2.3) 
  
 def test_Object():
     assert re.match(r'obj #[0-9a-f]+', str(Object()))
@@ -51,37 +51,37 @@ def test_Number():
 
 ###
 
-print Number('1.2')
+# print Number('1.2')
 
 class Integer(Number):
 	tag = 'int'
 	def __init__(self, V): Primitive.__init__(self,int(V))
 
-print Integer('123')
+# print Integer('123')
 
 class Hex(Integer):
 	tag = 'hex'
 	def __init__(self,V): Primitive.__init__(self,int(V,0x10))
 	def head(self): return '%s:0x%X #%x' % (self.tag, self.val, id(self))
 
-print Hex('0xFF')
+# print Hex('0xFF')
 
 class Binary(Integer):
 	tag = 'bin'
 	def __init__(self,V): Primitive.__init__(self,int(V,0x02))
 	def head(self): return '%s:%s #%x' % (self.tag, "{0:b}".format(self.val), id(self))
 
-print Binary('1111')
+# print Binary('1111')
 
 class Active(Object): tag = 'act'
 
 class Operator(Active):
 	tag = 'op'
 
-print \
-	Operator("+") \
-		<< Integer(1) \
-		<< Number('2.3') \
-	<< Operator('*') \
-		<< Symbol('X')
+# print \
+# 	Operator("+") \
+# 		<< Integer(1) \
+# 		<< Number('2.3') \
+# 	<< Operator('*') \
+# 		<< Symbol('X')
 
