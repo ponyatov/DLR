@@ -1,71 +1,97 @@
-import sys,time
+# Dynamic GUI (mobile phone layout)
 
-import threading
-import wx					# import wxWidgets
+from SYM import *
+from VM import *
 
-wxapp = wx.App()		# create wx GUI application
+import threading            # GUI must be separate thread
+import wx                   # import wxWidgets
+wxapp = wx.App()            # create wx GUI application
 
-# https://www.blog.pythonlibrary.org/2013/07/12/wxpython-how-to-minimize-to-system-tray/
-class TaskBar(wx.TaskBarIcon):	# taskbar manager
-	def __init__(self,frame):
-		# init superclass
-		wx.TaskBarIcon.__init__(self)
-		# save frame we manage
-		self.frame = frame
-		# set taskbar icon
-		self.icon = frame.icon
-		self.SetIcon(self.icon,sys.argv[0])
-		# bind open/focus on left click
-		self.Bind(wx.EVT_TASKBAR_LEFT_DOWN,
-			self.OnTaskBarLeftClick)
-	def OnTaskBarActivate(self,event):
-		pass
-	def OnTaskBarClose(self,event):
-		self.frame.Close()
-	def OnTaskBarLeftClick(self,event):
-		self.frame.Show()		# show frame
-		self.frame.Restore()	# un(min|max)imize
-		self.frame.Raise()		# make top level window
-		self.frame.SetFocus()	# and set focus
+class PageWindow(wx.Frame): # inherit GUI widget
+    def __init__(self):
+        # align on screen
+        SW,SH = wx.GetDisplaySize()
+        H = SH/5*4 ; W = H/4*3 ; Center = (SW/7,SH/11)
+        # colors
+        color = {'F':wx.GREEN,'B':wx.BLACK}#'F':'#000011','B':'#E0E0AA'}
+        # console font
+        font = wx.Font(H/24,
+            wx.FONTFAMILY_MODERN,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD)
+        # initialize superclass
+        wx.Frame.__init__(self,None,title='SYM',pos=Center,size=(W,H))
+        self.Show()
+        self.Maximize()
+        # set window icon
+        self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
+        # tabbing
+        tab = wx.Notebook(self) ; tab.SetFont(font)
+        tab.SetBackgroundColour(color['B']);
+        tab.SetForegroundColour(color['F']);
+        # log
+        log = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        log.SetValue('# log')
+        log.SetBackgroundColour(color['B']);
+        log.SetForegroundColour(color['F']);
+        tab.AddPage(log,'log')
+        # workpad
+        workpad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        workpad.SetValue('# workpad\n\n\twords')
+        workpad.SetBackgroundColour(color['B']);
+        workpad.SetForegroundColour(color['F']);
+        tab.AddPage(workpad,'pad')
+        # stack
+        stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        stack.SetValue('# stack')
+        stack.SetBackgroundColour(color['B']);
+        stack.SetForegroundColour(color['F']);
+        tab.AddPage(stack,'stack')
+        # words
+        words = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        words.SetValue('# words')
+        words.SetBackgroundColour(color['B']);
+        words.SetForegroundColour(color['F']);
+        tab.AddPage(words,'words')
+        # draw
+        draw = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        draw.SetValue('# draw')
+        draw.SetBackgroundColour(color['B']);
+        draw.SetForegroundColour(color['F']);
+        tab.AddPage(draw,'draw')
+        # shell
+        shell = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        shell.SetValue('# shell')
+        shell.SetBackgroundColour(color['B']);
+        shell.SetForegroundColour(color['F']);
+        tab.AddPage(shell,'shell')
+        # layout
+        sizer = wx.BoxSizer()
+        sizer.Add(tab,1,wx.EXPAND)
+        self.SetSizer(sizer)
+        self.Layout()
 
-class MainWindow(wx.Frame): # main GUI window in class
-	def __init__(self):
-		# tune size and position to look like messenger
-		X,Y,W,H = wx.ClientDisplayRect()
-		# create main frame
-		wx.Frame.__init__(self,None,-1,sys.argv[0],
-		size=(W/4,H/2),pos=(W-W/4,H-H/2))
-		# style tune
-		self.icon = wx.ArtProvider.GetIcon(wx.ART_ADD_BOOKMARK)
-		self.SetIcon(self.icon)
-		self.SetBackgroundColour(wx.BLACK)
-		# set visible
-		self.Show()
-		# make GUI taskbared
-		self.tbIcon = TaskBar(self)
-	def onClose(self,event):
-		# required to remove taskbar icon
-		self.tbIcon.RemoveIcon()
-		self.tbIcon.Destroy()
-		# destroy main window itself
-		self.Destroy()
-	def shot(self,PNG='sshot.png'):	# do screen shot
-		dc = wx.ScreenDC()
-		X,Y,W,H = self.GetRect()
-		bmp = wx.EmptyBitmap(W,H)
-		mdc = wx.MemoryDC(bmp)
-		mdc.Blit(0,0,W,H,dc,X,Y)
-		bmp.SaveFile(PNG,wx.BITMAP_TYPE_PNG)
+class MainWindow(wx.Frame):    
+    def __init__(self):
+        # align on screen
+        SW,SH = wx.GetDisplaySize()
+        H = SH/5*4 ; W = H/4*3
+        RightCorner = (SW-W,SH-H) ; Center = (SW/7,SH/11)
+        LPW = 32 # lines per window
+        # colors
+        BG = '#000011' ; FG = '#E0E0AA'
+        # initialize superclass
+        wx.Frame.__init__(self,None,title='SYM',pos=Center,size=(W,H))
+        # set window icon
+        self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
+        # show window
+        self.Show()
+        # console font
+        self.font = wx.Font(H/LPW,wx.FONTFAMILY_MODERN,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD)
 
-def startGUI():				# wrap thread in function
-	global wxmain			# required for ScreenShot()
-	wxmain = MainWindow()	# construct main window
-	wxapp.MainLoop()		# start wx GUI main loop
-thGUI = threading.Thread(None,startGUI)
-thGUI.start()				# start GUI thread
+def GUI():
+    global wxmain ; wxmain = PageWindow()
+    wxapp.MainLoop()
 
-# time.sleep(1) ; wxmain.shot()
+thread_GUI = threading.Thread(None,GUI)
+thread_GUI.start()
 
-raw_input()
-
-thGUI.join()				# wait until GUI stops
+thread_GUI.join()    # wait until GUI stops
