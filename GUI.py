@@ -1,7 +1,7 @@
 # Dynamic GUI (mobile phone layout)
 
 from SYM import *
-from VM import *
+import VM
 
 import threading            # GUI must be separate thread
 import wx                   # import wxWidgets
@@ -41,16 +41,16 @@ class PageWindow(wx.Frame): # inherit GUI widget
         tab.AddPage(workpad,'pad')
         # stack
         stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
-        stack.SetValue('# stack')
+        stack.SetValue(VM.D.dump()[1:])
         stack.SetBackgroundColour(color['B']);
         stack.SetForegroundColour(color['F']);
-        tab.AddPage(stack,'stack')
+        tab.AddPage(stack,VM.D.tag)
         # words
         words = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
-        words.SetValue('# words')
+        words.SetValue(VM.W.dump()[1:])
         words.SetBackgroundColour(color['B']);
         words.SetForegroundColour(color['F']);
-        tab.AddPage(words,'words')
+        tab.AddPage(words,VM.W.val)
         # draw
         draw = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         draw.SetValue('# draw')
@@ -63,6 +63,12 @@ class PageWindow(wx.Frame): # inherit GUI widget
         shell.SetBackgroundColour(color['B']);
         shell.SetForegroundColour(color['F']);
         tab.AddPage(shell,'shell')
+        # files
+        files = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        files.SetValue(Dir().dump()[1:])
+        files.SetBackgroundColour(color['B']);
+        files.SetForegroundColour(color['F']);
+        tab.AddPage(files,'files')
         # layout
         sizer = wx.BoxSizer()
         sizer.Add(tab,1,wx.EXPAND)

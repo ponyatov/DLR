@@ -1,8 +1,10 @@
 # Dynamic FORTH/VM
 
-PAD = ''    # pad:   active wordpad text (will be parsed/executed)
-D   = []    # stack: data stack
-VOC = {}    # words: vocabulary (words)
+from SYM import *
 
-R   = []    # return stack (call/ret)
+PAD = String('pad') # active wordpad text (will be parsed/executed)
+D   = Stack('data') # data stack
+W   = Map('words')  # vocabulary (words)
+
+R   = Stack('ret')  # return stack (call/ret)
 
