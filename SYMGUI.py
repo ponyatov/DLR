@@ -10,8 +10,9 @@ class MainWindow(wx.Frame):    # inherit GUI widget
     def __init__(self):
         # align on screen
         SW,SH = wx.GetDisplaySize()
-        H = SH/2 ; W = H*2# /4*3
-        RightCorner = (SW-W,SH-H) ; Center = (SW/5,SH/4)
+        H = SH/5*4 ; W = H/4*3
+        RightCorner = (SW-W,SH-H) ; Center = (SW/7,SH/7)
+        LPW = 32 # lines per window
         # initialize superclass
         wx.Frame.__init__(self,None,title='SYM',pos=Center,size=(W,H))
         # set window icon
@@ -19,7 +20,7 @@ class MainWindow(wx.Frame):    # inherit GUI widget
         # show window
         self.Show()
         # console font
-        self.font = wx.Font(H/24,wx.FONTFAMILY_MODERN,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD)
+        self.font = wx.Font(H/LPW,wx.FONTFAMILY_MODERN,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD)
         # sizer
         self.Hsizer = wx.BoxSizer(wx.HORIZONTAL)
         self.Vsizer = wx.BoxSizer(wx.VERTICAL) 
