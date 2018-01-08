@@ -14,7 +14,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         print
         print self,E
         print ctrl,alt,shift,key
-        if alt and key == wx.WXK_F4: self.Destroy()
+        if alt and key == wx.WXK_F4: self.Close()
         elif ctrl and key == wx.WXK_RETURN:
             VM.PAD_Q.put(self.pad.GetStringSelection())
         elif ctrl and key == wx.WXK_PAGEDOWN:
@@ -27,9 +27,11 @@ class MainWindow(wx.Frame): # inherit GUI widget
             else: self.tab.SetSelection(self.tab.GetPageCount()-1)
         else:
             E.Skip()
-    def Logger(self):
-        while True:
-            self.log.AppendText(VM.log.get())
+    def Logger(self,E):
+        if not VM.log.empty(): self.log.AppendText(VM.log.get())
+    def onClose(self,E):
+        self.timer.Stop()
+        self.Destroy()
     def __init__(self):
         # align on screen
         SW,SH = wx.GetDisplaySize()
@@ -39,6 +41,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
             wx.FONTFAMILY_MODERN,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD)
         # initialize superclass
         wx.Frame.__init__(self,None,title='SYM',pos=Center,size=(W,H))
+        self.Bind(wx.EVT_CLOSE,self.onClose)
         self.Show()
         # set window icon
         self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
@@ -84,13 +87,15 @@ class MainWindow(wx.Frame): # inherit GUI widget
         sizer.Add(tab,1,wx.EXPAND)
         self.SetSizer(sizer)
         self.Layout()
+        # start-up timer
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER,self.Logger,self.timer)
+        self.timer.Start(0x111)#ms
 
-def GUI():
-    wxmain = MainWindow()
-    wxapp.MainLoop() 
+global wxmain ; wxmain = MainWindow()
 
-thread_GUI = threading.Thread(None,GUI)           ; thread_GUI.start()
-# thread_LOG = threading.Thread(None,wxmain.Logger) ; thread_LOG.start()
-thread_PAD = threading.Thread(None,VM.PAD_runner) ; thread_PAD.start()
+thread_VM = threading.Thread(None,VM.PAD_runner) ; thread_VM.start()
 
-thread_GUI.join()    # wait until GUI stops
+wxapp.MainLoop() 
+
+# thread_VM.join()    # wait until VM stops

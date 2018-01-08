@@ -4,7 +4,7 @@ import Queue
 
 from SYM import *
 
-# log = Queue.Queue() # logging
+log = Queue.Queue() # logging
 
 PAD = String('pad') # active wordpad text (will be parsed/executed)
 
@@ -12,12 +12,13 @@ PAD_Q = Queue.Queue()
 def PAD_runner():
     while True:
         PAD.val = PAD_Q.get()
-        print PAD.dump() ; print
+        log.put(PAD.dump()+'\n')
         Interpreter()
         PAD_Q.task_done()
         
-D   = Stack('data') # data stack
 W   = Map('words')  # vocabulary (words)
+
+D   = Stack('data') # data stack
 
 R   = Stack('ret')  # return stack (call/ret)
 
@@ -34,9 +35,9 @@ def Interpreter():
         r'[a-zA-Z0-9_]+'
         return t
     def t_error(t):
-        print 'ERROR:<%s>\n'%t
-        global stop ; stop=True
-        t.lexer.skip(len(t.lexer.lexdata)-t.lexer.lexpos)
+        E = 'ERROR:<%s>\n'%t ; log.put(E) ; print E
+        global stop ; stop=True                             # stop interpreter
+        t.lexer.skip(len(t.lexer.lexdata)-t.lexer.lexpos)   # drop end of PAD
     # feed lexer
     lexer = lex.lex() ; lexer.input(PAD.val)
     # FORTH is very simple language , use only lexer
