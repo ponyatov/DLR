@@ -15,10 +15,18 @@ class MainWindow(wx.Frame): # inherit GUI widget
         print self,E
         print ctrl,alt,shift,key
         if alt and key == wx.WXK_F4: self.Destroy()
-        if ctrl and key == wx.WXK_RETURN:
-            VM.PAD.val = self.pad.GetStringSelection()
-            self.pad.AppendText('\nexecute: [%s]' % VM.PAD.dump() )
-        E.Skip()
+        elif ctrl and key == wx.WXK_RETURN:
+            VM.PAD_Q.put(self.pad.GetStringSelection())
+        elif ctrl and key == wx.WXK_PAGEDOWN:
+            pos = self.tab.GetSelection()+1
+            if pos < self.tab.GetPageCount(): self.tab.SetSelection(pos)
+            else: self.tab.SetSelection(0)
+        elif ctrl and key == wx.WXK_PAGEUP:
+            pos = self.tab.GetSelection()-1
+            if pos >= 0: self.tab.SetSelection(pos)
+            else: self.tab.SetSelection(self.tab.GetPageCount()-1)
+        else:
+            E.Skip()
     def __init__(self):
         # align on screen
         SW,SH = wx.GetDisplaySize()
@@ -33,37 +41,42 @@ class MainWindow(wx.Frame): # inherit GUI widget
         # set window icon
         self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
         # tabbing
-        tab = wx.Notebook(self) ; tab.SetFont(font)
+        self.tab = tab = wx.Notebook(self) ; tab.SetFont(font)
         # log
         log = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         log.SetValue('# log')
         tab.AddPage(log,'log')
+        log.Bind(wx.EVT_CHAR,self.KeyDown)
         # pad
         self.pad = pad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         pad.SetValue('# pad\n\n\twords')
         tab.AddPage(pad,'pad',select=True)
+        pad.Bind(wx.EVT_CHAR,self.KeyDown)
         # stack
         stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         stack.SetValue(VM.D.dump()[1:])
         tab.AddPage(stack,VM.D.tag)
+        stack.Bind(wx.EVT_CHAR,self.KeyDown)
         # words
         words = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         words.SetValue(VM.W.dump()[1:])
         tab.AddPage(words,VM.W.val)
+        words.Bind(wx.EVT_CHAR,self.KeyDown)
         # draw
         draw = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         draw.SetValue('# draw')
         tab.AddPage(draw,'draw')
+        draw.Bind(wx.EVT_CHAR,self.KeyDown)
         # shell
         shell = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         shell.SetValue('# shell')
         tab.AddPage(shell,'shell')
+        shell.Bind(wx.EVT_CHAR,self.KeyDown)
         # files
         files = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         files.SetValue(Dir().dump()[1:])
         tab.AddPage(files,'files')
-        # bind keys
-        pad.Bind(wx.EVT_CHAR,self.KeyDown)
+        files.Bind(wx.EVT_CHAR,self.KeyDown)
         # layout
         sizer = wx.BoxSizer()
         sizer.Add(tab,1,wx.EXPAND)
@@ -76,5 +89,8 @@ def GUI():
 
 thread_GUI = threading.Thread(None,GUI)
 thread_GUI.start()
+
+thread_PAD = threading.Thread(None,VM.PAD_runner)
+thread_PAD.start()
 
 thread_GUI.join()    # wait until GUI stops
