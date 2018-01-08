@@ -27,7 +27,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
             else: self.tab.SetSelection(self.tab.GetPageCount()-1)
         else:
             E.Skip()
-    def Logger(self,E):
+    def Update(self,E):
         if not VM.log.empty(): self.log.AppendText(VM.log.get())
     def onClose(self,E):
         self.timer.Stop()
@@ -87,9 +87,9 @@ class MainWindow(wx.Frame): # inherit GUI widget
         sizer.Add(tab,1,wx.EXPAND)
         self.SetSizer(sizer)
         self.Layout()
-        # start-up timer
+        # start-up update timer
         self.timer = wx.Timer(self)
-        self.Bind(wx.EVT_TIMER,self.Logger,self.timer)
+        self.Bind(wx.EVT_TIMER,self.Update,self.timer)
         self.timer.Start(0x111)#ms
 
 global wxmain ; wxmain = MainWindow()

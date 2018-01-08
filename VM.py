@@ -22,6 +22,9 @@ D   = Stack('data') # data stack
 
 R   = Stack('ret')  # return stack (call/ret)
 
+def WORDS(): log.put(W.dump())
+W['WORDS'] = Fn(WORDS)
+
 
 # parser/interpreter
 
@@ -35,7 +38,7 @@ def Interpreter():
         r'[a-zA-Z0-9_]+'
         return t
     def t_error(t):
-        E = 'ERROR:<%s>\n'%t ; log.put(E) ; print E
+        E = '\n\nERROR:<%s>\n'%t ; log.put(E) ; print E
         global stop ; stop=True                             # stop interpreter
         t.lexer.skip(len(t.lexer.lexdata)-t.lexer.lexpos)   # drop end of PAD
     # feed lexer
@@ -45,3 +48,6 @@ def Interpreter():
         token = lexer.token()
         if not token: break
         log.put('<%s>\n'%token)
+        N = token.value.upper()
+        if N in W.attr: W.attr[N].fn()
+

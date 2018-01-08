@@ -91,11 +91,23 @@ class String(Primitive): tag = 'str'
 
 class Collection(Object): tag = 'coll'
  
-class Map(Collection): tag = 'map'
+class Map(Collection):
+    tag = 'map'
+    def __setitem__(self,K,V): self.attr[K] = V
 
 class OrderedCollection(Collection): tag ='ord'
 
 class Stack(OrderedCollection): tag = 'stack'
+
+# action
+
+class Action(Object): tag = 'act'
+
+class Fn(Action):
+    tag = 'fn'
+    def __init__(self,V):
+        Action.__init__(self, V.__name__)
+        self.fn = V
 
 # #print Stack('data') << Integer(1) << Number(2.3)
 
