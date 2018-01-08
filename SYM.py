@@ -113,8 +113,8 @@ class Dir(IO):
         return '%s'%N
     def fname(self,N):
         name = N
-        if len(N)>10: name = N[:10]+'...'
-        return ' '*(10-len(name))+name
+        if len(N)>22: name = N[:10]+'...'
+        return ' '*(22-len(name))+name
     def dump(self,depth=0):
         S = self.pad(depth) + self.head()
         for i in os.listdir(self.val):
