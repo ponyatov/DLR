@@ -33,14 +33,13 @@ class MainWindow(wx.Frame): # inherit GUI widget
     def __init__(self):
         # align on screen
         SW,SH = wx.GetDisplaySize()
-        H = SH/5*4 ; W = H/4*3 ; Center = (SW/7,SH/11)
+        H = SH/5*4 ; W = H/5*3 ; Center = (SW/7,SH/11)
         # console font
         font = wx.Font(H/48,
             wx.FONTFAMILY_MODERN,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD)
         # initialize superclass
         wx.Frame.__init__(self,None,title='SYM',pos=Center,size=(W,H))
         self.Show()
-#         self.Maximize()
         # set window icon
         self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
         # tabbing
@@ -52,7 +51,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         log.Bind(wx.EVT_CHAR,self.KeyDown)
         # pad
         self.pad = pad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
-        pad.SetValue('# pad\n\n\twords')
+        pad.SetValue('# pad\n\n\twords?zz')
         tab.AddPage(pad,'pad',select=True)
         pad.Bind(wx.EVT_CHAR,self.KeyDown)
         # stack
@@ -86,13 +85,12 @@ class MainWindow(wx.Frame): # inherit GUI widget
         self.SetSizer(sizer)
         self.Layout()
 
-wxmain = MainWindow()
-# def GUI():
-#     #global wxmain #; wxmain = MainWindow()
-#     wxapp.MainLoop()
+def GUI():
+    wxmain = MainWindow()
+    wxapp.MainLoop() 
 
-thread_GUI = threading.Thread(None,wxapp.MainLoop) ; thread_GUI.start()
-thread_LOG = threading.Thread(None,wxmain.Logger) ; thread_LOG.start()
+thread_GUI = threading.Thread(None,GUI)           ; thread_GUI.start()
+# thread_LOG = threading.Thread(None,wxmain.Logger) ; thread_LOG.start()
 thread_PAD = threading.Thread(None,VM.PAD_runner) ; thread_PAD.start()
 
 thread_GUI.join()    # wait until GUI stops
