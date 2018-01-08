@@ -112,7 +112,9 @@ class Dir(IO):
         if N > 1024     : return '%sk'%(N/1024     )
         return '%s'%N
     def fname(self,N):
-        return ' '*(20-len(N))+N
+        name = N
+        if len(N)>10: name = N[:10]+'...'
+        return ' '*(10-len(name))+name
     def dump(self,depth=0):
         S = self.pad(depth) + self.head()
         for i in os.listdir(self.val):
