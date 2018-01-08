@@ -27,6 +27,9 @@ class MainWindow(wx.Frame): # inherit GUI widget
             else: self.tab.SetSelection(self.tab.GetPageCount()-1)
         else:
             E.Skip()
+    def Logger(self):
+        while True:
+            self.log.AppendText(VM.log.get())
     def __init__(self):
         # align on screen
         SW,SH = wx.GetDisplaySize()
@@ -43,7 +46,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         # tabbing
         self.tab = tab = wx.Notebook(self) ; tab.SetFont(font)
         # log
-        log = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        self.log = log = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         log.SetValue('# log')
         tab.AddPage(log,'log')
         log.Bind(wx.EVT_CHAR,self.KeyDown)
@@ -83,14 +86,13 @@ class MainWindow(wx.Frame): # inherit GUI widget
         self.SetSizer(sizer)
         self.Layout()
 
-def GUI():
-    global wxmain ; wxmain = MainWindow()
-    wxapp.MainLoop()
+wxmain = MainWindow()
+# def GUI():
+#     #global wxmain #; wxmain = MainWindow()
+#     wxapp.MainLoop()
 
-thread_GUI = threading.Thread(None,GUI)
-thread_GUI.start()
-
-thread_PAD = threading.Thread(None,VM.PAD_runner)
-thread_PAD.start()
+thread_GUI = threading.Thread(None,wxapp.MainLoop) ; thread_GUI.start()
+thread_LOG = threading.Thread(None,wxmain.Logger) ; thread_LOG.start()
+thread_PAD = threading.Thread(None,VM.PAD_runner) ; thread_PAD.start()
 
 thread_GUI.join()    # wait until GUI stops
