@@ -8,6 +8,17 @@ import wx                   # import wxWidgets
 wxapp = wx.App()            # create wx GUI application
 
 class MainWindow(wx.Frame): # inherit GUI widget
+    def KeyDown(self,E):
+        key = E.GetKeyCode()
+        ctrl = E.CmdDown() ; alt = E.AltDown() ; shift = E.ShiftDown()
+        print
+        print self,E
+        print ctrl,alt,shift,key
+        if alt and key == wx.WXK_F4: self.Destroy()
+        if ctrl and key == wx.WXK_RETURN:
+            VM.PAD.val = self.pad.GetStringSelection()
+            self.pad.AppendText('\nexecute: [%s]' % VM.PAD.dump() )
+        E.Skip()
     def __init__(self):
         # align on screen
         SW,SH = wx.GetDisplaySize()
@@ -28,7 +39,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         log.SetValue('# log')
         tab.AddPage(log,'log')
         # pad
-        pad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        self.pad = pad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         pad.SetValue('# pad\n\n\twords')
         tab.AddPage(pad,'pad',select=True)
         # stack
@@ -51,6 +62,8 @@ class MainWindow(wx.Frame): # inherit GUI widget
         files = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         files.SetValue(Dir().dump()[1:])
         tab.AddPage(files,'files')
+        # bind keys
+        pad.Bind(wx.EVT_CHAR,self.KeyDown)
         # layout
         sizer = wx.BoxSizer()
         sizer.Add(tab,1,wx.EXPAND)
