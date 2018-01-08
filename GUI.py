@@ -8,23 +8,28 @@ import wx                   # import wxWidgets
 wxapp = wx.App()            # create wx GUI application
 
 class PageWindow(wx.Frame): # inherit GUI widget
+    def TabChanged(self,E):
+        old = E.GetOldSelection() ; new = E.GetSelection()
+        print old,new,self
     def __init__(self):
         # align on screen
         SW,SH = wx.GetDisplaySize()
         H = SH/5*4 ; W = H/4*3 ; Center = (SW/7,SH/11)
         # colors
-        color = {'F':wx.GREEN,'B':wx.BLACK}#'F':'#000011','B':'#E0E0AA'}
+        color = {'F':wx.GREEN,'B':wx.BLACK,'S':wx.CYAN}
         # console font
-        font = wx.Font(H/24,
+        font = wx.Font(H/32,
             wx.FONTFAMILY_MODERN,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_BOLD)
         # initialize superclass
         wx.Frame.__init__(self,None,title='SYM',pos=Center,size=(W,H))
+        self.SetBackgroundColour(color['B']);
         self.Show()
-        self.Maximize()
+#         self.Maximize()
         # set window icon
         self.SetIcon(wx.ArtProvider.GetIcon(wx.ART_INFORMATION))
         # tabbing
         tab = wx.Notebook(self) ; tab.SetFont(font)
+        tab.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED,self.TabChanged)
         tab.SetBackgroundColour(color['B']);
         tab.SetForegroundColour(color['F']);
         # log
@@ -33,12 +38,12 @@ class PageWindow(wx.Frame): # inherit GUI widget
         log.SetBackgroundColour(color['B']);
         log.SetForegroundColour(color['F']);
         tab.AddPage(log,'log')
-        # workpad
-        workpad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
-        workpad.SetValue('# workpad\n\n\twords')
-        workpad.SetBackgroundColour(color['B']);
-        workpad.SetForegroundColour(color['F']);
-        tab.AddPage(workpad,'pad')
+        # pad
+        pad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        pad.SetValue('# pad\n\n\twords')
+        pad.SetBackgroundColour(color['B']);
+        pad.SetForegroundColour(color['F']);
+        tab.AddPage(pad,'pad',select=True)
         # stack
         stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         stack.SetValue(VM.D.dump()[1:])
