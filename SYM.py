@@ -27,34 +27,27 @@ class Object:
     # set attribute value
     def set(self,key,val): self.attr[key]=val ; return self
 
-# # print Object('+') .set('doc',Object('attribite')) \
-# # 		<< Object(1) << Object(2.3) 
-#  
-# def test_Object():
-#     assert re.match(r'obj #[0-9a-f]+', str(Object()))
+def test_Object():
+    assert re.match(r'obj: #[0-9a-f]+', Object().head())
      
 class Primitive(Object): tag = 'prim'
 
-# def test_Primitive():
-#     assert re.match(r'prim: #[0-9a-f]+',str(Primitive()))
-#     
-# class Symbol(Primitive):
-#     tag = 'sym'
-# 
-# def test_Symbol():
-#     assert re.match(r'sym:xxx #[0-9a-f]+',str(Symbol('xxx')))
-# 
-# class Number(Primitive):
-#     tag = 'num'
-#     def __init__(self, V): Primitive.__init__(self,float(V))
-# 
-# def test_Number():
-#     assert re.match(r'num:1.2 #[0-9a-f]+',str(Number('1.2')))
-# 
-# ###
-# 
-# # print Number('1.2')
-# 
+def test_Primitive():
+    assert re.match(r'prim: #[0-9a-f]+',Primitive().head())
+     
+class Symbol(Primitive):
+    tag = 'sym'
+
+def test_Symbol():
+    assert re.match(r'sym:xxx #[0-9a-f]+',Symbol('xxx').head())
+ 
+class Number(Primitive):
+     tag = 'num'
+     def __init__(self, V): Primitive.__init__(self,float(V))
+ 
+def test_Number():
+    assert re.match(r'num:1.2 #[0-9a-f]+',Number('1.2').head())
+
 # class Integer(Number):
 # 	tag = 'int'
 # 	def __init__(self, V): Primitive.__init__(self,int(V))
@@ -95,7 +88,9 @@ class Map(Collection):
     tag = 'map'
     def __setitem__(self,K,V): self.attr[K] = V
 
-class OrderedCollection(Collection): tag ='ord'
+class OrderedCollection(Collection):
+    tag ='ord'
+    def dropall(self): self.nest = []
 
 class Stack(OrderedCollection): tag = 'stack'
 

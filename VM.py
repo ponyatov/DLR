@@ -33,19 +33,27 @@ import ply.yacc as yacc
 
 def Interpreter():
     stop = False # flag
-    tokens = ['WORDNAME']
+    tokens = ['WORDNAME','DOT','QUEST']
     t_ignore = ' \t\r'
     t_ignore_COMMENT = '\#.+'
     def t_newline(t):
         r'\n+'
         t.lexer.lineno += len(t.value)
+    def t_DOT(t):
+        r'\.'
+        D.dropall()
+    def t_QUEST(t):
+        r'\?'
+        log.put(D.dump()+'\n\n')
     def t_WORDNAME(t):
-        r'[a-zA-Z0-9_]+|\?|\.'
+        r'[a-zA-Z0-9_]+'
         return t
     def t_error(t):
-        E = '\n\nERROR:<%s>\n'%t ; log.put(E) ; print E
+        error(t,t.lexer)
+    def error(msg,lexer):
+        E = '\n\nERROR:<%s>\n' % msg ; log.put(E) ; print E
         global stop ; stop=True                             # stop interpreter
-        t.lexer.skip(len(t.lexer.lexdata)-t.lexer.lexpos)   # drop end of PAD
+        lexer.skip(len(lexer.lexdata)-lexer.lexpos)         # drop end of PAD
     # feed lexer
     lexer = lex.lex() ; lexer.input(PAD.val)
     # FORTH is very simple language , use only lexer
@@ -54,5 +62,7 @@ def Interpreter():
         if not token: break
         log.put('<%s>\n'%token)
         N = token.value.upper()
-        if N in W.attr: W.attr[N].fn()
-
+        try:
+            W.attr[N].fn()
+        except KeyError:
+            error('unknown: %s' % token,lexer)
