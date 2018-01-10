@@ -16,7 +16,11 @@ class MainWindow(wx.Frame): # inherit GUI widget
         print ctrl,alt,shift,key
         if alt and key == wx.WXK_F4: self.Close()
         elif ctrl and key == wx.WXK_RETURN:
-            VM.PAD_Q.put(self.pad.GetStringSelection())
+            VM.PAD_Q.put(self.edit.GetStringSelection())
+        elif shift and key == wx.WXK_RETURN:
+            self.pad.AppendText(self.edit.GetStringSelection()+' ')
+        elif key == wx.WXK_F12:
+            VM.PAD_Q.put(self.pad.GetValue())
         elif ctrl and key == wx.WXK_PAGEDOWN:
             pos = self.tab.GetSelection()+1
             if pos < self.tab.GetPageCount(): self.tab.SetSelection(pos)
@@ -52,11 +56,11 @@ class MainWindow(wx.Frame): # inherit GUI widget
         log.SetValue('# log')
         tab.AddPage(log,'log')
         log.Bind(wx.EVT_CHAR,self.KeyDown)
-        # pad
-        self.pad = pad = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
-        pad.SetValue('# pad\n\n\twords?zz')
-        tab.AddPage(pad,'pad',select=True)
-        pad.Bind(wx.EVT_CHAR,self.KeyDown)
+        # edit
+        self.edit = edit = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        edit.SetValue('# pad\n\n\twords?zz')
+        tab.AddPage(edit,'edit',select=True)
+        edit.Bind(wx.EVT_CHAR,self.KeyDown)
         # stack
         stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         stack.SetValue(VM.D.dump()[1:])
@@ -82,9 +86,14 @@ class MainWindow(wx.Frame): # inherit GUI widget
         files.SetValue(Dir().dump()[1:])
         tab.AddPage(files,'files')
         files.Bind(wx.EVT_CHAR,self.KeyDown)
+        # pad
+        pad = self.pad = wx.TextCtrl(self,style=wx.TE_MULTILINE)
+        self.pad.SetValue('# pad\n')
+        pad.SetFont(font)
         # layout
-        sizer = wx.BoxSizer()
-        sizer.Add(tab,1,wx.EXPAND)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(tab,4,wx.EXPAND)
+        sizer.Add(pad,1,wx.EXPAND)
         self.SetSizer(sizer)
         self.Layout()
         # start-up update timer
