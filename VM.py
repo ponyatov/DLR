@@ -34,8 +34,13 @@ import ply.yacc as yacc
 def Interpreter():
     stop = False # flag
     tokens = ['WORDNAME']
+    t_ignore = ' \t\r'
+    t_ignore_COMMENT = '\#.+'
+    def t_newline(t):
+        r'\n+'
+        t.lexer.lineno += len(t.value)
     def t_WORDNAME(t):
-        r'[a-zA-Z0-9_]+'
+        r'[a-zA-Z0-9_]+|\?|\.'
         return t
     def t_error(t):
         E = '\n\nERROR:<%s>\n'%t ; log.put(E) ; print E
