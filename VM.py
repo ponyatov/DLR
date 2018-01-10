@@ -33,12 +33,16 @@ import ply.yacc as yacc
 
 def Interpreter():
     stop = False # flag
-    tokens = ['WORDNAME','DOT','QUEST']
+    tokens = ['NUM','WORDNAME','DOT','QUEST','unknown']
     t_ignore = ' \t\r'
     t_ignore_COMMENT = '\#.+'
     def t_newline(t):
         r'\n+'
         t.lexer.lineno += len(t.value)
+    def t_NUM(t):
+        r'[\+\-]?[0-9]+(\.[0-9]*)?([eE][\+\-]?[0-9]+)?'
+        D << Number(t.value)
+        return t
     def t_DOT(t):
         r'\.'
         D.dropall()
@@ -47,11 +51,12 @@ def Interpreter():
         log.put(D.dump()+'\n\n')
     def t_WORDNAME(t):
         r'[a-zA-Z0-9_]+'
+        N = t.value.upper()
+        try: W.attr[N].fn()
+        except KeyError: t.type = 'unknown' ; t_error(t)
         return t
     def t_error(t):
-        error(t,t.lexer)
-    def error(msg,lexer):
-        E = '\n\nERROR:<%s>\n' % msg ; log.put(E) ; print E
+        E = '\n\nERROR:<%s>\n' % t ; log.put(E) ; print E
         global stop ; stop=True                             # stop interpreter
         lexer.skip(len(lexer.lexdata)-lexer.lexpos)         # drop end of PAD
     # feed lexer
@@ -61,8 +66,3 @@ def Interpreter():
         token = lexer.token()
         if not token: break
         log.put('<%s>\n'%token)
-        N = token.value.upper()
-        try:
-            W.attr[N].fn()
-        except KeyError:
-            error('unknown: %s' % token,lexer)
