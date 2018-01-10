@@ -32,7 +32,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         else:
             E.Skip()
     def Update(self,E):
-        if not VM.log.empty(): self.log.AppendText(VM.log.get())
+        while not VM.log.empty(): self.log.AppendText(VM.log.get())
     def onClose(self,E):
         self.timer.Stop()
         self.Destroy()
@@ -88,7 +88,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         files.Bind(wx.EVT_CHAR,self.KeyDown)
         # pad
         pad = self.pad = wx.TextCtrl(self,style=wx.TE_MULTILINE)
-        self.pad.SetValue('# pad\n')
+        self.pad.SetValue('# pad\n? 1 2.3 4e5 ? . ?\n')
         pad.SetFont(font)
         pad.Bind(wx.EVT_CHAR,self.KeyDown)
         # layout
