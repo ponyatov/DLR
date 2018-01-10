@@ -90,6 +90,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         pad = self.pad = wx.TextCtrl(self,style=wx.TE_MULTILINE)
         self.pad.SetValue('# pad\n')
         pad.SetFont(font)
+        pad.Bind(wx.EVT_CHAR,self.KeyDown)
         # layout
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(tab,4,wx.EXPAND)
