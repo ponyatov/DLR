@@ -1,5 +1,9 @@
 # Dynamic GUI (mobile phone layout)
 
+TESTCODE = '''#pad
+        words?zz
+1 2.3 4e5 ? #. ?'''
+
 from SYM import *
 import VM
 
@@ -18,7 +22,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         elif ctrl and key == wx.WXK_RETURN:
             VM.PAD_Q.put(self.edit.GetStringSelection())
         elif shift and key == wx.WXK_RETURN:
-            self.pad.AppendText(self.edit.GetStringSelection()+' ')
+            VM.PAD_Q.put(self.pad.GetValue())
         elif key == wx.WXK_F12:
             VM.PAD_Q.put(self.pad.GetValue())
         elif ctrl and key == wx.WXK_PAGEDOWN:
@@ -32,6 +36,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         else:
             E.Skip()
     def Update(self,E):
+        self.stack.SetValue(VM.D.dump()[1:])
         while not VM.log.empty(): self.log.AppendText(VM.log.get())
     def onClose(self,E):
         self.timer.Stop()
@@ -58,12 +63,12 @@ class MainWindow(wx.Frame): # inherit GUI widget
         log.Bind(wx.EVT_CHAR,self.KeyDown)
         # edit
         self.edit = edit = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
-        edit.SetValue('# pad\n\n\twords?zz')
+        edit.SetValue(TESTCODE)
         tab.AddPage(edit,'edit',select=True)
         edit.Bind(wx.EVT_CHAR,self.KeyDown)
         # stack
-        stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
-        stack.SetValue(VM.D.dump()[1:])
+        self.stack = stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        self.stack.SetValue(VM.D.dump()[1:])
         tab.AddPage(stack,VM.D.tag)
         stack.Bind(wx.EVT_CHAR,self.KeyDown)
         # words
@@ -88,7 +93,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         files.Bind(wx.EVT_CHAR,self.KeyDown)
         # pad
         pad = self.pad = wx.TextCtrl(self,style=wx.TE_MULTILINE)
-        self.pad.SetValue('# pad\n? 1 2.3 4e5 ? . ?\n')
+        self.pad.SetValue(TESTCODE)
         pad.SetFont(font)
         pad.Bind(wx.EVT_CHAR,self.KeyDown)
         # layout
