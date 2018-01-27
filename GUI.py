@@ -20,9 +20,9 @@ class MainWindow(wx.Frame): # inherit GUI widget
         print ctrl,alt,shift,key
         if alt and key == wx.WXK_F4: self.Close()
         elif ctrl and key == wx.WXK_RETURN:
-            VM.PAD_Q.put(self.edit.GetStringSelection())
+            VM.PAD_Q.put(self.pad.GetStringSelection())
         elif shift and key == wx.WXK_RETURN:
-            VM.PAD_Q.put(self.pad.GetValue())
+            self.edit.WriteText(self.pad.GetStringSelection())
         elif key == wx.WXK_F12:
             VM.PAD_Q.put(self.pad.GetValue())
         elif ctrl and key == wx.WXK_PAGEDOWN:
