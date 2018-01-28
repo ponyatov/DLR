@@ -15,9 +15,9 @@ class MainWindow(wx.Frame): # inherit GUI widget
     def KeyDown(self,E):
         key = E.GetKeyCode()
         ctrl = E.CmdDown() ; alt = E.AltDown() ; shift = E.ShiftDown()
-        print
-        print self,E
-        print ctrl,alt,shift,key
+#         print
+#         print self,E
+#         print ctrl,alt,shift,key
         if alt and key == wx.WXK_F4: self.Close()
         elif ctrl and key == wx.WXK_RETURN:
             VM.PAD_Q.put(self.pad.GetStringSelection())
