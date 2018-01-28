@@ -26,6 +26,7 @@ def WORDS(): log.put(W.dump())
 W['WORDS'] = Fn(WORDS)
 
 W['DUP'] = Fn(D.dup)
+W['DROP'] = Fn(D.drop)
 
 
 # parser/interpreter
@@ -35,7 +36,7 @@ import ply.yacc as yacc
 
 def Interpreter():
     stop = False # flag
-    tokens = ['NUM','WORDNAME','DOT','QUEST','unknown']
+    tokens = ['NUM','WORDNAME','DOT','QUEST','unknown','outofdata']
     t_ignore = ' \t\r'
     t_ignore_COMMENT = '\#.+'
     def t_newline(t):
@@ -56,6 +57,7 @@ def Interpreter():
         N = t.value.upper()
         try: W.attr[N].fn()
         except KeyError: t.type = 'unknown' ; t_error(t)
+        except IndexError: t.type = 'outofdata' ; t_error(t)
         return t
     def t_error(t):
         E = '\n\nERROR:<%s>\n' % t ; log.put(E) ; print E
