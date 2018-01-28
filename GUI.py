@@ -102,6 +102,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         sizer.Add(pad,1,wx.EXPAND)
         self.SetSizer(sizer)
         self.Layout()
+        self.pad.SetFocus()
         # start-up update timer
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER,self.Update,self.timer)
