@@ -27,7 +27,7 @@ W['WORDS'] = Fn(WORDS)
 
 W['DUP'] = Fn(D.dup)
 W['DROP'] = Fn(D.drop)
-
+W['SWAP'] = Fn(D.swap)
 
 # parser/interpreter
 

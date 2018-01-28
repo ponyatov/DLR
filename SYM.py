@@ -97,7 +97,11 @@ class Stack(OrderedCollection):
     def dup(self): self.push(self.top())
     def top(self): return self.nest[-1]
     def push(self,o): self.nest.append(o)
-    def drop(self): self.nest.pop()
+    def drop(self): self.pop()
+    def pop(self): return self.nest.pop()
+    def swap(self):
+        A = self.pop() ; B = self.pop()
+        self.push(A) ; self.push(B)
 
 # action
 
