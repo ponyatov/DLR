@@ -64,12 +64,12 @@ class MainWindow(wx.Frame): # inherit GUI widget
         # edit
         self.edit = edit = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         edit.SetValue(TESTCODE)
-        tab.AddPage(edit,'edit',select=True)
+        tab.AddPage(edit,'edit')
         edit.Bind(wx.EVT_CHAR,self.KeyDown)
         # stack
         self.stack = stack = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         self.stack.SetValue(VM.D.dump()[1:])
-        tab.AddPage(stack,VM.D.tag)
+        tab.AddPage(stack,VM.D.tag,select=True)
         stack.Bind(wx.EVT_CHAR,self.KeyDown)
         # words
         words = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
