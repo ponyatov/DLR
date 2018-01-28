@@ -25,6 +25,8 @@ R   = Stack('ret')  # return stack (call/ret)
 def WORDS(): log.put(W.dump())
 W['WORDS'] = Fn(WORDS)
 
+W['DUP'] = Fn(D.dup)
+
 
 # parser/interpreter
 

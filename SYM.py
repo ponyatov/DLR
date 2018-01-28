@@ -92,7 +92,11 @@ class OrderedCollection(Collection):
     tag ='ord'
     def dropall(self): self.nest = []
 
-class Stack(OrderedCollection): tag = 'stack'
+class Stack(OrderedCollection):
+    tag = 'stack'
+    def dup(self): self.push(self.top())
+    def top(self): return self.nest[-1]
+    def push(self,o): self.nest.append(o)
 
 # action
 
