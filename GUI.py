@@ -37,6 +37,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
             E.Skip()
     def Update(self,E):
         self.stack.SetValue(VM.D.dump()[1:])
+        self.words.SetValue(VM.W.dump()[1:])
         while not VM.log.empty(): self.log.AppendText(VM.log.get())
     def onClose(self,E):
         self.timer.Stop()
@@ -72,7 +73,7 @@ class MainWindow(wx.Frame): # inherit GUI widget
         tab.AddPage(stack,VM.D.tag,select=True)
         stack.Bind(wx.EVT_CHAR,self.KeyDown)
         # words
-        words = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
+        self.words = words = wx.TextCtrl(tab,style=wx.TE_MULTILINE)
         words.SetValue(VM.W.dump()[1:])
         tab.AddPage(words,VM.W.val)
         words.Bind(wx.EVT_CHAR,self.KeyDown)

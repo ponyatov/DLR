@@ -31,12 +31,21 @@ W['DROP'] = Fn(D.drop)
 W['SWAP'] = Fn(D.swap)
 W['OVER'] = Fn(D.over)
 
-COMPILE = False
-
 # parser/interpreter
 
 import ply.lex  as lex
 import ply.yacc as yacc
+
+COMPILE = False
+
+lexer = None
+
+def defer():
+    t = lexer.token() ; wn = t.value.upper()
+    if t.type != 'WORDNAME': raise TypeError
+    global COMPILE ; COMPILE = W[wn]=Code(wn)
+
+W[':'] = Fn(defer)
 
 def Interpreter():
     stop = False # flag
@@ -52,14 +61,14 @@ def Interpreter():
         r'[0-9]+'
         t.value = Number(t.value) ; return t
     def t_WORDNAME(t):
-        r'[0-9a-zA-Z_\.\?\:]+'
+        r'[0-9a-zA-Z_\.\?\:\;]+'
         return t
     def t_error(t):
         E = '\n\nERROR:<%s>\n' % t ; log.put(E) ; print E
         global stop ; stop=True                             # stop interpreter
         lexer.skip(len(lexer.lexdata)-lexer.lexpos)         # drop end of PAD
     # feed lexer
-    lexer = lex.lex() ; lexer.input(PAD.val)
+    global lexer ; lexer=lex.lex() ; lexer.input(PAD.val)
     # FORTH is very simple language , use only lexer
     while not stop:
         t = lexer.token()
