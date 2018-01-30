@@ -2,7 +2,7 @@
 
 TESTCODE = '''#pad
         words?zz
-1 2.3 4e5 ? #. ?'''
+1 2.3 4e5 ? #. ? : nop 1 2 3 ; '''
 
 from SYM import *
 import VM

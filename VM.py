@@ -24,10 +24,14 @@ R   = Stack('ret')  # return stack (call/ret)
 
 def WORDS(): log.put(W.dump())
 W['WORDS'] = Fn(WORDS)
+W['?'] = Fn(lambda: log.put(D.dump()+'\n\n'))
 
 W['DUP'] = Fn(D.dup)
 W['DROP'] = Fn(D.drop)
 W['SWAP'] = Fn(D.swap)
+W['OVER'] = Fn(D.over)
+
+COMPILE = False
 
 # parser/interpreter
 
@@ -36,28 +40,19 @@ import ply.yacc as yacc
 
 def Interpreter():
     stop = False # flag
-    tokens = ['NUM','WORDNAME','DOT','QUEST','unknown','outofdata']
+    tokens = ['NUM','WORDNAME']
+#     tokens = ['NUM',,'DOT','QUEST','unknown','outofdata',
+#               'COLON','SEMICOLON']
     t_ignore = ' \t\r'
     t_ignore_COMMENT = '\#.+'
     def t_newline(t):
         r'\n+'
         t.lexer.lineno += len(t.value)
     def t_NUM(t):
-        r'[\+\-]?[0-9]+(\.[0-9]*)?([eE][\+\-]?[0-9]+)?'
-        D << Number(t.value)
-        return t
-    def t_DOT(t):
-        r'\.'
-        D.dropall()
-    def t_QUEST(t):
-        r'\?'
-        log.put(D.dump()+'\n\n')
+        r'[0-9]+'
+        t.value = Number(t.value) ; return t
     def t_WORDNAME(t):
-        r'[a-zA-Z0-9_]+'
-        N = t.value.upper()
-        try: W.attr[N].fn()
-        except KeyError: t.type = 'unknown' ; t_error(t)
-        except IndexError: t.type = 'outofdata' ; t_error(t)
+        r'[0-9a-zA-Z_\.\?\:]+'
         return t
     def t_error(t):
         E = '\n\nERROR:<%s>\n' % t ; log.put(E) ; print E
@@ -67,6 +62,15 @@ def Interpreter():
     lexer = lex.lex() ; lexer.input(PAD.val)
     # FORTH is very simple language , use only lexer
     while not stop:
-        token = lexer.token()
-        if not token: break
-        log.put('<%s>\n'%token)
+        t = lexer.token()
+        if not t: break
+        log.put('<%s>\n'%t)
+        if COMPILE:
+            raise BaseException
+        else:
+            if t.type == 'NUM':
+                D.push(t.value)
+            else:
+                try: W.attr[t.value.upper()].eval()
+                except KeyError: t.type = 'unknown' ; t_error(t)
+                except IndexError: t.type = 'outofdata' ; t_error(t)

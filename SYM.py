@@ -102,6 +102,7 @@ class Stack(OrderedCollection):
     def swap(self):
         A = self.pop() ; B = self.pop()
         self.push(A) ; self.push(B)
+    def over(self): self.nest.append(self.nest[-2])
 
 # action
 
@@ -112,6 +113,10 @@ class Fn(Action):
     def __init__(self,V):
         Action.__init__(self, V.__name__)
         self.fn = V
+    def eval(self): self.fn()
+        
+class Code(Action):
+    tag = 'code'
 
 # #print Stack('data') << Integer(1) << Number(2.3)
 
