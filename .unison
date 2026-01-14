@@ -1,0 +1,22 @@
+# .unison
+## ln -fs ~/dlr/.unison ~/.unison/dlr.prf
+
+# profile name (optional)
+label = dlr sync
+
+# directories (local/remote)
+root = /home/dponyatov/dlr
+root = ssh://dimon@10.110.1.101//home/dimon/dlr
+
+# automation
+auto   = true
+batch  = true
+prefer = newer
+
+# temp/build/local-only files ignoring
+ignore = Name {.git}
+ignore = Name {*~,*.log,*.sw?}
+ignore = Name {bin,tmp,ref,_build,target}
+ignore = Name {doc/html,lib/pcpp}
+ignore = Name {node_modules,.cache}
+ignore = Name {*.pyc,__pycache__}

@@ -1,0 +1,11 @@
+version=0.28.1
+profile=default
+margin=80
+line-endings=lf
+break-cases=all
+wrap-comments=true
+break-string-literals=never
+# break-infix-before-func = false
+# break-infix = fit-or-vertical
+# break-separators = after
+# let-and = sparse
